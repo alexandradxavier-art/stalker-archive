@@ -24,7 +24,7 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
 .auth-screen{position:fixed;inset:0;background:var(--bg);z-index:7000;display:flex;align-items:center;justify-content:center}
 .auth-screen.hidden{display:none}
 /* большой фоновый водяной знак */
-.auth-screen::after{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg viewBox='0 0 64 64' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='32,2 58,14 58,38 32,62 6,38 6,14' fill='none' stroke='%237ab648' stroke-width='1.8'/%3E%3Cpolygon points='32,7 53,17 53,36 32,56 11,36 11,17' fill='none' stroke='%234a7228' stroke-width='1'/%3E%3Ccircle cx='32' cy='28' r='7' fill='none' stroke='%237ab648' stroke-width='1.5'/%3E%3Ccircle cx='32' cy='28' r='3' fill='%237ab648'/%3E%3Cline x1='32' y1='14' x2='32' y2='21' stroke='%237ab648' stroke-width='1.2'/%3E%3Cline x1='32' y1='35' x2='32' y2='42' stroke='%237ab648' stroke-width='1.2'/%3E%3Cline x1='18' y1='28' x2='25' y2='28' stroke='%237ab648' stroke-width='1.2'/%3E%3Cline x1='39' y1='28' x2='46' y2='28' stroke='%237ab648' stroke-width='1.2'/%3E%3C/svg%3E") center/320px repeat;opacity:0.025;pointer-events:none;z-index:0}
+
 .auth-box{width:100%;max-width:380px;border:1px solid var(--green-dim);background:var(--paper);position:relative;animation:mIn 0.3s ease;z-index:1}
 .auth-box::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--green),var(--green-dim),transparent)}
 .auth-logo{display:flex;flex-direction:column;align-items:center;padding:28px 24px 18px;gap:10px}
