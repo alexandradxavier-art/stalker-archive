@@ -1031,6 +1031,8 @@ window.confirmDeleteCat=function(id){
 
 // ══ FILTERS / SORT / VIEW ══
 window.filterCategory=function(id){
+  document.getElementById('detail-panel').classList.remove('open');
+  editingId=null;window._editRecord=null;
   currentCat=id;
   document.querySelectorAll('.sb-item').forEach(b=>b.classList.remove('active'));
   if(id===null){document.getElementById('nav-all').classList.add('active');document.getElementById('main-title').textContent='База аномальных образцов';}
