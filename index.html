@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>База аномальных образцов — ЧАЗ</title>
+<title>База ЧАЗ — Закрытый архив</title>
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Oswald:wght@200;300;400;600&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -11,6 +11,8 @@
   --green:#7ab648;--green-dim:#4a7228;--green-dark:#2a4218;
   --amber:#c8a84b;--amber-dim:#7a6428;
   --red:#b84040;--red-dim:#7a2828;
+  --blue:#3a8fd4;--blue-dim:#1a5a9a;
+  --purple:#9a6ab8;--purple-dim:#5a3a78;
   --text:#c4c09e;--text-dim:#6e6c5c;--text-faint:#3a392e;
   --border:#252818;--border2:#1e2016;
   --scan:rgba(100,180,50,0.02);
@@ -18,260 +20,285 @@
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;overflow:hidden}
 body{background:var(--bg);color:var(--text);font-family:'PT Serif',Georgia,serif;font-size:14px;line-height:1.7;position:relative}
-body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(to bottom,transparent 0px,transparent 3px,var(--scan) 3px,var(--scan) 4px);pointer-events:none;z-index:9999}
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(to bottom,transparent 0,transparent 3px,var(--scan) 3px,var(--scan) 4px);pointer-events:none;z-index:9999}
 
-/* ══ AUTH SCREEN ══ */
+/* AUTH */
 .auth-screen{position:fixed;inset:0;background:var(--bg);z-index:7000;display:flex;align-items:center;justify-content:center}
 .auth-screen.hidden{display:none}
-/* большой фоновый водяной знак */
-
-.auth-box{width:100%;max-width:380px;border:1px solid var(--green-dim);background:var(--paper);position:relative;animation:mIn 0.3s ease;z-index:1}
+.auth-box{width:100%;max-width:380px;border:1px solid var(--green-dim);background:var(--paper);position:relative;z-index:1}
 .auth-box::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--green),var(--green-dim),transparent)}
-.auth-logo{display:flex;flex-direction:column;align-items:center;padding:28px 24px 18px;gap:10px}
-.auth-logo svg{filter:drop-shadow(0 0 6px rgba(58,143,212,0.18))}
-.auth-logo-title{font-family:'Oswald',sans-serif;font-weight:600;font-size:16px;color:var(--green);letter-spacing:2px;text-transform:uppercase}
-.auth-logo-sub{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--text-dim);letter-spacing:3px;text-transform:uppercase}
+.auth-logo{display:flex;flex-direction:column;align-items:center;padding:22px 22px 14px;gap:7px}
+.auth-logo-title{font-family:'Oswald',sans-serif;font-weight:600;font-size:14px;color:var(--green);letter-spacing:2px;text-transform:uppercase}
+.auth-logo-sub{font-family:'Share Tech Mono',monospace;font-size:7.5px;color:var(--text-dim);letter-spacing:3px;text-transform:uppercase}
 .auth-tabs{display:flex;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
-.auth-tab{flex:1;padding:10px;background:none;border:none;font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;color:var(--text-dim);transition:all 0.15s;border-bottom:2px solid transparent}
+.auth-tab{flex:1;padding:9px;background:none;border:none;font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;color:var(--text-dim);border-bottom:2px solid transparent}
 .auth-tab.active{color:var(--green);border-bottom-color:var(--green);background:rgba(122,182,72,0.04)}
-.auth-tab:hover:not(.active){color:var(--text)}
-.auth-body{padding:20px 24px}
-.auth-field{margin-bottom:14px}
-.auth-label{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:2px;color:var(--text-dim);text-transform:uppercase;display:block;margin-bottom:6px}
-.auth-input{width:100%;background:var(--paper3);border:1px solid var(--border);color:var(--text);font-family:'Share Tech Mono',monospace;font-size:13px;padding:10px 12px;outline:none;transition:border-color 0.2s;letter-spacing:1px}
+.auth-body{padding:16px 20px}
+.auth-field{margin-bottom:12px}
+.auth-label{font-family:'Share Tech Mono',monospace;font-size:7.5px;letter-spacing:2px;color:var(--text-dim);text-transform:uppercase;display:block;margin-bottom:5px}
+.auth-input{width:100%;background:var(--paper3);border:1px solid var(--border);color:var(--text);font-family:'Share Tech Mono',monospace;font-size:12px;padding:8px 10px;outline:none;transition:border-color 0.2s;letter-spacing:1px}
 .auth-input:focus{border-color:var(--green-dark)}
 .auth-input::placeholder{color:var(--text-faint);letter-spacing:0}
-.auth-submit{width:100%;padding:11px;background:none;border:1px solid var(--green-dim);color:var(--green-dim);font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all 0.2s;margin-top:6px}
+.auth-submit{width:100%;padding:9px;background:none;border:1px solid var(--green-dim);color:var(--green-dim);font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all 0.2s;margin-top:4px}
 .auth-submit:hover{border-color:var(--green);color:var(--green);background:rgba(122,182,72,0.06)}
 .auth-submit:disabled{opacity:0.4;cursor:not-allowed}
-.auth-err{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--red);letter-spacing:1px;min-height:18px;margin-top:8px;display:block}
-.auth-footer{padding:12px 24px;border-top:1px solid var(--border);background:var(--paper2);font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--text-faint);text-align:center;letter-spacing:1px;line-height:1.8}
+.auth-err{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--red);letter-spacing:1px;min-height:16px;margin-top:6px;display:block}
+.auth-footer{padding:9px 20px;border-top:1px solid var(--border);background:var(--paper2);font-family:'Share Tech Mono',monospace;font-size:7px;color:var(--text-faint);text-align:center;letter-spacing:1px;line-height:1.8}
 
-/* ══ LAYOUT ══ */
-.layout{display:flex;height:100vh;overflow:hidden}
-.sidebar{width:248px;flex-shrink:0;background:var(--paper2);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
-.main{flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative}
+/* APP LAYOUT */
+.app{display:flex;flex-direction:column;height:100vh;overflow:hidden}
+.app.hidden{display:none}
 
-.sb-head{padding:16px 16px 12px;border-bottom:1px solid var(--border);position:relative;flex-shrink:0}
-.sb-head::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--green),var(--green-dim),transparent)}
-.sb-logo{display:flex;align-items:center;gap:10px;margin-bottom:6px}
-.sb-logo svg{flex-shrink:0;filter:drop-shadow(0 0 3px rgba(58,143,212,0.15))}
-.sb-title{font-family:'Oswald',sans-serif;font-weight:600;font-size:12px;color:var(--green);letter-spacing:1.5px;text-transform:uppercase;line-height:1.2}
-.sb-sub{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--text-dim);letter-spacing:2px;text-transform:uppercase}
+/* TOP NAV */
+.topnav{background:var(--paper3);border-bottom:1px solid var(--border);display:flex;align-items:stretch;height:38px;flex-shrink:0;position:relative}
+.topnav::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--green-dim),transparent);opacity:0.4}
+.tn-logo{display:flex;align-items:center;gap:7px;padding:0 14px;border-right:1px solid var(--border);flex-shrink:0}
+.tn-logo svg{width:18px;height:20px;flex-shrink:0}
+.tn-logo-t{font-family:'Oswald',sans-serif;font-weight:600;font-size:11px;color:var(--green);letter-spacing:1.5px;text-transform:uppercase}
+.tn-modules{display:flex;align-items:stretch}
+.tn-mod{display:flex;align-items:center;gap:5px;padding:0 14px;background:none;border:none;border-bottom:2px solid transparent;color:var(--text-dim);font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all 0.15s;white-space:nowrap}
+.tn-mod:hover{color:var(--text)}
+.tn-mod.act-arc{color:var(--green);border-bottom-color:var(--green)}
+.tn-mod.act-stk{color:var(--amber);border-bottom-color:var(--amber)}
+.tn-mod.act-doc{color:var(--purple);border-bottom-color:var(--purple)}
+.tn-mod.act-all{color:var(--text-dim);border-bottom-color:var(--text-dim)}
+.tn-right{margin-left:auto;display:flex;align-items:center;gap:8px;padding:0 12px;border-left:1px solid var(--border)}
+.user-badge{display:flex;align-items:center;gap:6px;padding:3px 9px;border:1px solid var(--green-dark);background:rgba(122,182,72,0.05)}
+.ub-dot{width:5px;height:5px;border-radius:50%;background:var(--green);box-shadow:0 0 4px var(--green);animation:pulse 2s infinite;flex-shrink:0}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+.ub-call{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--green);letter-spacing:1px}
+.ub-logout{background:none;border:none;color:var(--text-faint);cursor:pointer;font-family:'Share Tech Mono',monospace;font-size:8px;padding:0 3px;transition:color 0.15s}
+.ub-logout:hover{color:var(--red)}
+.red-tag{background:var(--red);padding:3px 8px;font-family:'Share Tech Mono',monospace;font-size:7px;letter-spacing:2px;color:#ffd0d0;white-space:nowrap}
 
-.sb-stats{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border-top:1px solid var(--border);border-bottom:1px solid var(--border);flex-shrink:0}
-.st-box{background:var(--paper2);padding:8px 12px}
-.st-n{font-family:'Share Tech Mono',monospace;font-size:16px;color:var(--green);line-height:1}
-.st-n.am{color:var(--amber)}
-.st-l{font-family:'Share Tech Mono',monospace;font-size:7px;color:var(--text-dim);letter-spacing:1px;text-transform:uppercase;margin-top:2px}
+/* BODY LAYOUT */
+.body-layout{display:flex;flex:1;overflow:hidden}
 
+/* SIDEBAR — context-specific */
+.sidebar{width:200px;flex-shrink:0;background:var(--paper2);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.sb-mod-head{padding:11px 12px;border-bottom:1px solid var(--border);flex-shrink:0}
+.sb-mod-title{font-family:'Oswald',sans-serif;font-weight:600;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;line-height:1.2;margin-bottom:2px}
+.sb-mod-title.cg{color:var(--green)}
+.sb-mod-title.ca{color:var(--amber)}
+.sb-mod-title.cp{color:var(--purple)}
+.sb-mod-title.ct{color:var(--text)}
+.sb-mod-sub{font-family:'Share Tech Mono',monospace;font-size:7px;color:var(--text-faint);letter-spacing:1px}
 .sb-scroll{flex:1;overflow-y:auto;overflow-x:hidden}
 .sb-scroll::-webkit-scrollbar{width:3px}
 .sb-scroll::-webkit-scrollbar-thumb{background:var(--border)}
+.sb-sec{font-family:'Share Tech Mono',monospace;font-size:7px;letter-spacing:2px;color:var(--text-faint);text-transform:uppercase;padding:7px 12px 2px}
+.sb-item{display:flex;align-items:center;gap:6px;width:100%;padding:7px 12px;background:none;border:none;border-left:2px solid transparent;color:var(--text-dim);font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:0.5px;text-align:left;cursor:pointer;transition:all 0.15s}
+.sb-item:hover{color:var(--text);background:rgba(255,255,255,0.02)}
+.sb-item.act-g{border-left-color:var(--green);color:var(--green);background:rgba(122,182,72,0.06)}
+.sb-item.act-a{border-left-color:var(--amber);color:var(--amber);background:rgba(200,168,75,0.06)}
+.sb-item.act-p{border-left-color:var(--purple);color:var(--purple);background:rgba(154,106,184,0.06)}
+.sb-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.sb-cnt{margin-left:auto;font-size:8px;color:var(--text-faint)}
+.sb-div{height:1px;background:var(--border2);margin:4px 0}
+.sb-stats{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border-top:1px solid var(--border);flex-shrink:0}
+.st-box{background:var(--paper2);padding:7px 10px}
+.st-n{font-family:'Share Tech Mono',monospace;font-size:15px;line-height:1}
+.st-l{font-family:'Share Tech Mono',monospace;font-size:7px;color:var(--text-faint);letter-spacing:1px;text-transform:uppercase;margin-top:1px}
 
-.sb-section{padding:8px 14px 4px;font-family:'Share Tech Mono',monospace;font-size:7px;letter-spacing:2px;color:var(--text-faint);text-transform:uppercase;display:flex;align-items:center;justify-content:space-between}
-.sb-section button{background:none;border:none;color:var(--text-faint);cursor:pointer;font-size:14px;line-height:1;padding:0 2px;transition:color 0.2s}
-.sb-section button:hover{color:var(--green)}
-
-.sb-item{display:flex;align-items:center;width:100%;padding:8px 14px;background:none;border:none;color:var(--text-dim);cursor:pointer;font-family:'Share Tech Mono',monospace;font-size:11px;text-align:left;transition:all 0.15s;border-left:2px solid transparent;gap:8px}
-.sb-item:hover{color:var(--text);background:rgba(122,182,72,0.04);border-left-color:var(--green-dark)}
-.sb-item.active{color:var(--green);background:rgba(122,182,72,0.07);border-left-color:var(--green)}
-.sb-item .si-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
-.sb-item .si-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.sb-item .si-count{font-size:9px;color:var(--text-faint);flex-shrink:0}
-.sb-item .si-actions{display:none;gap:4px;flex-shrink:0}
-.sb-item:hover .si-actions{display:flex}
-.si-act-btn{background:none;border:none;color:var(--text-faint);cursor:pointer;font-size:11px;padding:1px 3px;transition:color 0.15s}
-.si-act-btn:hover{color:var(--amber)}
-.si-act-btn.del:hover{color:var(--red)}
-
-.sb-add-cat{margin:10px 14px;padding:8px;background:none;border:1px dashed var(--green-dark);color:var(--green-dim);font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;width:calc(100% - 28px);transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:6px}
-.sb-add-cat:hover{border-color:var(--green);color:var(--green);background:rgba(122,182,72,0.04)}
-
-/* ══ ONLINE USERS PANEL ══ */
-.online-panel{border-top:1px solid var(--border);flex-shrink:0;max-height:180px;overflow-y:auto}
-.online-panel::-webkit-scrollbar{width:3px}
-.online-panel::-webkit-scrollbar-thumb{background:var(--border)}
-.online-head{padding:7px 14px;font-family:'Share Tech Mono',monospace;font-size:7px;letter-spacing:2px;color:var(--text-faint);text-transform:uppercase;background:var(--paper3);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px}
-.online-count{color:var(--green);font-size:9px}
-.online-user{display:flex;align-items:center;gap:8px;padding:7px 14px;border-bottom:1px solid var(--border2)}
-.online-user:last-child{border-bottom:none}
-.ou-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
-.ou-dot.on{background:var(--green);box-shadow:0 0 5px var(--green);animation:oup 2s infinite}
-.ou-dot.off{background:var(--text-faint)}
-@keyframes oup{0%,100%{opacity:1}50%{opacity:0.4}}
-.ou-name{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text-dim);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.ou-name.me{color:var(--green)}
-.ou-status{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:1px}
-.ou-status.on{color:var(--green)}
-.ou-status.off{color:var(--text-faint)}
-
-.sb-foot{padding:10px 14px;border-top:1px solid var(--border);font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--text-faint);line-height:1.8;flex-shrink:0}
-.sync-indicator{display:flex;align-items:center;gap:6px;margin-bottom:4px}
-.sync-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pp 2s infinite}
-@keyframes pp{0%,100%{opacity:1}50%{opacity:0.3}}
-.sync-dot.err{background:var(--red);animation:none}
-.sync-dot.wait{background:var(--amber);animation:none}
-
-/* ══ CURRENT USER IN HEADER ══ */
-.user-badge{display:flex;align-items:center;gap:8px;padding:4px 12px;border:1px solid var(--green-dark);background:rgba(122,182,72,0.05);flex-shrink:0}
-.ub-dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 5px var(--green);animation:oup 2s infinite;flex-shrink:0}
-.ub-call{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--green);letter-spacing:1px}
-.ub-logout{background:none;border:none;color:var(--text-faint);cursor:pointer;font-family:'Share Tech Mono',monospace;font-size:9px;padding:0 4px;letter-spacing:1px;transition:color 0.15s;text-transform:uppercase}
-.ub-logout:hover{color:var(--red)}
-
-.main-head{padding:12px 24px;border-bottom:1px solid var(--border);background:var(--paper2);display:flex;align-items:center;gap:12px;flex-shrink:0;flex-wrap:wrap}
-.mh-title{font-family:'Oswald',sans-serif;font-weight:600;font-size:17px;color:var(--green);letter-spacing:1px;text-transform:uppercase;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;animation:flicker 14s infinite}
-@keyframes flicker{0%,97%,100%{opacity:1}98.5%{opacity:0.2}}
-.class-tag{background:var(--red);padding:4px 10px;font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:2px;color:#ffd0d0;text-transform:uppercase;white-space:nowrap;flex-shrink:0}
-
-.toolbar{padding:10px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0;background:var(--paper3);flex-wrap:nowrap}
-.search-box{display:flex;align-items:center;flex:1;min-width:150px;max-width:400px;border:1px solid var(--border2);background:var(--paper2);overflow:hidden}
-.search-box input{flex:1;background:none;border:none;color:var(--text);font-family:'Share Tech Mono',monospace;font-size:11px;padding:7px 10px;outline:none;min-width:0;width:100%;display:block}
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative}
+.toolbar{padding:7px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:7px;flex-shrink:0;background:var(--paper3);flex-wrap:wrap}
+.search-box{display:flex;align-items:center;flex:1;min-width:130px;max-width:280px;border:1px solid var(--border2);background:var(--paper2);overflow:hidden}
+.search-box input{flex:1;background:none;border:none;color:var(--text);font-family:'Share Tech Mono',monospace;font-size:10px;padding:6px 8px;outline:none;min-width:0}
 .search-box input::placeholder{color:var(--text-faint)}
-.search-ico{padding:7px 10px;color:var(--text-dim);font-size:12px}
-.tb-select{background:var(--paper2);border:1px solid var(--border2);color:var(--text-dim);font-family:'Share Tech Mono',monospace;font-size:10px;padding:7px 10px;outline:none;cursor:pointer}
+.search-ico{padding:6px 8px;color:var(--text-dim);font-size:11px}
+.tb-select{background:var(--paper2);border:1px solid var(--border2);color:var(--text-dim);font-family:'Share Tech Mono',monospace;font-size:9px;padding:5px 7px;outline:none;cursor:pointer}
 .tb-select option{background:var(--paper2)}
-.tb-sep{width:1px;height:24px;background:var(--border);flex-shrink:0}
-.view-btn{background:none;border:1px solid var(--border2);color:var(--text-dim);padding:7px 10px;cursor:pointer;font-family:'Share Tech Mono',monospace;font-size:10px;transition:all 0.15s}
+.tb-sep{width:1px;height:20px;background:var(--border);flex-shrink:0}
+.view-btn{background:none;border:1px solid var(--border2);color:var(--text-dim);padding:5px 8px;cursor:pointer;font-family:'Share Tech Mono',monospace;font-size:9px;transition:all 0.15s}
 .view-btn.active,.view-btn:hover{border-color:var(--green-dark);color:var(--green)}
-.add-record-btn{margin-left:auto;padding:8px 16px;background:none;border:1px solid var(--green-dim);color:var(--green-dim);font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all 0.2s;white-space:nowrap}
-.add-record-btn:hover{border-color:var(--green);color:var(--green);background:rgba(122,182,72,0.06)}
+.add-btn{padding:6px 12px;background:none;border:1px solid;font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all 0.2s;white-space:nowrap;margin-left:auto}
+.add-btn.g{border-color:var(--green-dim);color:var(--green-dim)}.add-btn.g:hover{border-color:var(--green);color:var(--green);background:rgba(122,182,72,0.06)}
+.add-btn.a{border-color:var(--amber-dim);color:var(--amber-dim)}.add-btn.a:hover{border-color:var(--amber);color:var(--amber);background:rgba(200,168,75,0.06)}
+.add-btn.p{border-color:var(--purple-dim);color:var(--purple-dim)}.add-btn.p:hover{border-color:var(--purple);color:var(--purple);background:rgba(154,106,184,0.06)}
 
-.content-area{flex:1;overflow-y:auto;overflow-x:hidden;padding:20px 24px}
+.content-area{flex:1;overflow-y:auto;overflow-x:hidden;padding:14px 16px}
 .content-area::-webkit-scrollbar{width:4px}
 .content-area::-webkit-scrollbar-thumb{background:var(--border)}
 
+/* CHIPS */
+.chip{display:inline-flex;align-items:center;gap:3px;font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:0.5px;padding:2px 6px;border:1px solid;text-transform:uppercase}
+.ch-g{color:var(--green);border-color:var(--green-dark);background:rgba(122,182,72,0.07)}
+.ch-a{color:var(--amber);border-color:var(--amber-dim);background:rgba(200,168,75,0.07)}
+.ch-r{color:var(--red);border-color:var(--red-dim);background:rgba(184,64,64,0.07)}
+.ch-b{color:var(--blue);border-color:var(--blue-dim);background:rgba(58,143,212,0.07)}
+.ch-p{color:var(--purple);border-color:var(--purple-dim);background:rgba(154,106,184,0.07)}
+.ch-d{color:var(--text-dim);border-color:var(--border);background:transparent}
+.ch-dot{width:4px;height:4px;border-radius:50%}
+
+/* LIST TABLE */
 .list-table{width:100%;border-collapse:collapse}
-.list-table th{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);text-align:left;padding:8px 12px;border-bottom:1px solid var(--border);background:var(--paper2);cursor:pointer;user-select:none;white-space:nowrap}
+.list-table th{font-family:'Share Tech Mono',monospace;font-size:7.5px;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);text-align:left;padding:6px 9px;border-bottom:1px solid var(--border);background:var(--paper2);cursor:pointer;user-select:none;white-space:nowrap}
 .list-table th:hover{color:var(--text)}
-.list-table td{padding:9px 12px;border-bottom:1px solid var(--border2);color:var(--text);vertical-align:middle;font-size:13px}
-.list-table tr.data-row:hover td{background:rgba(122,182,72,0.03);cursor:pointer}
-.list-table td.mono{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--green)}
+.list-table td{padding:7px 9px;border-bottom:1px solid var(--border2);color:var(--text);vertical-align:middle;font-size:12px}
+.list-table tr.dr:hover td{background:rgba(122,182,72,0.02);cursor:pointer}
+.td-mono{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--green)}
+.td-dim{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--text-dim)}
+.td-art{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--amber)}
+.td-an{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--blue)}
+.td-mut{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--red)}
+.td-call{font-family:'Oswald',sans-serif;font-size:13px;color:var(--amber);letter-spacing:0.5px}
 
-.status-chip{display:inline-flex;align-items:center;gap:5px;font-family:'Share Tech Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:0.5px;white-space:nowrap}
-.chip-dot{width:5px;height:5px;border-radius:50%}
-.chip-done{color:var(--green)}.dot-done{background:var(--green);box-shadow:0 0 4px var(--green);animation:pd 2s infinite}
-.chip-wip{color:var(--amber)}.dot-wip{background:var(--amber);box-shadow:0 0 4px var(--amber);animation:pd 3s infinite}
-.chip-wait{color:var(--text-dim)}.dot-wait{background:var(--text-dim)}
-@keyframes pd{0%,100%{opacity:1}50%{opacity:0.3}}
-
-.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:2px}
+/* CARD GRID */
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:2px}
 .cv{border:1px solid var(--border);background:var(--paper);cursor:pointer;transition:border-color 0.2s;overflow:hidden;display:flex;flex-direction:column}
 .cv:hover{border-color:var(--green-dark)}
-.cv-thumb{height:110px;background:var(--paper3);overflow:hidden;flex-shrink:0}
+.cv-thumb{height:90px;background:var(--paper3);overflow:hidden;flex-shrink:0}
 .cv-thumb img{width:100%;height:100%;object-fit:cover;display:block}
-.cv-thumb-empty{display:flex;align-items:center;justify-content:center;height:100%;font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--text-faint);letter-spacing:2px;text-transform:uppercase}
+.cv-thumb-empty{display:flex;align-items:center;justify-content:center;height:100%;font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--text-faint);letter-spacing:2px;text-transform:uppercase}
 .cv-top{display:flex;align-items:center;border-bottom:1px solid var(--border2);flex-shrink:0}
-.cv-num{width:40px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:var(--paper2);border-right:1px solid var(--border2);font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--green-dim);padding:10px 0}
-.cv-name{flex:1;padding:9px 12px;font-family:'Oswald',sans-serif;font-size:13px;color:var(--text);text-transform:uppercase;letter-spacing:0.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.cv-body{padding:10px 12px;font-size:12px;color:var(--text-dim);line-height:1.55;flex:1;min-height:44px}
-.cv-foot{display:flex;align-items:center;justify-content:space-between;padding:7px 12px;border-top:1px solid var(--border2);background:var(--paper2);flex-shrink:0}
-.cv-cat{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--text-dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:120px}
+.cv-num{width:34px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:var(--paper2);border-right:1px solid var(--border2);font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--green-dim);padding:8px 0}
+.cv-name{flex:1;padding:7px 9px;font-family:'Oswald',sans-serif;font-size:11px;color:var(--text);text-transform:uppercase;letter-spacing:0.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cv-body{padding:7px 9px;font-size:11px;color:var(--text-dim);line-height:1.5;flex:1;min-height:36px}
+.cv-foot{display:flex;align-items:center;justify-content:space-between;padding:5px 9px;border-top:1px solid var(--border2);background:var(--paper2);flex-shrink:0;gap:4px;flex-wrap:wrap}
 
-.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;height:260px;color:var(--text-faint);gap:12px}
-.empty-state .es-ico{font-size:28px}
-.empty-state p{font-size:12px;text-align:center;max-width:260px;line-height:1.7}
+/* STALKER CARDS */
+.sc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:2px}
+.sc-card{border:1px solid var(--border);background:var(--paper);cursor:pointer;transition:border-color 0.2s;display:grid;grid-template-columns:68px 1fr;overflow:hidden}
+.sc-card:hover{border-color:var(--amber-dim)}
+.sc-photo-col{background:var(--paper2);border-right:1px solid var(--border2);padding:9px 7px;display:flex;flex-direction:column;align-items:center;gap:5px}
+.sc-photo-box{width:48px;height:58px;background:var(--paper3);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-family:'Share Tech Mono',monospace;font-size:7px;color:var(--text-faint);letter-spacing:1px;text-align:center;overflow:hidden;flex-shrink:0}
+.sc-photo-box img{width:100%;height:100%;object-fit:cover}
+.sc-body-col{padding:9px 10px}
+.sc-callsign{font-family:'Oswald',sans-serif;font-weight:600;font-size:13px;color:var(--amber);letter-spacing:1px;margin-bottom:1px}
+.sc-fio{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--text-dim);margin-bottom:5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sc-chips{display:flex;flex-wrap:wrap;gap:3px;margin-bottom:5px}
+.sc-mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+.sc-mini-f{display:flex;flex-direction:column;gap:1px}
+.sc-mini-l{font-family:'Share Tech Mono',monospace;font-size:7px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px}
+.sc-mini-v{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--text)}
 
+/* DOC CARDS */
+.doc-card{border:1px solid var(--border);background:var(--paper);cursor:pointer;transition:border-color 0.2s;margin-bottom:2px}
+.doc-card:hover{border-color:var(--purple-dim)}
+.doc-card-head{padding:8px 13px;border-bottom:1px solid var(--border2);display:flex;align-items:center;gap:9px}
+.doc-card-title{font-family:'Oswald',sans-serif;font-size:13px;color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;letter-spacing:0.5px}
+.doc-card-meta{padding:5px 13px;border-bottom:1px solid var(--border2);display:flex;gap:12px;background:var(--paper2)}
+.doc-meta-item{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--text-dim)}
+.doc-meta-item span{color:var(--text)}
+.doc-card-body{padding:8px 13px;font-size:12px;color:var(--text-dim);line-height:1.55}
+
+/* EMPTY STATE */
+.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;height:240px;color:var(--text-faint);gap:10px}
+.es-ico{font-size:24px}
+
+/* DETAIL PANEL */
 .detail-panel{position:absolute;inset:0;background:var(--bg);z-index:200;display:none;flex-direction:column;overflow:hidden}
 .detail-panel.open{display:flex}
-.dp-head{padding:14px 24px;border-bottom:1px solid var(--border);background:var(--paper2);display:flex;align-items:center;gap:12px;flex-shrink:0}
-.dp-back{background:none;border:1px solid var(--border);color:var(--text-dim);font-family:'Share Tech Mono',monospace;font-size:10px;padding:6px 12px;cursor:pointer;transition:all 0.15s}
+.dp-head{padding:11px 18px;border-bottom:1px solid var(--border);background:var(--paper2);display:flex;align-items:center;gap:9px;flex-shrink:0}
+.dp-back{background:none;border:1px solid var(--border);color:var(--text-dim);font-family:'Share Tech Mono',monospace;font-size:9px;padding:5px 10px;cursor:pointer;transition:all 0.15s}
 .dp-back:hover{border-color:var(--green-dim);color:var(--green-dim)}
-.dp-title{font-family:'Oswald',sans-serif;font-weight:600;font-size:18px;color:var(--green);text-transform:uppercase;letter-spacing:1px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.dp-actions{display:flex;gap:8px;flex-shrink:0}
-.act-btn{padding:7px 14px;border:1px solid;font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;background:none;transition:all 0.15s}
-.btn-edit{border-color:var(--amber-dim);color:var(--amber-dim)}.btn-edit:hover{border-color:var(--amber);color:var(--amber);background:rgba(200,168,75,0.06)}
-.btn-del{border-color:var(--red-dim);color:var(--red-dim)}.btn-del:hover{border-color:var(--red);color:var(--red);background:rgba(184,64,64,0.06)}
-.btn-save{border-color:var(--green-dim);color:var(--green-dim)}.btn-save:hover{border-color:var(--green);color:var(--green);background:rgba(122,182,72,0.06)}
+.dp-title{font-family:'Oswald',sans-serif;font-weight:600;font-size:16px;text-transform:uppercase;letter-spacing:1px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dp-title.cg{color:var(--green)}.dp-title.ca{color:var(--amber)}.dp-title.cp{color:var(--purple)}
+.dp-actions{display:flex;gap:6px;flex-shrink:0}
+.act-btn{padding:5px 11px;border:1px solid;font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;background:none;transition:all 0.15s}
+.btn-edit{border-color:var(--amber-dim);color:var(--amber-dim)}.btn-edit:hover{border-color:var(--amber);color:var(--amber)}
+.btn-del{border-color:var(--red-dim);color:var(--red-dim)}.btn-del:hover{border-color:var(--red);color:var(--red)}
+.btn-save{border-color:var(--green-dim);color:var(--green-dim)}.btn-save:hover{border-color:var(--green);color:var(--green)}
 .btn-cancel{border-color:var(--border);color:var(--text-dim)}.btn-cancel:hover{border-color:var(--text-dim);color:var(--text)}
 
-.dp-body{flex:1;overflow-y:auto;padding:24px;display:grid;grid-template-columns:1fr 280px;gap:16px}
+.dp-body{flex:1;overflow-y:auto;padding:18px}
 .dp-body::-webkit-scrollbar{width:4px}
 .dp-body::-webkit-scrollbar-thumb{background:var(--border)}
-.dp-block{border:1px solid var(--border);background:var(--paper);margin-bottom:12px}
+.dp-2col{display:grid;grid-template-columns:1fr 260px;gap:12px}
+.dp-block{border:1px solid var(--border);background:var(--paper);margin-bottom:10px}
 .dp-block:last-child{margin-bottom:0}
-.dp-block-label{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:2px;color:var(--text-dim);text-transform:uppercase;padding:8px 14px;border-bottom:1px solid var(--border2);background:var(--paper2)}
-.dp-block-body{padding:14px}
-.field-view{margin-bottom:12px}
-.field-view:last-child{margin-bottom:0}
-.fv-label{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:2px;color:var(--text-dim);text-transform:uppercase;margin-bottom:5px}
-.fv-val{font-size:13px;color:var(--text);white-space:pre-wrap;line-height:1.6}
+.dp-block-label{font-family:'Share Tech Mono',monospace;font-size:7.5px;letter-spacing:2px;color:var(--text-dim);text-transform:uppercase;padding:7px 12px;border-bottom:1px solid var(--border2);background:var(--paper2)}
+.dp-block-body{padding:12px}
+.fv{margin-bottom:9px}
+.fv:last-child{margin-bottom:0}
+.fv-label{font-family:'Share Tech Mono',monospace;font-size:7px;letter-spacing:2px;color:var(--text-dim);text-transform:uppercase;margin-bottom:4px}
+.fv-val{font-size:12px;color:var(--text);white-space:pre-wrap;line-height:1.6}
 .fv-val.empty{color:var(--text-faint);font-style:italic}
-.fv-val.mono{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--green)}
-.fv-val.am{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--amber)}
+.fv-val.mono{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--green)}
+.fv-val.am{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--amber)}
+.fv-note{background:var(--paper3);border-left:3px solid var(--amber-dim);padding:8px 11px;font-size:12px;color:var(--amber);font-style:italic;line-height:1.6}
 
-.photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:6px}
+/* STALKER DETAIL TOP */
+.sc-detail-top{display:grid;grid-template-columns:96px 1fr;border-bottom:1px solid var(--border)}
+.sc-detail-photo{background:var(--paper2);border-right:1px solid var(--border);padding:12px 9px;display:flex;flex-direction:column;align-items:center;gap:7px}
+.sc-detail-img{width:68px;height:82px;background:var(--paper3);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-family:'Share Tech Mono',monospace;font-size:7px;color:var(--text-faint);text-align:center;overflow:hidden;cursor:pointer}
+.sc-detail-img img{width:100%;height:100%;object-fit:cover}
+.sc-detail-main{padding:12px 14px}
+.sc-detail-call{font-family:'Oswald',sans-serif;font-weight:600;font-size:20px;color:var(--amber);letter-spacing:2px;margin-bottom:2px}
+.sc-detail-fio{font-size:12px;color:var(--text);margin-bottom:7px;letter-spacing:0.5px}
+.sc-detail-chips{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:9px}
+.sc-detail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.sc-df{display:flex;flex-direction:column;gap:2px}
+.sc-dl{font-family:'Share Tech Mono',monospace;font-size:7px;color:var(--text-faint);text-transform:uppercase;letter-spacing:1px}
+.sc-dv{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text)}
+.sc-dv.big{font-size:15px;color:var(--amber);font-weight:bold}
+
+/* PHOTOS */
+.photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:5px}
 .photo-item{position:relative;aspect-ratio:1;overflow:hidden;border:1px solid var(--border2);cursor:pointer;background:var(--paper3)}
 .photo-item img{width:100%;height:100%;object-fit:cover;display:block;transition:opacity 0.2s}
 .photo-item:hover img{opacity:0.7}
-.photo-del{position:absolute;top:3px;right:3px;background:rgba(0,0,0,0.75);border:none;color:var(--red);width:18px;height:18px;border-radius:50%;cursor:pointer;font-size:9px;display:none;align-items:center;justify-content:center}
+.photo-del{position:absolute;top:3px;right:3px;background:rgba(0,0,0,0.75);border:none;color:var(--red);width:16px;height:16px;border-radius:50%;cursor:pointer;font-size:9px;display:none;align-items:center;justify-content:center}
 .photo-item:hover .photo-del{display:flex}
-.photo-add-btn{aspect-ratio:1;border:1px dashed var(--border);background:none;color:var(--text-faint);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:1px;transition:all 0.2s}
+.photo-add-btn{aspect-ratio:1;border:1px dashed var(--border);background:none;color:var(--text-faint);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-family:'Share Tech Mono',monospace;font-size:7px;letter-spacing:1px;transition:all 0.2s}
 .photo-add-btn:hover{border-color:var(--green-dark);color:var(--green-dim)}
-.photo-add-btn span.ico{font-size:18px;line-height:1}
+.photo-add-btn .pic{font-size:15px;line-height:1}
 
-.lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:9000;display:none;align-items:center;justify-content:center}
-.lightbox.open{display:flex}
-.lightbox img{max-width:90vw;max-height:90vh;object-fit:contain;border:1px solid var(--border)}
-.lb-close{position:absolute;top:20px;right:24px;background:none;border:none;color:var(--text-dim);font-size:24px;cursor:pointer}
-.lb-close:hover{color:var(--text)}
-
-.cf-row{display:flex;flex-direction:column;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--border2)}
-.cf-row:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
-.cf-key{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:2px;color:var(--text-dim);text-transform:uppercase;margin-bottom:3px}
-.cf-val{font-size:13px;color:var(--text)}
-
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.form-field{display:flex;flex-direction:column;gap:5px}
-.form-label{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:2px;color:var(--text-dim);text-transform:uppercase}
-input[type=text],input[type=date],input[type=password],textarea,select{background:var(--paper3);border:1px solid var(--border);color:var(--text);font-family:'PT Serif',Georgia,serif;font-size:13px;padding:8px 10px;outline:none;transition:border-color 0.2s;width:100%;resize:vertical}
+/* FORMS */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.form-field{display:flex;flex-direction:column;gap:4px}
+.form-label{font-family:'Share Tech Mono',monospace;font-size:7.5px;letter-spacing:2px;color:var(--text-dim);text-transform:uppercase}
+input[type=text],input[type=date],input[type=password],textarea,select{background:var(--paper3);border:1px solid var(--border);color:var(--text);font-family:'PT Serif',Georgia,serif;font-size:13px;padding:7px 9px;outline:none;transition:border-color 0.2s;width:100%;resize:vertical}
 input[type=text]:focus,input[type=date]:focus,input[type=password]:focus,textarea:focus,select:focus{border-color:var(--green-dark)}
 input::placeholder,textarea::placeholder{color:var(--text-faint)}
-select{font-family:'Share Tech Mono',monospace;font-size:11px;cursor:pointer}
+select{font-family:'Share Tech Mono',monospace;font-size:10px;cursor:pointer}
 select option{background:var(--paper2)}
-textarea{min-height:80px;line-height:1.6}
-
-.cf-editor{display:flex;flex-direction:column;gap:6px;margin-top:8px}
-.cf-pair{display:flex;gap:6px;align-items:center}
+textarea{min-height:70px;line-height:1.6}
+.cf-editor{display:flex;flex-direction:column;gap:5px;margin-top:5px}
+.cf-pair{display:flex;gap:5px;align-items:center}
 .cf-pair input{flex:1}
-.cf-pair .cf-rm{background:none;border:1px solid var(--red-dim);color:var(--red-dim);padding:8px 10px;cursor:pointer;font-family:'Share Tech Mono',monospace;font-size:10px;transition:all 0.15s;flex-shrink:0}
-.cf-pair .cf-rm:hover{border-color:var(--red);color:var(--red)}
-.cf-add{padding:7px;background:none;border:1px dashed var(--border);color:var(--text-dim);font-family:'Share Tech Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:1px;cursor:pointer;width:100%;transition:all 0.15s;margin-top:4px}
+.cf-rm{background:none;border:1px solid var(--red-dim);color:var(--red-dim);padding:7px 9px;cursor:pointer;font-family:'Share Tech Mono',monospace;font-size:9px;transition:all 0.15s;flex-shrink:0}
+.cf-rm:hover{border-color:var(--red);color:var(--red)}
+.cf-add{padding:5px;background:none;border:1px dashed var(--border);color:var(--text-dim);font-family:'Share Tech Mono',monospace;font-size:8px;text-transform:uppercase;letter-spacing:1px;cursor:pointer;width:100%;transition:all 0.15s;margin-top:3px}
 .cf-add:hover{border-color:var(--green-dark);color:var(--green-dim)}
 
+/* MODALS */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:5000;display:none;align-items:center;justify-content:center}
 .overlay.open{display:flex}
-.modal{background:var(--paper);border:1px solid var(--green-dim);width:100%;max-width:420px;position:relative;animation:mIn 0.18s ease}
-@keyframes mIn{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
+.modal{background:var(--paper);border:1px solid var(--green-dim);width:100%;max-width:400px;position:relative;animation:mIn 0.18s ease}
+@keyframes mIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
 .modal::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--green),var(--green-dim),transparent)}
-.modal-head{padding:16px 20px 12px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
-.modal-title{font-family:'Oswald',sans-serif;font-size:14px;color:var(--green);text-transform:uppercase;letter-spacing:1px}
-.modal-close-x{background:none;border:none;color:var(--text-dim);font-size:16px;cursor:pointer;padding:0 4px}
-.modal-close-x:hover{color:var(--text)}
-.modal-body{padding:18px 20px}
-.modal-foot{padding:12px 20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px;background:var(--paper2)}
-.modal-label{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:2px;color:var(--text-dim);text-transform:uppercase;display:block;margin-bottom:6px}
-.modal-text{font-size:13px;color:var(--text-dim);line-height:1.6;margin-bottom:4px}
+.modal-head{padding:13px 17px 10px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.modal-title{font-family:'Oswald',sans-serif;font-size:12px;color:var(--green);text-transform:uppercase;letter-spacing:1px}
+.modal-close-x{background:none;border:none;color:var(--text-dim);font-size:14px;cursor:pointer}
+.modal-body{padding:15px 17px}
+.modal-foot{padding:10px 17px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:6px;background:var(--paper2)}
+.modal-text{font-size:12px;color:var(--text-dim);line-height:1.6}
 .confirm-modal .modal{border-color:var(--red-dim)}
 .confirm-modal .modal::before{background:linear-gradient(90deg,transparent,var(--red),var(--red-dim),transparent)}
 .confirm-modal .modal-title{color:var(--red)}
 
-.toast{position:fixed;bottom:24px;right:24px;background:var(--paper);border:1px solid var(--green-dim);padding:9px 16px;font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--green);z-index:9999;transform:translateY(20px);opacity:0;transition:all 0.25s;pointer-events:none;letter-spacing:1px;max-width:320px}
+.lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:9000;display:none;align-items:center;justify-content:center}
+.lightbox.open{display:flex}
+.lightbox img{max-width:90vw;max-height:90vh;object-fit:contain;border:1px solid var(--border)}
+.lb-close{position:absolute;top:18px;right:20px;background:none;border:none;color:var(--text-dim);font-size:20px;cursor:pointer}
+
+.toast{position:fixed;bottom:20px;right:20px;background:var(--paper);border:1px solid var(--green-dim);padding:7px 13px;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--green);z-index:9999;transform:translateY(20px);opacity:0;transition:all 0.25s;pointer-events:none;letter-spacing:1px}
 .toast.show{transform:translateY(0);opacity:1}
 
-.loading-screen{position:fixed;inset:0;background:var(--bg);z-index:8000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px}
+.loading-screen{position:fixed;inset:0;background:var(--bg);z-index:8000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
 .loading-screen.hidden{display:none}
-.ld-title{font-family:'Oswald',sans-serif;font-size:18px;color:var(--green);letter-spacing:2px;text-transform:uppercase}
-.ld-sub{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:2px}
-.ld-bar{width:200px;height:2px;background:var(--border);position:relative;overflow:hidden}
-.ld-bar::after{content:'';position:absolute;left:-60%;top:0;width:60%;height:100%;background:var(--green);animation:ldanim 1s linear infinite}
-@keyframes ldanim{to{left:100%}}
+.ld-title{font-family:'Oswald',sans-serif;font-size:15px;color:var(--green);letter-spacing:2px;text-transform:uppercase}
+.ld-bar{width:160px;height:2px;background:var(--border);position:relative;overflow:hidden}
+.ld-bar::after{content:'';position:absolute;left:-60%;top:0;width:60%;height:100%;background:var(--green);animation:lda 1s linear infinite}
+@keyframes lda{to{left:100%}}
 
 @media(max-width:700px){
   .sidebar{display:none}
-  .dp-body{grid-template-columns:1fr}
+  .dp-2col{grid-template-columns:1fr}
   .form-grid{grid-template-columns:1fr}
+  .sc-detail-grid{grid-template-columns:repeat(2,1fr)}
 }
 </style>
 </head>
@@ -279,17 +306,17 @@ textarea{min-height:80px;line-height:1.6}
 
 <!-- LOADING -->
 <div class="loading-screen" id="loading-screen">
-  <div class="ld-title">База образцов</div>
+  <div class="ld-title">База ЧАЗ</div>
   <div class="ld-bar"></div>
-  <div class="ld-sub" id="ld-status">Подключение...</div>
+  <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--text-dim);letter-spacing:2px" id="ld-status">Подключение...</div>
 </div>
 
-<!-- AUTH SCREEN -->
+<!-- AUTH -->
 <div class="auth-screen" id="auth-screen">
   <div class="auth-box">
     <div class="auth-logo">
-      <svg viewBox="0 0 100 112" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:54px;height:60px"><path d="M50 3 L92 17 L92 62 Q92 90 50 108 Q8 90 8 62 L8 17 Z" fill="#0d1e30" stroke="#3a8fd4" stroke-width="1.8"/><path d="M50 7 L88 20 L88 62 Q88 86 50 104 Q12 86 12 62 L12 20 Z" fill="none" stroke="#5ab0e8" stroke-width="0.8" opacity="0.5"/><circle cx="50" cy="46" r="14" fill="#e09018"/><circle cx="50" cy="46" r="9" fill="#f0c030"/><circle cx="50" cy="46" r="5" fill="#ffe060"/><line x1="50" y1="28" x2="50" y2="31" stroke="#e09018" stroke-width="2" stroke-linecap="round"/><line x1="50" y1="61" x2="50" y2="64" stroke="#e09018" stroke-width="2" stroke-linecap="round"/><line x1="32" y1="46" x2="35" y2="46" stroke="#e09018" stroke-width="2" stroke-linecap="round"/><line x1="65" y1="46" x2="68" y2="46" stroke="#e09018" stroke-width="2" stroke-linecap="round"/><line x1="37" y1="33" x2="39" y2="35" stroke="#e09018" stroke-width="1.5" stroke-linecap="round"/><line x1="63" y1="33" x2="61" y2="35" stroke="#e09018" stroke-width="1.5" stroke-linecap="round"/><path d="M18 66 Q28 60 38 66 Q44 72 50 66 Q56 60 62 66 Q72 72 82 66" fill="none" stroke="#5ab0e8" stroke-width="1.8"/><path d="M19 73 Q29 67 39 73 Q45 79 51 73 Q57 67 63 73 Q73 79 81 73" fill="none" stroke="#3a8fd4" stroke-width="1.5"/><path d="M15 32 Q21 26 27 32" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" opacity="0.9"/><path d="M73 32 Q79 26 85 32" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" opacity="0.9"/><path d="M24 92 Q50 87 76 92 L72 100 Q50 96 28 100 Z" fill="#1a5a9a" stroke="#3a8fd4" stroke-width="0.8"/></svg>
-      <div class="auth-logo-title">База образцов · ЧАЗ</div>
+      <svg viewBox="0 0 100 112" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:50px;height:56px"><path d="M50 3 L92 17 L92 62 Q92 90 50 108 Q8 90 8 62 L8 17 Z" fill="#0d1e30" stroke="#3a8fd4" stroke-width="1.8"/><path d="M50 7 L88 20 L88 62 Q88 86 50 104 Q12 86 12 62 L12 20 Z" fill="none" stroke="#5ab0e8" stroke-width="0.8" opacity="0.5"/><circle cx="50" cy="46" r="14" fill="#e09018"/><circle cx="50" cy="46" r="9" fill="#f0c030"/><circle cx="50" cy="46" r="5" fill="#ffe060"/><line x1="50" y1="28" x2="50" y2="31" stroke="#e09018" stroke-width="2" stroke-linecap="round"/><line x1="50" y1="61" x2="50" y2="64" stroke="#e09018" stroke-width="2" stroke-linecap="round"/><line x1="32" y1="46" x2="35" y2="46" stroke="#e09018" stroke-width="2" stroke-linecap="round"/><line x1="65" y1="46" x2="68" y2="46" stroke="#e09018" stroke-width="2" stroke-linecap="round"/><line x1="37" y1="33" x2="39" y2="35" stroke="#e09018" stroke-width="1.5" stroke-linecap="round"/><line x1="63" y1="33" x2="61" y2="35" stroke="#e09018" stroke-width="1.5" stroke-linecap="round"/><path d="M18 66 Q28 60 38 66 Q44 72 50 66 Q56 60 62 66 Q72 72 82 66" fill="none" stroke="#5ab0e8" stroke-width="1.8"/><path d="M19 73 Q29 67 39 73 Q45 79 51 73 Q57 67 63 73 Q73 79 81 73" fill="none" stroke="#3a8fd4" stroke-width="1.5"/><path d="M15 32 Q21 26 27 32" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" opacity="0.9"/><path d="M73 32 Q79 26 85 32" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" opacity="0.9"/></svg>
+      <div class="auth-logo-title">База ЧАЗ</div>
       <div class="auth-logo-sub">Доступ ограничен · Засекречено</div>
     </div>
     <div class="auth-tabs">
@@ -298,166 +325,92 @@ textarea{min-height:80px;line-height:1.6}
     </div>
     <div class="auth-body">
       <div id="auth-login-form">
-        <div class="auth-field">
-          <label class="auth-label">Позывной</label>
-          <input class="auth-input" type="text" id="login-call" placeholder="позывной" autocomplete="username">
-        </div>
-        <div class="auth-field">
-          <label class="auth-label">Пароль</label>
-          <input class="auth-input" type="password" id="login-pass" placeholder="пароль" autocomplete="current-password">
-        </div>
+        <div class="auth-field"><label class="auth-label">Позывной</label><input class="auth-input" type="text" id="login-call" placeholder="позывной" autocomplete="username"></div>
+        <div class="auth-field"><label class="auth-label">Пароль</label><input class="auth-input" type="password" id="login-pass" placeholder="пароль" autocomplete="current-password"></div>
         <button class="auth-submit" id="login-btn" onclick="doLogin()">Войти в систему</button>
         <span class="auth-err" id="login-err"></span>
       </div>
       <div id="auth-reg-form" style="display:none">
-        <div class="auth-field">
-          <label class="auth-label">Позывной</label>
-          <input class="auth-input" type="text" id="reg-call" placeholder="позывной" autocomplete="username">
-        </div>
-        <div class="auth-field">
-          <label class="auth-label">Пароль</label>
-          <input class="auth-input" type="password" id="reg-pass" placeholder="минимум 6 символов" autocomplete="new-password">
-        </div>
-        <div class="auth-field">
-          <label class="auth-label">Повтор пароля</label>
-          <input class="auth-input" type="password" id="reg-pass2" placeholder="повтори пароль" autocomplete="new-password">
-        </div>
+        <div class="auth-field"><label class="auth-label">Позывной</label><input class="auth-input" type="text" id="reg-call" placeholder="позывной" autocomplete="username"></div>
+        <div class="auth-field"><label class="auth-label">Пароль</label><input class="auth-input" type="password" id="reg-pass" placeholder="минимум 6 символов" autocomplete="new-password"></div>
+        <div class="auth-field"><label class="auth-label">Повтор пароля</label><input class="auth-input" type="password" id="reg-pass2" placeholder="повтори пароль" autocomplete="new-password"></div>
         <button class="auth-submit" id="reg-btn" onclick="doRegister()">Зарегистрироваться</button>
         <span class="auth-err" id="reg-err"></span>
       </div>
     </div>
-    <div class="auth-footer">
-      Чернобыльская аномальная зона · Закрытый архив<br>
-      Несанкционированный доступ запрещён
-    </div>
+    <div class="auth-footer">Чернобыльская аномальная зона · Закрытый архив<br>Несанкционированный доступ запрещён</div>
   </div>
 </div>
 
-<!-- MAIN APP -->
-<div class="layout" id="app-layout" style="display:none">
-  <div class="sidebar">
-    <div class="sb-head">
-      <div class="sb-logo">
-        <svg viewBox="0 0 100 112" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:28px;height:31px"><path d="M50 3 L92 17 L92 62 Q92 90 50 108 Q8 90 8 62 L8 17 Z" fill="#0d1e30" stroke="#3a8fd4" stroke-width="1.8"/><path d="M50 7 L88 20 L88 62 Q88 86 50 104 Q12 86 12 62 L12 20 Z" fill="none" stroke="#5ab0e8" stroke-width="0.8" opacity="0.5"/><circle cx="50" cy="46" r="14" fill="#e09018"/><circle cx="50" cy="46" r="9" fill="#f0c030"/><circle cx="50" cy="46" r="5" fill="#ffe060"/><line x1="50" y1="28" x2="50" y2="31" stroke="#e09018" stroke-width="2" stroke-linecap="round"/><line x1="50" y1="61" x2="50" y2="64" stroke="#e09018" stroke-width="2" stroke-linecap="round"/><line x1="32" y1="46" x2="35" y2="46" stroke="#e09018" stroke-width="2" stroke-linecap="round"/><line x1="65" y1="46" x2="68" y2="46" stroke="#e09018" stroke-width="2" stroke-linecap="round"/><path d="M18 66 Q28 60 38 66 Q44 72 50 66 Q56 60 62 66 Q72 72 82 66" fill="none" stroke="#5ab0e8" stroke-width="1.8"/><path d="M19 73 Q29 67 39 73 Q45 79 51 73 Q57 67 63 73 Q73 79 81 73" fill="none" stroke="#3a8fd4" stroke-width="1.5"/><path d="M15 32 Q21 26 27 32" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" opacity="0.9"/><path d="M73 32 Q79 26 85 32" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" opacity="0.9"/></svg>
-        <div><div class="sb-title">База образцов</div><div class="sb-sub">ЧАЗ · Архив</div></div>
-      </div>
+<!-- APP -->
+<div class="app hidden" id="app">
+  <!-- TOP NAV -->
+  <div class="topnav">
+    <div class="tn-logo">
+      <svg viewBox="0 0 100 112" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:18px;height:20px"><path d="M50 3 L92 17 L92 62 Q92 90 50 108 Q8 90 8 62 L8 17 Z" fill="#0d1e30" stroke="#3a8fd4" stroke-width="1.8"/><circle cx="50" cy="46" r="14" fill="#e09018"/><circle cx="50" cy="46" r="9" fill="#f0c030"/><circle cx="50" cy="46" r="5" fill="#ffe060"/><path d="M18 66 Q28 60 38 66 Q44 72 50 66 Q56 60 62 66 Q72 72 82 66" fill="none" stroke="#5ab0e8" stroke-width="1.8"/><path d="M15 32 Q21 26 27 32" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" opacity="0.9"/><path d="M73 32 Q79 26 85 32" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" opacity="0.9"/></svg>
+      <span class="tn-logo-t">База ЧАЗ</span>
     </div>
-    <div class="sb-stats">
-      <div class="st-box"><div class="st-n" id="st-total">0</div><div class="st-l">Всего</div></div>
-      <div class="st-box"><div class="st-n" id="st-done">0</div><div class="st-l">Изучено</div></div>
-      <div class="st-box"><div class="st-n am" id="st-wip">0</div><div class="st-l">В работе</div></div>
-      <div class="st-box"><div class="st-n" id="st-cats">0</div><div class="st-l">Разделов</div></div>
+    <div class="tn-modules">
+      <button class="tn-mod" id="tn-arc" onclick="setModule('arc')">⊙ Архив образцов</button>
+      <button class="tn-mod" id="tn-stk" onclick="setModule('stk')">◉ Сталкеры</button>
+      <button class="tn-mod" id="tn-doc" onclick="setModule('doc')">▤ Документы</button>
+      <button class="tn-mod" id="tn-all" onclick="setModule('all')">◈ Все записи</button>
     </div>
-    <div class="sb-scroll">
-      <div class="sb-section"><span>Навигация</span></div>
-      <button class="sb-item active" id="nav-all" onclick="filterCategory(null)">
-        <span class="si-dot" style="background:var(--green)"></span>
-        <span class="si-name">Все записи</span>
-        <span class="si-count" id="nav-all-count"></span>
-      </button>
-      <div class="sb-section">
-        <span>Разделы</span>
-        <button onclick="openAddCat()" title="Добавить раздел">＋</button>
-      </div>
-      <div id="cat-list"></div>
-      <button class="sb-add-cat" onclick="openAddCat()">＋ Добавить раздел</button>
-    </div>
-
-    <!-- ONLINE USERS -->
-    <div class="online-panel">
-      <div class="online-head">
-        <span>В сети</span>
-        <span class="online-count" id="online-count">0</span>
-      </div>
-      <div id="online-list"></div>
-    </div>
-
-    <div class="sb-foot">
-      <div style="display:flex;justify-content:center;padding:8px 0 4px;opacity:0.12"><svg viewBox="0 0 100 112" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:44px;height:49px"><path d="M50 3 L92 17 L92 62 Q92 90 50 108 Q8 90 8 62 L8 17 Z" fill="#0d1e30" stroke="#3a8fd4" stroke-width="1.8"/><circle cx="50" cy="46" r="14" fill="#e09018"/><circle cx="50" cy="46" r="9" fill="#f0c030"/><circle cx="50" cy="46" r="5" fill="#ffe060"/><path d="M18 66 Q28 60 38 66 Q44 72 50 66 Q56 60 62 66 Q72 72 82 66" fill="none" stroke="#5ab0e8" stroke-width="1.8"/><path d="M15 32 Q21 26 27 32" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" opacity="0.9"/><path d="M73 32 Q79 26 85 32" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" opacity="0.9"/></svg>
-      </div>
-      <div class="sync-indicator">
-        <div class="sync-dot" id="sync-dot"></div>
-        <span id="sync-label" style="font-size:8px;letter-spacing:1px">Синхронизировано</span>
-      </div>
-      Firebase · Общая база<br>
-      <span style="color:var(--text-faint)">Засекречено</span>
-    </div>
-  </div>
-
-  <div class="main" id="main-panel">
-    <div class="main-head">
-      <svg viewBox="0 0 100 112" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:28px;height:31px"><path d="M50 3 L92 17 L92 62 Q92 90 50 108 Q8 90 8 62 L8 17 Z" fill="#0d1e30" stroke="#3a8fd4" stroke-width="1.8"/><path d="M50 7 L88 20 L88 62 Q88 86 50 104 Q12 86 12 62 L12 20 Z" fill="none" stroke="#5ab0e8" stroke-width="0.8" opacity="0.5"/><circle cx="50" cy="46" r="14" fill="#e09018"/><circle cx="50" cy="46" r="9" fill="#f0c030"/><circle cx="50" cy="46" r="5" fill="#ffe060"/><line x1="50" y1="28" x2="50" y2="31" stroke="#e09018" stroke-width="2" stroke-linecap="round"/><line x1="50" y1="61" x2="50" y2="64" stroke="#e09018" stroke-width="2" stroke-linecap="round"/><line x1="32" y1="46" x2="35" y2="46" stroke="#e09018" stroke-width="2" stroke-linecap="round"/><line x1="65" y1="46" x2="68" y2="46" stroke="#e09018" stroke-width="2" stroke-linecap="round"/><path d="M18 66 Q28 60 38 66 Q44 72 50 66 Q56 60 62 66 Q72 72 82 66" fill="none" stroke="#5ab0e8" stroke-width="1.8"/><path d="M19 73 Q29 67 39 73 Q45 79 51 73 Q57 67 63 73 Q73 79 81 73" fill="none" stroke="#3a8fd4" stroke-width="1.5"/><path d="M15 32 Q21 26 27 32" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" opacity="0.9"/><path d="M73 32 Q79 26 85 32" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" opacity="0.9"/></svg>
-      <div style="flex:1;min-width:0">
-        <div class="mh-title" id="main-title">База аномальных образцов</div>
-        <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--text-dim)">Чернобыльская аномальная зона · Общая база данных</div>
-      </div>
+    <div class="tn-right">
       <div class="user-badge">
         <div class="ub-dot"></div>
         <span class="ub-call" id="current-callsign">—</span>
-        <button class="ub-logout" onclick="doLogout()" title="Выйти">✕ выход</button>
+        <button class="ub-logout" onclick="doLogout()">✕</button>
       </div>
-      <div class="class-tag">🔴 ЗАСЕКРЕЧЕНО</div>
+      <div class="red-tag">ЗАСЕКРЕЧЕНО</div>
     </div>
-    <div class="toolbar">
-      <div class="search-box">
-        <span class="search-ico">⌕</span>
-        <input type="text" id="search-input" placeholder="поиск по названию..." style="flex:1;min-width:120px;width:100%">
+  </div>
+
+  <!-- BODY -->
+  <div class="body-layout">
+    <!-- SIDEBAR (context) -->
+    <div class="sidebar">
+      <div class="sb-mod-head">
+        <div class="sb-mod-title ct" id="sb-title">Все записи</div>
+        <div class="sb-mod-sub" id="sb-sub">Общий обзор</div>
       </div>
-      <select class="tb-select" id="filter-status">
-        <option value="">Все статусы</option>
-        <option value="done">Изучен</option>
-        <option value="wip">В работе</option>
-        <option value="pending">Ожидает</option>
-      </select>
-      <div class="tb-sep"></div>
-      <button class="view-btn active" id="vbtn-list" onclick="setView('list')">☰ Список</button>
-      <button class="view-btn" id="vbtn-cards" onclick="setView('cards')">⊞ Карточки</button>
-      <button class="add-record-btn" onclick="openAddRecord()">＋ Добавить запись</button>
+      <div class="sb-scroll" id="sb-nav"></div>
+      <div class="sb-stats" id="sb-stats"></div>
     </div>
-    <div class="content-area" id="content-area"></div>
-    <div class="detail-panel" id="detail-panel">
-      <div class="dp-head">
-        <button class="dp-back" onclick="closeDetail()">◀ Назад</button>
-        <div class="dp-title" id="dp-title">—</div>
-        <div class="dp-actions" id="dp-actions"></div>
+
+    <!-- MAIN -->
+    <div class="main">
+      <div class="toolbar">
+        <div class="search-box">
+          <span class="search-ico">⌕</span>
+          <input type="text" id="search-input" placeholder="поиск...">
+        </div>
+        <div id="toolbar-filters"></div>
+        <div class="tb-sep"></div>
+        <button class="view-btn active" id="vbtn-list" onclick="setView('list')">☰</button>
+        <button class="view-btn" id="vbtn-cards" onclick="setView('cards')">⊞</button>
+        <button class="add-btn g" id="add-btn" onclick="openAdd()">＋ Добавить</button>
       </div>
-      <div class="dp-body" id="dp-body"></div>
+      <div class="content-area" id="content-area"></div>
+      <!-- DETAIL -->
+      <div class="detail-panel" id="detail-panel">
+        <div class="dp-head">
+          <button class="dp-back" onclick="closeDetail()">◀ Назад</button>
+          <div class="dp-title cg" id="dp-title">—</div>
+          <div class="dp-actions" id="dp-actions"></div>
+        </div>
+        <div class="dp-body" id="dp-body"></div>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- CATEGORY MODAL -->
-<div class="overlay" id="modal-cat">
-  <div class="modal">
-    <div class="modal-head">
-      <div class="modal-title" id="cat-modal-title">Новый раздел</div>
-      <button class="modal-close-x" onclick="closeModal('modal-cat')">✕</button>
-    </div>
-    <div class="modal-body">
-      <label class="modal-label">Название раздела</label>
-      <input type="text" id="cat-name-input" placeholder="Например: Артефакты, Мутанты...">
-    </div>
-    <div class="modal-foot">
-      <button class="act-btn btn-cancel" onclick="closeModal('modal-cat')">Отмена</button>
-      <button class="act-btn btn-save" onclick="saveCat()">Сохранить</button>
-    </div>
-  </div>
-</div>
-
-<!-- CONFIRM MODAL -->
+<!-- CONFIRM -->
 <div class="overlay confirm-modal" id="modal-confirm">
   <div class="modal">
-    <div class="modal-head">
-      <div class="modal-title">Подтверждение</div>
-      <button class="modal-close-x" onclick="closeModal('modal-confirm')">✕</button>
-    </div>
-    <div class="modal-body">
-      <p class="modal-text" id="confirm-text">Вы уверены?</p>
-    </div>
-    <div class="modal-foot">
-      <button class="act-btn btn-cancel" onclick="closeModal('modal-confirm')">Отмена</button>
-      <button class="act-btn btn-del" id="confirm-ok">Удалить</button>
-    </div>
+    <div class="modal-head"><div class="modal-title">Подтверждение</div><button class="modal-close-x" onclick="closeModal('modal-confirm')">✕</button></div>
+    <div class="modal-body"><p class="modal-text" id="confirm-text">Вы уверены?</p></div>
+    <div class="modal-foot"><button class="act-btn btn-cancel" onclick="closeModal('modal-confirm')">Отмена</button><button class="act-btn btn-del" id="confirm-ok">Удалить</button></div>
   </div>
 </div>
 
@@ -469,7 +422,7 @@ textarea{min-height:80px;line-height:1.6}
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot, getDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
 
 const firebaseConfig = {
@@ -478,39 +431,40 @@ const firebaseConfig = {
   projectId: "stalker-archiv",
   storageBucket: "stalker-archiv.firebasestorage.app",
   messagingSenderId: "1050385657234",
-  appId: "1:1050385657234:web:c98eecbfb9282967a9654b",
-  measurementId: "G-LD9B7J8PNJ"
+  appId: "1:1050385657234:web:c98eecbfb9282967a9654b"
 };
+const app=initializeApp(firebaseConfig);
+const db=getFirestore(app);
+const auth=getAuth(app);
 
-const app  = initializeApp(firebaseConfig);
-const db   = getFirestore(app);
-const auth = getAuth(app);
+// STATE
+let records=[],stalkers=[],documents=[];
+let currentModule='arc';
+let currentSub=null; // subfilter within module
+let currentView='list';
+let sortKey='num',sortDir=1;
+let editingId=null;
+let currentUser=null;
+let heartbeatInterval=null;
+let confirmCb=null;
 
-// ══ STATE ══
-let records=[], categories=[], currentCat=null, currentView='list';
-let sortKey='num', sortDir=1, editingId=null, catEditId=null, confirmCb=null;
-let currentUser=null, heartbeatInterval=null;
-
-const STATUS_META={
-  done:{label:'Изучен',chipClass:'chip-done',dotClass:'dot-done'},
-  wip:{label:'В работе',chipClass:'chip-wip',dotClass:'dot-wip'},
-  pending:{label:'Ожидает',chipClass:'chip-wait',dotClass:'dot-wait'},
-};
-
+// HELPERS
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7);}
 function today(){return new Date().toISOString().slice(0,10);}
-function fmtDate(d){if(!d)return'—';const[y,m,day]=d.split('-');return`${day}.${m}.${y}`;}
+function fmtDate(d){if(!d)return'—';try{const[y,m,day]=d.split('-');return`${day}.${m}.${y}`;}catch(e){return d;}}
 function padNum(n){return String(n||0).padStart(3,'0');}
 function esc(s){if(!s)return'';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function setSyncStatus(state){
-  const dot=document.getElementById('sync-dot'),lbl=document.getElementById('sync-label');
-  if(state==='ok'){dot.className='sync-dot';lbl.textContent='Синхронизировано';}
-  if(state==='wait'){dot.className='sync-dot wait';lbl.textContent='Сохранение...';}
-  if(state==='err'){dot.className='sync-dot err';lbl.textContent='Ошибка связи';}
+  // no sync indicator needed in new layout
 }
+function showToast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.remove('show'),2500);
+}
+function emptyState(msg){return`<div class="empty-state"><div class="es-ico">◈</div><p style="font-size:12px;color:var(--text-faint);text-align:center">${msg||'Записи не найдены.'}</p></div>`;}
 
-// ══ AUTH TAB SWITCH ══
-window.switchTab = function(t) {
+// AUTH
+window.switchTab=function(t){
   document.getElementById('tab-login').classList.toggle('active',t==='login');
   document.getElementById('tab-reg').classList.toggle('active',t==='reg');
   document.getElementById('auth-login-form').style.display=t==='login'?'':'none';
@@ -518,528 +472,854 @@ window.switchTab = function(t) {
   document.getElementById('login-err').textContent='';
   document.getElementById('reg-err').textContent='';
 }
+function callToEmail(c){return c.toLowerCase().replace(/[^a-z0-9]/g,'')+`@stalker.zone`;}
 
-// ══ REGISTER ══
-// Firebase Auth uses email/password — we use callsign@stalker.zone as fake email
-function callToEmail(call){return call.toLowerCase().replace(/[^a-z0-9]/g,'')+`@stalker.zone`;}
-
-window.doRegister = async function(){
+window.doRegister=async function(){
   const call=document.getElementById('reg-call').value.trim();
   const pass=document.getElementById('reg-pass').value;
   const pass2=document.getElementById('reg-pass2').value;
   const errEl=document.getElementById('reg-err');
   errEl.textContent='';
   if(!call){errEl.textContent='⚠ Введи позывной';return;}
-  if(call.length<2){errEl.textContent='⚠ Позывной слишком короткий';return;}
   if(pass.length<6){errEl.textContent='⚠ Пароль минимум 6 символов';return;}
   if(pass!==pass2){errEl.textContent='⚠ Пароли не совпадают';return;}
-  const btn=document.getElementById('reg-btn');
-  btn.disabled=true; btn.textContent='Регистрация...';
-  try {
+  const btn=document.getElementById('reg-btn');btn.disabled=true;btn.textContent='Регистрация...';
+  try{
     const cred=await createUserWithEmailAndPassword(auth,callToEmail(call),pass);
     await updateProfile(cred.user,{displayName:call});
-    // save user profile to Firestore
     await setDoc(doc(db,'users',cred.user.uid),{callsign:call,uid:cred.user.uid,createdAt:Date.now()});
-  } catch(e){
+  }catch(e){
     errEl.textContent=e.code==='auth/email-already-in-use'?'⚠ Этот позывной уже занят':'⚠ '+e.message;
-    btn.disabled=false; btn.textContent='Зарегистрироваться';
+    btn.disabled=false;btn.textContent='Зарегистрироваться';
   }
 }
-
-// ══ LOGIN ══
-window.doLogin = async function(){
+window.doLogin=async function(){
   const call=document.getElementById('login-call').value.trim();
   const pass=document.getElementById('login-pass').value;
-  const errEl=document.getElementById('login-err');
-  errEl.textContent='';
+  const errEl=document.getElementById('login-err');errEl.textContent='';
   if(!call||!pass){errEl.textContent='⚠ Заполни все поля';return;}
-  const btn=document.getElementById('login-btn');
-  btn.disabled=true; btn.textContent='Проверка...';
-  try {
-    await signInWithEmailAndPassword(auth,callToEmail(call),pass);
-  } catch(e){
-    errEl.textContent='⚠ Неверный позывной или пароль';
-    btn.disabled=false; btn.textContent='Войти в систему';
-  }
+  const btn=document.getElementById('login-btn');btn.disabled=true;btn.textContent='Проверка...';
+  try{await signInWithEmailAndPassword(auth,callToEmail(call),pass);}
+  catch(e){errEl.textContent='⚠ Неверный позывной или пароль';btn.disabled=false;btn.textContent='Войти в систему';}
 }
+window.doLogout=async function(){await setUserOffline();await signOut(auth);}
 
-// ══ LOGOUT ══
-window.doLogout = async function(){
-  await setUserOffline();
-  await signOut(auth);
-}
-
-// ══ ONLINE PRESENCE ══
+// PRESENCE
 async function setUserOnline(){
-  if(!currentUser) return;
-  await setDoc(doc(db,'presence',currentUser.uid),{
-    callsign: currentUser.displayName||'—',
-    uid: currentUser.uid,
-    online: true,
-    lastSeen: Date.now()
-  });
+  if(!currentUser)return;
+  await setDoc(doc(db,'presence',currentUser.uid),{callsign:currentUser.displayName||'—',uid:currentUser.uid,online:true,lastSeen:Date.now()});
 }
-
 async function setUserOffline(){
-  if(!currentUser) return;
-  try {
-    await setDoc(doc(db,'presence',currentUser.uid),{
-      callsign: currentUser.displayName||'—',
-      uid: currentUser.uid,
-      online: false,
-      lastSeen: Date.now()
-    });
-  } catch(e){}
+  if(!currentUser)return;
+  try{await setDoc(doc(db,'presence',currentUser.uid),{callsign:currentUser.displayName||'—',uid:currentUser.uid,online:false,lastSeen:Date.now()});}catch(e){}
 }
+function startHeartbeat(){clearInterval(heartbeatInterval);setUserOnline();heartbeatInterval=setInterval(setUserOnline,30000);}
+function stopHeartbeat(){clearInterval(heartbeatInterval);}
+document.addEventListener('visibilitychange',()=>{if(document.hidden)setUserOffline();else if(currentUser)setUserOnline();});
+window.addEventListener('beforeunload',()=>{setUserOffline();});
 
-function startHeartbeat(){
-  clearInterval(heartbeatInterval);
-  setUserOnline();
-  heartbeatInterval=setInterval(setUserOnline, 30000); // every 30s
-}
-
-function stopHeartbeat(){
-  clearInterval(heartbeatInterval);
-  heartbeatInterval=null;
-}
-
-// mark offline if tab closed / hidden for long time
-document.addEventListener('visibilitychange',()=>{
-  if(document.hidden) setUserOffline();
-  else if(currentUser) setUserOnline();
-});
-window.addEventListener('beforeunload',()=>{ setUserOffline(); });
-
-// ══ PRESENCE LISTENER ══
-function startPresenceListener(){
-  onSnapshot(collection(db,'presence'), snap=>{
-    const now=Date.now();
-    const users=snap.docs.map(d=>d.data())
-      .filter(u=>u.callsign)
-      .map(u=>({...u, isOnline: u.online && (now-u.lastSeen)<90000})) // 90s timeout
-      .sort((a,b)=>b.isOnline-a.isOnline||(a.callsign>b.callsign?1:-1));
-    renderOnlineUsers(users);
-  });
-}
-
-function renderOnlineUsers(users){
-  const onlineCount=users.filter(u=>u.isOnline).length;
-  document.getElementById('online-count').textContent=onlineCount;
-  document.getElementById('online-list').innerHTML=users.map(u=>{
-    const isMe=currentUser&&u.uid===currentUser.uid;
-    const cls=u.isOnline?'on':'off';
-    return `<div class="online-user">
-      <div class="ou-dot ${cls}"></div>
-      <span class="ou-name${isMe?' me':''}">${esc(u.callsign)}${isMe?' (я)':''}</span>
-      <span class="ou-status ${cls}">${u.isOnline?'в сети':'не в сети'}</span>
-    </div>`;
-  }).join('');
-}
-
-// ══ AUTH STATE ══
-onAuthStateChanged(auth, async user=>{
-  document.getElementById('loading-screen').classList.add('hidden');
-  if(user){
-    currentUser=user;
-    const callsign=user.displayName||user.email.replace('@stalker.zone','');
-    document.getElementById('current-callsign').textContent=callsign;
-    document.getElementById('auth-screen').classList.add('hidden');
-    document.getElementById('app-layout').style.display='flex';
-    // reset login btn
-    const lb=document.getElementById('login-btn');
-    lb.disabled=false; lb.textContent='Войти в систему';
-    startHeartbeat();
-    startListeners();
-    startPresenceListener();
-  } else {
-    currentUser=null;
-    stopHeartbeat();
-    document.getElementById('auth-screen').classList.remove('hidden');
-    document.getElementById('app-layout').style.display='none';
-    // reset reg btn
-    const rb=document.getElementById('reg-btn');
-    rb.disabled=false; rb.textContent='Зарегистрироваться';
-  }
-});
-
-// Enter key on auth inputs
-document.getElementById('login-pass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
-document.getElementById('login-call').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
-document.getElementById('reg-pass2').addEventListener('keydown',e=>{if(e.key==='Enter')doRegister();});
-
-// ══ FIRESTORE LISTENERS ══
+// DATA LISTENERS
 function startListeners(){
   onSnapshot(collection(db,'records'),snap=>{
     records=snap.docs.map(d=>({id:d.id,...d.data()}));
-    updateStats(); renderContent(); setSyncStatus('ok');
-  },()=>setSyncStatus('err'));
-  onSnapshot(collection(db,'categories'),snap=>{
-    categories=snap.docs.map(d=>({id:d.id,...d.data()}));
-    updateStats(); renderSidebar();
+    renderSidebar();renderContent();
+  });
+  onSnapshot(collection(db,'stalkers'),snap=>{
+    stalkers=snap.docs.map(d=>({id:d.id,...d.data()}));
+    renderSidebar();renderContent();
+  });
+  onSnapshot(collection(db,'documents'),snap=>{
+    documents=snap.docs.map(d=>({id:d.id,...d.data()}));
+    renderSidebar();renderContent();
   });
 }
 
-async function saveRecord(rec){
-  setSyncStatus('wait');
-  try{ await setDoc(doc(db,'records',rec.id),rec); setSyncStatus('ok'); }
-  catch(e){ setSyncStatus('err'); showToast('⚠ Ошибка сохранения'); throw e; }
-}
-async function deleteRecord(id){ setSyncStatus('wait'); await deleteDoc(doc(db,'records',id)); setSyncStatus('ok'); }
-async function saveCatToDb(cat){ setSyncStatus('wait'); await setDoc(doc(db,'categories',cat.id),cat); setSyncStatus('ok'); }
-async function deleteCatFromDb(id){ setSyncStatus('wait'); await deleteDoc(doc(db,'categories',id)); setSyncStatus('ok'); }
-
-function fileToBase64(file){
-  return new Promise(resolve=>{
-    const reader=new FileReader();
-    reader.onload=e=>{
-      const img=new Image();
-      img.onload=()=>{
-        const MAX=800;
-        let w=img.width,h=img.height;
-        if(w>MAX||h>MAX){if(w>h){h=Math.round(h*MAX/w);w=MAX;}else{w=Math.round(w*MAX/h);h=MAX;}}
-        const canvas=document.createElement('canvas');
-        canvas.width=w;canvas.height=h;
-        canvas.getContext('2d').drawImage(img,0,0,w,h);
-        resolve(canvas.toDataURL('image/jpeg',0.60));
-      };
-      img.src=e.target.result;
-    };
-    reader.readAsDataURL(file);
+// MODULE SWITCHING
+window.setModule=function(mod){
+  currentModule=mod;currentSub=null;
+  document.getElementById('detail-panel').classList.remove('open');
+  editingId=null;window._editRecord=null;
+  // update top nav
+  ['arc','stk','doc','all'].forEach(m=>{
+    document.getElementById('tn-'+m).className='tn-mod'+(m===mod?' act-'+m:'');
   });
+  // update add btn
+  const addBtn=document.getElementById('add-btn');
+  if(mod==='arc'){addBtn.className='add-btn g';addBtn.textContent='＋ Образец';}
+  else if(mod==='stk'){addBtn.className='add-btn a';addBtn.textContent='＋ Досье';}
+  else if(mod==='doc'){addBtn.className='add-btn p';addBtn.textContent='＋ Документ';}
+  else{addBtn.className='add-btn g';addBtn.textContent='＋ Добавить';}
+  // detail title color
+  document.getElementById('dp-title').className='dp-title '+(mod==='arc'?'cg':mod==='stk'?'ca':mod==='doc'?'cp':'cg');
+  renderToolbarFilters();
+  renderSidebar();
+  renderContent();
 }
 
-// ══ STATS & SIDEBAR ══
-function updateStats(){
-  document.getElementById('st-total').textContent=records.length;
-  document.getElementById('st-done').textContent=records.filter(r=>r.status==='done').length;
-  document.getElementById('st-wip').textContent=records.filter(r=>r.status==='wip').length;
-  document.getElementById('st-cats').textContent=categories.length;
-  document.getElementById('nav-all-count').textContent=records.length;
-}
-
+// SIDEBAR
 function renderSidebar(){
-  document.getElementById('cat-list').innerHTML=categories.map(c=>{
-    const cnt=records.filter(r=>r.category===c.id).length;
-    const active=currentCat===c.id;
-    return `<button class="sb-item${active?' active':''}" onclick="filterCategory('${c.id}')">
-      <span class="si-dot" style="background:var(--amber)"></span>
-      <span class="si-name">${esc(c.name)}</span>
-      <span class="si-count">${cnt}</span>
-      <span class="si-actions">
-        <span class="si-act-btn" onclick="event.stopPropagation();openRenameCat('${c.id}')">✎</span>
-        <span class="si-act-btn del" onclick="event.stopPropagation();confirmDeleteCat('${c.id}')">✕</span>
-      </span>
-    </button>`;
-  }).join('');
+  const mod=currentModule;
+  const navEl=document.getElementById('sb-nav');
+  const statsEl=document.getElementById('sb-stats');
+  const titleEl=document.getElementById('sb-title');
+  const subEl=document.getElementById('sb-sub');
+
+  if(mod==='arc'){
+    titleEl.className='sb-mod-title cg';titleEl.textContent='Архив образцов';
+    subEl.textContent='Объекты исследования';
+    const byType={all:records.length,артефакт:0,аномалия:0,мутант:0,прочее:0};
+    const byStatus={изучен:0,'в работе':0,'на хранении':0,опасен:0,утерян:0};
+    records.forEach(r=>{
+      const t=(r.objectType||'прочее').toLowerCase();
+      if(byType[t]!==undefined)byType[t]++;else byType['прочее']++;
+      const s=(r.status||'').toLowerCase();
+      if(byStatus[s]!==undefined)byStatus[s]++;
+    });
+    navEl.innerHTML=`
+      <div class="sb-sec">Тип объекта</div>
+      ${sbItem(null,'all','Все образцы',byType.all,'g')}
+      ${sbItem('arc-type','артефакт','Артефакты',byType.артефакт,'g',true,'var(--amber)')}
+      ${sbItem('arc-type','аномалия','Аномалии',byType.аномалия,'g',true,'var(--blue)')}
+      ${sbItem('arc-type','мутант','Мутанты',byType.мутант,'g',true,'var(--red)')}
+      ${sbItem('arc-type','прочее','Прочее',byType.прочее,'g',true,'var(--text-dim)')}
+      <div class="sb-div"></div>
+      <div class="sb-sec">По статусу</div>
+      ${sbItem('arc-status','изучен','Изучен',byStatus['изучен'],'g',true,'var(--green)')}
+      ${sbItem('arc-status','в работе','В работе',byStatus['в работе'],'g',true,'var(--amber)')}
+      ${sbItem('arc-status','опасен','Опасен',byStatus['опасен'],'g',true,'var(--red)')}
+      ${sbItem('arc-status','на хранении','На хранении',byStatus['на хранении'],'g',true,'var(--blue)')}
+      ${sbItem('arc-status','утерян','Утерян',byStatus['утерян'],'g',true,'var(--text-dim)')}`;
+    statsEl.innerHTML=`
+      <div class="st-box"><div class="st-n" style="color:var(--green)">${records.length}</div><div class="st-l">Всего</div></div>
+      <div class="st-box"><div class="st-n" style="color:var(--green)">${byStatus['изучен']}</div><div class="st-l">Изучено</div></div>`;
+  }
+  else if(mod==='stk'){
+    titleEl.className='sb-mod-title ca';titleEl.textContent='База сталкеров';
+    subEl.textContent='Личные дела · Досье';
+    const byStatus={жив:0,'мёртв':0,'пропал':0,'неизвестно':0};
+    stalkers.forEach(s=>{const st=(s.status||'').toLowerCase();if(byStatus[st]!==undefined)byStatus[st]++;});
+    // online users from presence — show in sidebar
+    navEl.innerHTML=`
+      <div class="sb-sec">По статусу</div>
+      ${sbItem(null,'all-stk','Все досье',stalkers.length,'a')}
+      ${sbItem('stk-status','жив','Жив',byStatus['жив'],'a',true,'var(--green)')}
+      ${sbItem('stk-status','мёртв','Мёртв',byStatus['мёртв'],'a',true,'var(--red)')}
+      ${sbItem('stk-status','пропал','Пропал',byStatus['пропал'],'a',true,'var(--amber)')}
+      ${sbItem('stk-status','неизвестно','Неизвестно',byStatus['неизвестно'],'a',true,'var(--text-dim)')}
+      <div class="sb-div"></div>
+      <div class="sb-sec">Онлайн</div>
+      <div id="sb-online-list"></div>`;
+    statsEl.innerHTML=`
+      <div class="st-box"><div class="st-n" style="color:var(--amber)">${stalkers.length}</div><div class="st-l">Всего</div></div>
+      <div class="st-box"><div class="st-n" style="color:var(--green)">${byStatus['жив']}</div><div class="st-l">Живы</div></div>`;
+    startPresenceInSidebar();
+  }
+  else if(mod==='doc'){
+    titleEl.className='sb-mod-title cp';titleEl.textContent='Документы';
+    subEl.textContent='Архив · Отчёты · Заметки';
+    const byType={'отчёт':0,'заметка':0,'аналитика':0,'срочно':0,'архивная запись':0,'служебная заметка':0};
+    documents.forEach(d=>{const t=(d.docType||'').toLowerCase();if(byType[t]!==undefined)byType[t]++;});
+    const urgent=byType['срочно'];
+    navEl.innerHTML=`
+      <div class="sb-sec">Тип документа</div>
+      ${sbItem(null,'all-doc','Все документы',documents.length,'p')}
+      ${sbItem('doc-type','отчёт','Отчёты',byType['отчёт'],'p',true,'var(--green)')}
+      ${sbItem('doc-type','заметка','Заметки',byType['заметка'],'p',true,'var(--amber)')}
+      ${sbItem('doc-type','аналитика','Аналитика',byType['аналитика'],'p',true,'var(--blue)')}
+      ${sbItem('doc-type','срочно','Срочно',byType['срочно'],'p',true,'var(--red)')}
+      ${sbItem('doc-type','архивная запись','Архивные',byType['архивная запись'],'p',true,'var(--text-dim)')}
+      ${sbItem('doc-type','служебная заметка','Служебные',byType['служебная заметка'],'p',true,'var(--text-dim)')}`;
+    statsEl.innerHTML=`
+      <div class="st-box"><div class="st-n" style="color:var(--purple)">${documents.length}</div><div class="st-l">Всего</div></div>
+      <div class="st-box"><div class="st-n" style="color:${urgent?'var(--red)':'var(--text-faint)'}">${urgent}</div><div class="st-l" style="color:${urgent?'var(--red)':''}">Срочных</div></div>`;
+  }
+  else{
+    titleEl.className='sb-mod-title ct';titleEl.textContent='Все записи';
+    subEl.textContent='Общий обзор';
+    const total=records.length+stalkers.length+documents.length;
+    navEl.innerHTML=`
+      <div class="sb-sec">Разделы</div>
+      <div class="sb-item" onclick="setModule('arc')" style="cursor:pointer"><div class="sb-dot" style="background:var(--green)"></div>Архив образцов<span class="sb-cnt">${records.length}</span></div>
+      <div class="sb-item" onclick="setModule('stk')" style="cursor:pointer"><div class="sb-dot" style="background:var(--amber)"></div>База сталкеров<span class="sb-cnt">${stalkers.length}</span></div>
+      <div class="sb-item" onclick="setModule('doc')" style="cursor:pointer"><div class="sb-dot" style="background:var(--purple)"></div>Документы<span class="sb-cnt">${documents.length}</span></div>`;
+    statsEl.innerHTML=`
+      <div class="st-box"><div class="st-n" style="color:var(--text)">${total}</div><div class="st-l">Записей</div></div>
+      <div class="st-box"><div class="st-n" style="color:var(--green)">${records.length}</div><div class="st-l">Образцов</div></div>`;
+  }
 }
 
-// ══ RENDER ══
+function sbItem(group,val,label,cnt,cls,dot=false,dotColor='var(--green)'){
+  const isActive = currentSub===val||(val==='all'&&!currentSub)||(val==='all-stk'&&!currentSub)||(val==='all-doc'&&!currentSub);
+  const actClass=cls==='g'?'act-g':cls==='a'?'act-a':'act-p';
+  return `<button class="sb-item${isActive?' '+actClass:''}" onclick="setSub('${group||''}','${val}')" style="width:100%">
+    ${dot?`<div class="sb-dot" style="background:${dotColor}"></div>`:'<div class="sb-dot" style="background:transparent"></div>'}
+    <span style="flex:1;text-align:left">${label}</span>
+    ${cnt!==undefined?`<span class="sb-cnt">${cnt}</span>`:''}
+  </button>`;
+}
+
+let presenceUnsub=null;
+function startPresenceInSidebar(){
+  if(presenceUnsub)presenceUnsub();
+  presenceUnsub=onSnapshot(collection(db,'presence'),snap=>{
+    const now=Date.now();
+    const users=snap.docs.map(d=>d.data()).filter(u=>u.callsign)
+      .map(u=>({...u,isOnline:u.online&&(now-u.lastSeen)<90000}))
+      .sort((a,b)=>b.isOnline-a.isOnline);
+    const el=document.getElementById('sb-online-list');
+    if(!el)return;
+    el.innerHTML=users.map(u=>{
+      const isMe=currentUser&&u.uid===currentUser.uid;
+      const cls=u.isOnline?'on':'off';
+      return `<div class="sb-item">
+        <div class="sb-dot" style="background:${u.isOnline?'var(--green)':'var(--text-faint)'};${u.isOnline?'box-shadow:0 0 4px var(--green)':''}"></div>
+        <span style="flex:1;${isMe?'color:var(--green)':''}">${esc(u.callsign)}${isMe?' (я)':''}</span>
+        <span style="font-size:8px;color:${u.isOnline?'var(--green)':'var(--text-faint)'}">${u.isOnline?'в сети':'—'}</span>
+      </div>`;
+    }).join('');
+  });
+}
+
+window.setSub=function(group,val){
+  if(val==='all'||val==='all-stk'||val==='all-doc'){currentSub=null;}
+  else{currentSub={group,val};}
+  renderSidebar();renderContent();
+}
+
+// TOOLBAR FILTERS
+function renderToolbarFilters(){
+  const el=document.getElementById('toolbar-filters');
+  const mod=currentModule;
+  if(mod==='arc'){
+    el.innerHTML=`<select class="tb-select" id="f-danger" onchange="renderContent()">
+      <option value="">Все опасности</option>
+      <option value="низкая">Низкая</option>
+      <option value="средняя">Средняя</option>
+      <option value="высокая">Высокая</option>
+    </select>`;
+  }else if(mod==='stk'){
+    el.innerHTML='';
+  }else if(mod==='doc'){
+    el.innerHTML=`<select class="tb-select" id="f-author" onchange="renderContent()">
+      <option value="">Все авторы</option>
+    </select>`;
+    // populate authors
+    const authors=[...new Set(documents.map(d=>d.author).filter(Boolean))];
+    const sel=document.getElementById('f-author');
+    if(sel)authors.forEach(a=>{const o=document.createElement('option');o.value=a;o.textContent=a;sel.appendChild(o);});
+  }else{
+    el.innerHTML='';
+  }
+}
+
+// GET FILTERED DATA
+function getVal(id){const el=document.getElementById(id);return el?el.value:'';}
 function getFiltered(){
   const q=document.getElementById('search-input').value.toLowerCase();
-  const st=document.getElementById('filter-status').value;
-  return records.filter(r=>{
-    if(currentCat&&r.category!==currentCat)return false;
-    if(st&&r.status!==st)return false;
-    if(q&&!(r.name||'').toLowerCase().includes(q))return false;
-    return true;
-  }).sort((a,b)=>{
-    let va=a[sortKey]||'',vb=b[sortKey]||'';
-    if(sortKey==='num'){va=+(a.num||0);vb=+(b.num||0);}
-    return(va<vb?-1:va>vb?1:0)*sortDir;
-  });
+  const mod=currentModule;
+  const sub=currentSub;
+
+  if(mod==='arc'){
+    const fDanger=getVal('f-danger');
+    return records.filter(r=>{
+      if(sub&&sub.group==='arc-type'&&(r.objectType||'прочее').toLowerCase()!==sub.val)return false;
+      if(sub&&sub.group==='arc-status'&&(r.status||'').toLowerCase()!==sub.val)return false;
+      if(fDanger&&(r.danger||'').toLowerCase()!==fDanger)return false;
+      if(q&&!(r.name||'').toLowerCase().includes(q))return false;
+      return true;
+    }).sort((a,b)=>{
+      let va=a[sortKey]||0,vb=b[sortKey]||0;
+      if(sortKey==='num'){va=+(a.num||0);vb=+(b.num||0);}
+      return(va<vb?-1:va>vb?1:0)*sortDir;
+    });
+  }
+  if(mod==='stk'){
+    return stalkers.filter(s=>{
+      if(sub&&sub.group==='stk-status'&&(s.status||'').toLowerCase()!==sub.val)return false;
+      if(q&&!(s.callsign||'').toLowerCase().includes(q)&&!(s.fio||'').toLowerCase().includes(q))return false;
+      return true;
+    }).sort((a,b)=>{
+      const va=(a.callsign||'').toLowerCase(),vb=(b.callsign||'').toLowerCase();
+      return va<vb?-1:va>vb?1:0;
+    });
+  }
+  if(mod==='doc'){
+    const fAuthor=getVal('f-author');
+    return documents.filter(d=>{
+      if(sub&&sub.group==='doc-type'&&(d.docType||'').toLowerCase()!==sub.val)return false;
+      if(fAuthor&&d.author!==fAuthor)return false;
+      if(q&&!(d.title||'').toLowerCase().includes(q))return false;
+      return true;
+    }).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+  }
+  // all
+  const all=[
+    ...records.map(r=>({...r,_mod:'arc',_name:r.name})),
+    ...stalkers.map(s=>({...s,_mod:'stk',_name:s.callsign})),
+    ...documents.map(d=>({...d,_mod:'doc',_name:d.title}))
+  ];
+  return all.filter(r=>!q||(r._name||'').toLowerCase().includes(q));
 }
 
-function catName(id){const c=categories.find(x=>x.id===id);return c?c.name:'—';}
-function statusChip(s){const m=STATUS_META[s]||STATUS_META.pending;return`<span class="status-chip ${m.chipClass}"><span class="chip-dot ${m.dotClass}"></span>${m.label}</span>`;}
+// CHIPS
+function statusChipArc(s){
+  if(!s)return'<span class="chip ch-d">—</span>';
+  const sl=s.toLowerCase();
+  if(sl==='изучен')return`<span class="chip ch-g">${esc(s)}</span>`;
+  if(sl==='в работе')return`<span class="chip ch-a">${esc(s)}</span>`;
+  if(sl==='опасен')return`<span class="chip ch-r">${esc(s)}</span>`;
+  if(sl==='на хранении')return`<span class="chip ch-b">${esc(s)}</span>`;
+  if(sl==='утерян')return`<span class="chip ch-d">${esc(s)}</span>`;
+  return`<span class="chip ch-d">${esc(s)}</span>`;
+}
+function statusChipStk(s){
+  if(!s)return'<span class="chip ch-d">—</span>';
+  const sl=s.toLowerCase();
+  if(sl==='жив')return`<span class="chip ch-g">${esc(s)}</span>`;
+  if(sl==='мёртв')return`<span class="chip ch-r">${esc(s)}</span>`;
+  if(sl==='пропал')return`<span class="chip ch-a">${esc(s)}</span>`;
+  if(sl==='неизвестно')return`<span class="chip ch-d">${esc(s)}</span>`;
+  return`<span class="chip ch-d">${esc(s)}</span>`;
+}
+function dangerChip(d){
+  if(!d)return'<span class="chip ch-d">—</span>';
+  const dl=d.toLowerCase();
+  if(dl==='высокая')return`<span class="chip ch-r">${esc(d)}</span>`;
+  if(dl==='средняя')return`<span class="chip ch-a">${esc(d)}</span>`;
+  if(dl==='низкая')return`<span class="chip ch-g">${esc(d)}</span>`;
+  return`<span class="chip ch-d">${esc(d)}</span>`;
+}
+function typeLabel(t){
+  const tl=(t||'').toLowerCase();
+  if(tl==='артефакт')return`<span class="td-art">${esc(t)}</span>`;
+  if(tl==='аномалия')return`<span class="td-an">${esc(t)}</span>`;
+  if(tl==='мутант')return`<span class="td-mut">${esc(t)}</span>`;
+  return`<span class="td-dim">${esc(t||'—')}</span>`;
+}
+function docTypeChip(t){
+  if(!t)return'<span class="chip ch-d">—</span>';
+  const tl=t.toLowerCase();
+  if(tl==='отчёт')return`<span class="chip ch-g">${esc(t)}</span>`;
+  if(tl==='заметка')return`<span class="chip ch-a">${esc(t)}</span>`;
+  if(tl==='аналитика')return`<span class="chip ch-b">${esc(t)}</span>`;
+  if(tl==='срочно')return`<span class="chip ch-r">${esc(t)}</span>`;
+  return`<span class="chip ch-p">${esc(t)}</span>`;
+}
 
+// RENDER
 function renderContent(){
-  if(currentView==='list')renderList(); else renderCards();
+  if(currentView==='list')renderList();else renderCards();
 }
 
 function renderList(){
   const rows=getFiltered();
   const ca=document.getElementById('content-area');
   if(!rows.length){ca.innerHTML=emptyState();return;}
+  const mod=currentModule;
+
+  if(mod==='arc'){
+    ca.innerHTML=`<table class="list-table"><thead><tr>
+      <th onclick="doSort('num')">#</th>
+      <th onclick="doSort('name')">Название</th>
+      <th onclick="doSort('objectType')">Тип</th>
+      <th>Опасность</th>
+      <th onclick="doSort('status')">Статус</th>
+      <th onclick="doSort('date')">Дата</th>
+    </tr></thead><tbody>${rows.map(r=>`<tr class="dr" onclick="openDetail('${r.id}','arc')">
+      <td class="td-mono">${padNum(r.num||0)}</td>
+      <td><strong>${esc(r.name||'—')}</strong></td>
+      <td>${typeLabel(r.objectType)}</td>
+      <td>${dangerChip(r.danger)}</td>
+      <td>${statusChipArc(r.status)}</td>
+      <td class="td-dim">${fmtDate(r.date)}</td>
+    </tr>`).join('')}</tbody></table>`;
+    return;
+  }
+  if(mod==='stk'){
+    ca.innerHTML=`<table class="list-table"><thead><tr>
+      <th>Фото</th>
+      <th onclick="doSort('callsign')">Позывной</th>
+      <th onclick="doSort('fio')">ФИО</th>
+      <th>Возраст</th>
+      <th>Статус</th>
+      <th>Последняя активность</th>
+    </tr></thead><tbody>${rows.map(s=>{
+      const ph=s.photos&&s.photos.length?`<img src="${s.photos[0].data}" style="width:30px;height:36px;object-fit:cover;border:1px solid var(--border2)">`:`<div style="width:30px;height:36px;background:var(--paper3);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:7px;color:var(--text-faint)">—</div>`;
+      return`<tr class="dr" onclick="openDetail('${s.id}','stk')">
+        <td style="padding:4px 8px">${ph}</td>
+        <td class="td-call">${esc(s.callsign||'—')}</td>
+        <td class="td-dim">${esc(s.fio||'—')}</td>
+        <td class="td-dim">${esc(s.age||'—')}</td>
+        <td>${statusChipStk(s.status)}</td>
+        <td class="td-dim">${fmtDate(s.lastActive)}</td>
+      </tr>`;
+    }).join('')}</tbody></table>`;
+    return;
+  }
+  if(mod==='doc'){
+    ca.innerHTML=rows.map(d=>`<div class="doc-card" onclick="openDetail('${d.id}','doc')">
+      <div class="doc-card-head">${docTypeChip(d.docType)}<span class="doc-card-title">${esc(d.title||'Без названия')}</span></div>
+      <div class="doc-card-meta">
+        <div class="doc-meta-item">Дата: <span>${fmtDate(d.date)}</span></div>
+        <div class="doc-meta-item">Автор: <span>${esc(d.author||'—')}</span></div>
+        ${d.related?`<div class="doc-meta-item">Связано: <span>${esc(d.related)}</span></div>`:''}
+      </div>
+      <div class="doc-card-body">${esc((d.summary||d.text||'').slice(0,120))}${(d.summary||d.text||'').length>120?'…':''}</div>
+    </div>`).join('');
+    return;
+  }
+  // all
   ca.innerHTML=`<table class="list-table"><thead><tr>
-    <th onclick="doSort('num')">#</th>
-    <th onclick="doSort('name')">Название</th>
-    <th>Раздел</th>
-    <th onclick="doSort('status')">Статус</th>
-    <th onclick="doSort('date')">Дата</th>
-    <th>Описание</th>
-  </tr></thead><tbody>${rows.map(r=>`<tr class="data-row" onclick="openDetail('${r.id}')">
-    <td class="mono">${padNum(r.num)}</td>
-    <td><strong>${esc(r.name)}</strong></td>
-    <td style="color:var(--text-dim);font-size:12px">${esc(catName(r.category))}</td>
-    <td>${statusChip(r.status)}</td>
-    <td class="mono" style="color:var(--text-dim)">${fmtDate(r.date)}</td>
-    <td style="color:var(--text-dim);font-size:12px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(r.shortDesc||'')}</td>
-  </tr>`).join('')}</tbody></table>`;
+    <th>#</th><th>Название</th><th>Раздел</th><th>Статус/Тип</th><th>Дата</th>
+  </tr></thead><tbody>${rows.map((r,i)=>{
+    const mod=r._mod;
+    const name=r._name||'—';
+    const modLabel=mod==='arc'?`<span class="td-mono">Образец</span>`:mod==='stk'?`<span style="font-family:monospace;font-size:9px;color:var(--amber)">Сталкер</span>`:`<span style="font-family:monospace;font-size:9px;color:var(--purple)">Документ</span>`;
+    const st=mod==='arc'?statusChipArc(r.status):mod==='stk'?statusChipStk(r.status):docTypeChip(r.docType);
+    return`<tr class="dr" onclick="openDetail('${r.id}','${mod}')">
+      <td class="td-mono">${padNum(i+1)}</td>
+      <td><strong>${esc(name)}</strong></td>
+      <td>${modLabel}</td>
+      <td>${st}</td>
+      <td class="td-dim">${fmtDate(r.date||r.createdDate||'')}</td>
+    </tr>`;
+  }).join('')}</tbody></table>`;
 }
 
 function renderCards(){
   const rows=getFiltered();
   const ca=document.getElementById('content-area');
   if(!rows.length){ca.innerHTML=emptyState();return;}
+  const mod=currentModule;
+
+  if(mod==='stk'){
+    ca.innerHTML=`<div class="sc-grid">${rows.map(s=>{
+      const ph=s.photos&&s.photos.length?`<img src="${s.photos[0].data}" style="width:100%;height:100%;object-fit:cover">`:'ФОТО';
+      return`<div class="sc-card" onclick="openDetail('${s.id}','stk')">
+        <div class="sc-photo-col"><div class="sc-photo-box">${ph}</div></div>
+        <div class="sc-body-col">
+          <div class="sc-callsign">${esc(s.callsign||'—')}</div>
+          <div class="sc-fio">${esc(s.fio||'—')}</div>
+          <div class="sc-chips">${statusChipStk(s.status)}</div>
+          <div class="sc-mini-grid">
+            <div class="sc-mini-f"><div class="sc-mini-l">Возраст</div><div class="sc-mini-v">${esc(s.age||'—')}</div></div>
+            <div class="sc-mini-f"><div class="sc-mini-l">Активность</div><div class="sc-mini-v">${fmtDate(s.lastActive)}</div></div>
+          </div>
+        </div>
+      </div>`;
+    }).join('')}</div>`;
+    return;
+  }
+  if(mod==='doc'){renderList();return;}
+
+  // arc + all
   ca.innerHTML=`<div class="card-grid">${rows.map(r=>{
-    const photos=r.photos||[];
-    const thumb=photos.length?`<div class="cv-thumb"><img src="${photos[0].data}" alt=""></div>`:`<div class="cv-thumb"><div class="cv-thumb-empty">фото отсутствует</div></div>`;
-    return`<div class="cv" onclick="openDetail('${r.id}')">
+    const m=r._mod||'arc';
+    const name=r.name||r.callsign||r.title||'—';
+    const ph=(r.photos||[]);
+    const thumb=ph.length?`<div class="cv-thumb"><img src="${ph[0].data}" alt=""></div>`:`<div class="cv-thumb"><div class="cv-thumb-empty">нет фото</div></div>`;
+    return`<div class="cv" onclick="openDetail('${r.id}','${m}')">
       ${thumb}
-      <div class="cv-top"><div class="cv-num">${padNum(r.num)}</div><div class="cv-name">${esc(r.name)}</div></div>
-      <div class="cv-body">${esc((r.shortDesc||'').slice(0,90))}${(r.shortDesc||'').length>90?'…':''}</div>
-      <div class="cv-foot"><span class="cv-cat">${esc(catName(r.category))}</span>${statusChip(r.status)}</div>
+      <div class="cv-top"><div class="cv-num">${padNum(r.num||0)}</div><div class="cv-name">${esc(name)}</div></div>
+      <div class="cv-body">${esc((r.shortDesc||r.summary||'').slice(0,80))}${(r.shortDesc||r.summary||'').length>80?'…':''}</div>
+      <div class="cv-foot">${typeLabel(r.objectType||'')}${statusChipArc(r.status||r.docType)}</div>
     </div>`;
   }).join('')}</div>`;
 }
 
-function emptyState(){return`<div class="empty-state"><div class="es-ico">◈</div><p>Записи не найдены.<br>Добавьте новую запись или измените фильтр.</p></div>`;}
-
-// ══ DETAIL ══
-window.openDetail=function(id){
-  const r=records.find(x=>x.id===id);
-  if(!r)return;
-  document.getElementById('detail-panel').classList.add('open');
-  document.getElementById('dp-title').textContent=`#${padNum(r.num)} · ${r.name}`;
-  document.getElementById('dp-actions').innerHTML=`
-    <button class="act-btn btn-edit" onclick="openEditRecord('${id}')">✎ Редактировать</button>
-    <button class="act-btn btn-del" onclick="confirmDeleteRecord('${id}')">✕ Удалить</button>`;
-  renderDetailView(r);
+// DETAIL
+window.openDetail=function(id,mod){
+  const panel=document.getElementById('detail-panel');
+  panel.classList.add('open');
+  if(mod==='arc'){
+    const r=records.find(x=>x.id===id);if(!r)return;
+    document.getElementById('dp-title').textContent=`#${padNum(r.num)} · ${r.name}`;
+    document.getElementById('dp-actions').innerHTML=`<button class="act-btn btn-edit" onclick="openEdit('${id}','arc')">✎ Редактировать</button><button class="act-btn btn-del" onclick="confirmDel('${id}','arc')">✕ Удалить</button>`;
+    renderArcDetail(r);
+  }else if(mod==='stk'){
+    const s=stalkers.find(x=>x.id===id);if(!s)return;
+    document.getElementById('dp-title').textContent=s.callsign||'—';
+    document.getElementById('dp-actions').innerHTML=`<button class="act-btn btn-edit" onclick="openEdit('${id}','stk')">✎ Редактировать</button><button class="act-btn btn-del" onclick="confirmDel('${id}','stk')">✕ Удалить</button>`;
+    renderStkDetail(s);
+  }else if(mod==='doc'){
+    const d=documents.find(x=>x.id===id);if(!d)return;
+    document.getElementById('dp-title').textContent=d.title||'Документ';
+    document.getElementById('dp-actions').innerHTML=`<button class="act-btn btn-edit" onclick="openEdit('${id}','doc')">✎ Редактировать</button><button class="act-btn btn-del" onclick="confirmDel('${id}','doc')">✕ Удалить</button>`;
+    renderDocDetail(d);
+  }
 }
 
-function renderDetailView(r){
-  const cf=(r.customFields||[]).map(f=>`<div class="cf-row"><div class="cf-key">${esc(f.key)}</div><div class="cf-val">${esc(f.val)}</div></div>`).join('');
-  const photos=(r.photos||[]);
-  const photoHtml=photos.map(p=>`<div class="photo-item"><img src="${p.data}" alt="" onclick="openLightbox('${p.data}')"></div>`).join('');
+function renderArcDetail(r){
+  const cf=(r.customFields||[]).map(f=>`<div class="fv"><div class="fv-label">${esc(f.key)}</div><div class="fv-val">${esc(f.val)}</div></div>`).join('');
+  const ph=(r.photos||[]).map(p=>`<div class="photo-item"><img src="${p.data}" alt="" onclick="openLightbox('${p.data}')"></div>`).join('');
   document.getElementById('dp-body').innerHTML=`
-    <div class="dp-main">
-      <div class="dp-block"><div class="dp-block-label">Описание</div><div class="dp-block-body">
-        <div class="field-view"><div class="fv-label">Краткое описание</div>
-          <div class="fv-val${!r.shortDesc?' empty':''}">${r.shortDesc?esc(r.shortDesc):'не внесено'}</div></div>
-        <div class="field-view" style="margin-top:12px"><div class="fv-label">Полное описание / заметки</div>
-          <div class="fv-val${!r.fullDesc?' empty':''}">${r.fullDesc?esc(r.fullDesc):'не внесено'}</div></div>
-      </div></div>
-      ${cf?`<div class="dp-block"><div class="dp-block-label">Доп. поля</div><div class="dp-block-body">${cf}</div></div>`:''}
-      <div class="dp-block"><div class="dp-block-label">Фотоматериалы</div><div class="dp-block-body">
-        <div class="photo-grid">${photoHtml||'<span style="font-family:monospace;font-size:10px;color:var(--text-faint)">фото не загружено</span>'}</div>
-      </div></div>
-    </div>
-    <div class="dp-side"><div class="dp-block"><div class="dp-block-label">Параметры</div><div class="dp-block-body">
-      <div class="field-view"><div class="fv-label">Номер</div><div class="fv-val mono">${padNum(r.num)}</div></div>
-      <div class="field-view"><div class="fv-label">Раздел</div><div class="fv-val am">${esc(catName(r.category))}</div></div>
-      <div class="field-view"><div class="fv-label">Статус</div>${statusChip(r.status)}</div>
-      <div class="field-view"><div class="fv-label">Дата</div><div class="fv-val mono">${fmtDate(r.date)}</div></div>
-    </div></div></div>`;
-}
-
-// ══ EDIT FORM ══
-window.openAddRecord=function(){
-  const maxNum=records.length?Math.max(...records.map(r=>+(r.num||0))):0;
-  const r={id:uid(),num:maxNum+1,name:'',category:currentCat||'',status:'pending',date:today(),shortDesc:'',fullDesc:'',photos:[],customFields:[]};
-  window._editRecord=JSON.parse(JSON.stringify(r));
-  editingId=r.id;
-  renderEditForm(r,true);
-}
-
-window.openEditRecord=function(id){
-  const r=records.find(x=>x.id===id);
-  if(!r)return;
-  window._editRecord=JSON.parse(JSON.stringify(r));
-  editingId=id;
-  renderEditForm(r,false);
-}
-
-function renderEditForm(r,isNew){
-  document.getElementById('detail-panel').classList.add('open');
-  document.getElementById('dp-title').textContent=isNew?'Новая запись':`Редактировать: ${r.name}`;
-  document.getElementById('dp-actions').innerHTML=`
-    <button class="act-btn btn-save" onclick="doSaveRecord()">✓ Сохранить</button>
-    <button class="act-btn btn-cancel" onclick="doCancelEdit('${r.id}','${isNew}')">Отмена</button>`;
-  const catOpts=categories.map(c=>`<option value="${c.id}"${r.category===c.id?' selected':''}>${esc(c.name)}</option>`).join('');
-  const cfHtml=(r.customFields||[]).map((f,i)=>`<div class="cf-pair" id="cfp-${i}">
-    <input type="text" value="${esc(f.key)}" placeholder="Поле" class="cf-key-inp" data-idx="${i}">
-    <input type="text" value="${esc(f.val)}" placeholder="Значение" class="cf-val-inp" data-idx="${i}">
-    <button class="cf-rm" onclick="removeCF(${i})">✕</button></div>`).join('');
-  const photoHtml=(r.photos||[]).map(p=>`<div class="photo-item">
-    <img src="${p.data}" alt="" onclick="openLightbox('${p.data}')">
-    <button class="photo-del" onclick="deletePhoto('${p.id}')">✕</button></div>`).join('');
-  document.getElementById('dp-body').innerHTML=`
-    <div class="dp-main">
-      <div class="dp-block"><div class="dp-block-label">Основные поля</div><div class="dp-block-body">
-        <div class="form-grid">
-          <div class="form-field"><label class="form-label">Название *</label>
-            <input type="text" id="ef-name" value="${esc(r.name)}" placeholder="Название"></div>
-          <div class="form-field"><label class="form-label">Раздел</label>
-            <select id="ef-cat"><option value="">— без раздела —</option>${catOpts}</select></div>
-          <div class="form-field"><label class="form-label">Статус</label>
-            <select id="ef-status">
-              <option value="pending"${r.status==='pending'?' selected':''}>Ожидает</option>
-              <option value="wip"${r.status==='wip'?' selected':''}>В работе</option>
-              <option value="done"${r.status==='done'?' selected':''}>Изучен</option>
-            </select></div>
-          <div class="form-field"><label class="form-label">Дата</label>
-            <input type="date" id="ef-date" value="${r.date||today()}"></div>
-        </div>
-        <div class="form-field" style="margin-top:12px"><label class="form-label">Краткое описание</label>
-          <input type="text" id="ef-short" value="${esc(r.shortDesc||'')}" placeholder="Одна строка для списка"></div>
-        <div class="form-field" style="margin-top:12px"><label class="form-label">Полное описание / заметки</label>
-          <textarea id="ef-full" rows="5">${esc(r.fullDesc||'')}</textarea></div>
-      </div></div>
-      <div class="dp-block"><div class="dp-block-label">Дополнительные поля</div><div class="dp-block-body">
-        <div class="cf-editor" id="cf-editor">${cfHtml}</div>
-        <button class="cf-add" onclick="addCF()">＋ Добавить поле</button>
-      </div></div>
-      <div class="dp-block"><div class="dp-block-label">Фотоматериалы</div><div class="dp-block-body">
-        <div class="photo-grid" id="dp-photo-grid">
-          ${photoHtml}
-          <label class="photo-add-btn"><span class="ico">＋</span><span>Фото</span>
-            <input type="file" accept="image/*" multiple style="display:none" onchange="handlePhotoUpload(event)">
-          </label>
-        </div>
-      </div></div>
-    </div>
-    <div class="dp-side"><div class="dp-block"><div class="dp-block-label">Инфо</div>
-      <div class="dp-block-body" style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text-dim);line-height:2">
-        <div>Номер: <span style="color:var(--green)">${padNum(r.num)}</span></div>
-        <div style="margin-top:6px;color:var(--text-faint);font-size:9px">* — обязательное поле</div>
+    <div class="dp-2col">
+      <div>
+        <div class="dp-block"><div class="dp-block-label">Описание</div><div class="dp-block-body">
+          <div class="fv"><div class="fv-label">Краткое описание</div><div class="fv-val${!r.shortDesc?' empty':''}">${r.shortDesc?esc(r.shortDesc):'не внесено'}</div></div>
+          <div class="fv" style="margin-top:9px"><div class="fv-label">Подробное описание</div><div class="fv-val${!r.fullDesc?' empty':''}">${r.fullDesc?esc(r.fullDesc):'не внесено'}</div></div>
+        </div></div>
+        ${cf?`<div class="dp-block"><div class="dp-block-label">Дополнительные поля</div><div class="dp-block-body">${cf}</div></div>`:''}
+        ${ph?`<div class="dp-block"><div class="dp-block-label">Фотоматериалы</div><div class="dp-block-body"><div class="photo-grid">${ph}</div></div></div>`:''}
       </div>
-    </div></div>`;
+      <div>
+        <div class="dp-block"><div class="dp-block-label">Параметры</div><div class="dp-block-body">
+          <div class="fv"><div class="fv-label">Номер</div><div class="fv-val mono">${padNum(r.num)}</div></div>
+          <div class="fv"><div class="fv-label">Тип объекта</div>${typeLabel(r.objectType)}</div>
+          <div class="fv"><div class="fv-label">Статус</div>${statusChipArc(r.status)}</div>
+          <div class="fv"><div class="fv-label">Опасность</div>${dangerChip(r.danger)}</div>
+          <div class="fv"><div class="fv-label">Место обнаружения</div><div class="fv-val${!r.location?' empty':''}">${r.location?esc(r.location):'—'}</div></div>
+          <div class="fv"><div class="fv-label">Хранение</div><div class="fv-val${!r.storage?' empty':''}">${r.storage?esc(r.storage):'—'}</div></div>
+          <div class="fv"><div class="fv-label">Дата</div><div class="fv-val mono">${fmtDate(r.date)}</div></div>
+        </div></div>
+      </div>
+    </div>`;
 }
 
+function renderStkDetail(s){
+  const ph=s.photos&&s.photos.length?`<img src="${s.photos[0].data}" alt="" onclick="openLightbox('${s.photos[0].data}')" style="width:100%;height:100%;object-fit:cover;cursor:pointer">`:`<span style="font-family:monospace;font-size:7px;color:var(--text-faint);text-align:center;letter-spacing:1px">ФОТО<br>ДОСЬЕ</span>`;
+  const extraPh=(s.photos||[]).slice(1).map(p=>`<div class="photo-item"><img src="${p.data}" alt="" onclick="openLightbox('${p.data}')"></div>`).join('');
+  const cf=(s.customFields||[]).map(f=>`<div class="fv"><div class="fv-label">${esc(f.key)}</div><div class="fv-val">${esc(f.val)}</div></div>`).join('');
+  document.getElementById('dp-body').innerHTML=`
+    <div class="dp-block" style="margin-bottom:12px">
+      <div class="sc-detail-top">
+        <div class="sc-detail-photo">
+          <div class="sc-detail-img">${ph}</div>
+          ${statusChipStk(s.status)}
+        </div>
+        <div class="sc-detail-main">
+          <div class="sc-detail-call">${esc(s.callsign||'—')}</div>
+          <div class="sc-detail-fio">${esc(s.fio||'ФИО не указано')}</div>
+          <div class="sc-detail-chips">${statusChipStk(s.status)}</div>
+          <div class="sc-detail-grid">
+            <div class="sc-df"><div class="sc-dl">Возраст</div><div class="sc-dv big">${esc(s.age||'—')}</div></div>
+            <div class="sc-df"><div class="sc-dl">Пол</div><div class="sc-dv">${esc(s.gender||'—')}</div></div>
+            <div class="sc-df"><div class="sc-dl">Последняя активность</div><div class="sc-dv">${fmtDate(s.lastActive)}</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="dp-2col">
+      <div>
+        ${s.appearance?`<div class="dp-block"><div class="dp-block-label">Приметы</div><div class="dp-block-body"><div class="fv-val">${esc(s.appearance)}</div></div></div>`:''}
+        ${s.dossier?`<div class="dp-block"><div class="dp-block-label">Досье</div><div class="dp-block-body"><div class="fv-val">${esc(s.dossier)}</div></div></div>`:''}
+        ${cf?`<div class="dp-block"><div class="dp-block-label">Дополнительные поля</div><div class="dp-block-body">${cf}</div></div>`:''}
+        ${extraPh?`<div class="dp-block"><div class="dp-block-label">Дополнительные фото</div><div class="dp-block-body"><div class="photo-grid">${extraPh}</div></div></div>`:''}
+      </div>
+      <div>
+        ${s.note?`<div class="dp-block"><div class="dp-block-label">Заметка</div><div class="dp-block-body"><div class="fv-note">${esc(s.note)}</div></div></div>`:''}
+        <div class="dp-block"><div class="dp-block-label">Связи</div><div class="dp-block-body">
+          <div class="fv"><div class="fv-label">Связанные документы</div><div class="fv-val${!s.relatedDocs?' empty':''}">${s.relatedDocs?esc(s.relatedDocs):'—'}</div></div>
+          <div class="fv"><div class="fv-label">Связанные образцы</div><div class="fv-val${!s.relatedRecords?' empty':''}">${s.relatedRecords?esc(s.relatedRecords):'—'}</div></div>
+        </div></div>
+      </div>
+    </div>`;
+}
+
+function renderDocDetail(d){
+  const ph=(d.photos||[]).map(p=>`<div class="photo-item"><img src="${p.data}" alt="" onclick="openLightbox('${p.data}')"></div>`).join('');
+  document.getElementById('dp-body').innerHTML=`
+    <div class="dp-2col">
+      <div>
+        <div class="dp-block"><div class="dp-block-label">Содержание</div><div class="dp-block-body">
+          ${d.summary?`<div class="fv"><div class="fv-label">Краткое описание</div><div class="fv-val">${esc(d.summary)}</div></div>`:''}
+          <div class="fv" style="${d.summary?'margin-top:9px':''}"><div class="fv-label">Полный текст</div><div class="fv-val${!d.text?' empty':''}">${d.text?esc(d.text):'не внесено'}</div></div>
+        </div></div>
+        ${ph?`<div class="dp-block"><div class="dp-block-label">Вложения</div><div class="dp-block-body"><div class="photo-grid">${ph}</div></div></div>`:''}
+      </div>
+      <div>
+        <div class="dp-block"><div class="dp-block-label">Реквизиты</div><div class="dp-block-body">
+          <div class="fv"><div class="fv-label">Тип</div>${docTypeChip(d.docType)}</div>
+          <div class="fv"><div class="fv-label">Дата</div><div class="fv-val mono">${fmtDate(d.date)}</div></div>
+          <div class="fv"><div class="fv-label">Автор</div><div class="fv-val${!d.author?' empty':''}">${d.author?esc(d.author):'—'}</div></div>
+          <div class="fv"><div class="fv-label">Связано</div><div class="fv-val${!d.related?' empty':''}">${d.related?esc(d.related):'—'}</div></div>
+        </div></div>
+      </div>
+    </div>`;
+}
+
+window.closeDetail=function(){
+  document.getElementById('detail-panel').classList.remove('open');
+  editingId=null;window._editRecord=null;
+}
+
+// ADD / EDIT
+window.openAdd=function(){openEdit(null,currentModule==='all'?'arc':currentModule);}
+window.openEdit=function(id,mod){
+  editingId=id;
+  if(mod==='arc')renderArcForm(id,!id);
+  else if(mod==='stk')renderStkForm(id,!id);
+  else if(mod==='doc')renderDocForm(id,!id);
+}
+
+function setEditPanel(title,mod){
+  document.getElementById('detail-panel').classList.add('open');
+  document.getElementById('dp-title').textContent=title;
+  document.getElementById('dp-actions').innerHTML=`
+    <button class="act-btn btn-save" onclick="doSave()">✓ Сохранить</button>
+    <button class="act-btn btn-cancel" onclick="cancelEdit('${editingId||''}','${!editingId||editingId===window._newId}','${mod}')">Отмена</button>`;
+}
+
+function renderArcForm(id,isNew){
+  const r=id?records.find(x=>x.id===id):{};
+  const newId=uid();
+  if(isNew){editingId=newId;window._newId=newId;}
+  window._editMod='arc';
+  window._editRecord=isNew?{id:editingId,num:(records.length?Math.max(...records.map(x=>+(x.num||0))):0)+1,photos:[],customFields:[]}:JSON.parse(JSON.stringify(r));
+  setEditPanel(isNew?'Новый образец':`Редактировать: ${r.name||''}`, 'arc');
+  const cf=(window._editRecord.customFields||[]).map((f,i)=>`<div class="cf-pair" id="cfp-${i}"><input type="text" value="${esc(f.key)}" placeholder="Поле" class="cf-key-inp"><input type="text" value="${esc(f.val)}" placeholder="Значение" class="cf-val-inp"><button class="cf-rm" onclick="removeCF(${i})">✕</button></div>`).join('');
+  const ph=(window._editRecord.photos||[]).map(p=>`<div class="photo-item"><img src="${p.data}" alt="" onclick="openLightbox('${p.data}')"><button class="photo-del" onclick="deletePhoto('${p.id}')">✕</button></div>`).join('');
+  document.getElementById('dp-body').innerHTML=`
+    <div class="dp-2col">
+      <div>
+        <div class="dp-block"><div class="dp-block-label">Основные поля</div><div class="dp-block-body">
+          <div class="form-grid">
+            <div class="form-field"><label class="form-label">Название *</label><input type="text" id="ef-name" value="${esc(r.name||'')}" placeholder="Название объекта"></div>
+            <div class="form-field"><label class="form-label">Тип объекта</label><select id="ef-type"><option value="">—</option><option value="артефакт"${(r.objectType||'')==='артефакт'?' selected':''}>Артефакт</option><option value="аномалия"${(r.objectType||'')==='аномалия'?' selected':''}>Аномалия</option><option value="мутант"${(r.objectType||'')==='мутант'?' selected':''}>Мутант</option><option value="прочее"${(r.objectType||'')==='прочее'?' selected':''}>Прочее</option></select></div>
+            <div class="form-field"><label class="form-label">Статус</label><select id="ef-status"><option value="">—</option><option value="в работе"${(r.status||'')==='в работе'?' selected':''}>В работе</option><option value="изучен"${(r.status||'')==='изучен'?' selected':''}>Изучен</option><option value="на хранении"${(r.status||'')==='на хранении'?' selected':''}>На хранении</option><option value="опасен"${(r.status||'')==='опасен'?' selected':''}>Опасен</option><option value="утерян"${(r.status||'')==='утерян'?' selected':''}>Утерян</option></select></div>
+            <div class="form-field"><label class="form-label">Опасность</label><select id="ef-danger"><option value="">—</option><option value="низкая"${(r.danger||'')==='низкая'?' selected':''}>Низкая</option><option value="средняя"${(r.danger||'')==='средняя'?' selected':''}>Средняя</option><option value="высокая"${(r.danger||'')==='высокая'?' selected':''}>Высокая</option></select></div>
+            <div class="form-field"><label class="form-label">Дата</label><input type="date" id="ef-date" value="${r.date||today()}"></div>
+            <div class="form-field"><label class="form-label">Место обнаружения</label><input type="text" id="ef-location" value="${esc(r.location||'')}" placeholder="Сектор, квадрат..."></div>
+            <div class="form-field" style="grid-column:span 2"><label class="form-label">Хранение</label><input type="text" id="ef-storage" value="${esc(r.storage||'')}" placeholder="Контейнер, условия..."></div>
+          </div>
+          <div class="form-field" style="margin-top:9px"><label class="form-label">Краткое описание</label><input type="text" id="ef-short" value="${esc(r.shortDesc||'')}" placeholder="Одна строка"></div>
+          <div class="form-field" style="margin-top:9px"><label class="form-label">Подробное описание</label><textarea id="ef-full" rows="4">${esc(r.fullDesc||'')}</textarea></div>
+        </div></div>
+        <div class="dp-block"><div class="dp-block-label">Дополнительные поля</div><div class="dp-block-body"><div class="cf-editor" id="cf-editor">${cf}</div><button class="cf-add" onclick="addCF()">＋ Добавить поле</button></div></div>
+        <div class="dp-block"><div class="dp-block-label">Фото</div><div class="dp-block-body"><div class="photo-grid" id="dp-photo-grid">${ph}<label class="photo-add-btn"><span class="pic">＋</span><span>Фото</span><input type="file" accept="image/*" multiple style="display:none" onchange="handlePhotoUpload(event)"></label></div></div></div>
+      </div>
+      <div><div class="dp-block"><div class="dp-block-label">Инфо</div><div class="dp-block-body" style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--text-dim);line-height:2">
+        <div>Номер: <span style="color:var(--green)">${padNum(window._editRecord.num)}</span></div>
+        <div style="margin-top:4px;color:var(--text-faint);font-size:8px">* — обязательное поле</div>
+      </div></div></div>
+    </div>`;
+}
+
+function renderStkForm(id,isNew){
+  const s=id?stalkers.find(x=>x.id===id):{};
+  const newId=uid();
+  if(isNew){editingId=newId;window._newId=newId;}
+  window._editMod='stk';
+  window._editRecord=isNew?{id:editingId,photos:[],customFields:[]}:JSON.parse(JSON.stringify(s));
+  setEditPanel(isNew?'Новое досье':`Редактировать: ${s.callsign||''}`, 'stk');
+  const cf=(window._editRecord.customFields||[]).map((f,i)=>`<div class="cf-pair" id="cfp-${i}"><input type="text" value="${esc(f.key)}" placeholder="Поле" class="cf-key-inp"><input type="text" value="${esc(f.val)}" placeholder="Значение" class="cf-val-inp"><button class="cf-rm" onclick="removeCF(${i})">✕</button></div>`).join('');
+  const ph=(window._editRecord.photos||[]).map(p=>`<div class="photo-item"><img src="${p.data}" alt="" onclick="openLightbox('${p.data}')"><button class="photo-del" onclick="deletePhoto('${p.id}')">✕</button></div>`).join('');
+  document.getElementById('dp-body').innerHTML=`
+    <div class="dp-2col">
+      <div>
+        <div class="dp-block"><div class="dp-block-label">Основные данные</div><div class="dp-block-body">
+          <div class="form-grid">
+            <div class="form-field"><label class="form-label">Позывной *</label><input type="text" id="ef-callsign" value="${esc(s.callsign||'')}" placeholder="Позывной"></div>
+            <div class="form-field"><label class="form-label">ФИО</label><input type="text" id="ef-fio" value="${esc(s.fio||'')}" placeholder="Фамилия Имя Отчество"></div>
+            <div class="form-field"><label class="form-label">Возраст</label><input type="text" id="ef-age" value="${esc(s.age||'')}" placeholder="Лет"></div>
+            <div class="form-field"><label class="form-label">Пол</label><select id="ef-gender"><option value="">—</option><option value="муж."${(s.gender||'')==='муж.'?' selected':''}>Муж.</option><option value="жен."${(s.gender||'')==='жен.'?' selected':''}>Жен.</option></select></div>
+            <div class="form-field"><label class="form-label">Статус</label><select id="ef-status"><option value="">—</option><option value="жив"${(s.status||'')==='жив'?' selected':''}>Жив</option><option value="мёртв"${(s.status||'')==='мёртв'?' selected':''}>Мёртв</option><option value="пропал"${(s.status||'')==='пропал'?' selected':''}>Пропал</option><option value="неизвестно"${(s.status||'')==='неизвестно'?' selected':''}>Неизвестно</option></select></div>
+            <div class="form-field"><label class="form-label">Последняя активность</label><input type="date" id="ef-last-active" value="${s.lastActive||today()}"></div>
+          </div>
+        </div></div>
+        <div class="dp-block"><div class="dp-block-label">Внешность</div><div class="dp-block-body">
+          <div class="form-grid">
+            <div class="form-field"><label class="form-label">Телосложение</label><input type="text" id="ef-build" value="${esc(s.build||'')}" placeholder="Среднее, крепкое..."></div>
+            <div class="form-field"><label class="form-label">Рост</label><input type="text" id="ef-height" value="${esc(s.height||'')}" placeholder="180 см"></div>
+          </div>
+          <div class="form-field" style="margin-top:9px"><label class="form-label">Приметы</label><textarea id="ef-appearance" rows="3">${esc(s.appearance||'')}</textarea></div>
+        </div></div>
+        <div class="dp-block"><div class="dp-block-label">Досье и заметки</div><div class="dp-block-body">
+          <div class="form-field"><label class="form-label">Досье / история</label><textarea id="ef-dossier" rows="4">${esc(s.dossier||'')}</textarea></div>
+          <div class="form-field" style="margin-top:9px"><label class="form-label">Заметка (важное примечание)</label><textarea id="ef-note" rows="2">${esc(s.note||'')}</textarea></div>
+        </div></div>
+        <div class="dp-block"><div class="dp-block-label">Связи</div><div class="dp-block-body">
+          <div class="form-field"><label class="form-label">Связанные документы</label><input type="text" id="ef-reldocs" value="${esc(s.relatedDocs||'')}" placeholder="Названия документов"></div>
+          <div class="form-field" style="margin-top:8px"><label class="form-label">Связанные образцы</label><input type="text" id="ef-relrec" value="${esc(s.relatedRecords||'')}" placeholder="Названия образцов"></div>
+        </div></div>
+        <div class="dp-block"><div class="dp-block-label">Дополнительные поля</div><div class="dp-block-body"><div class="cf-editor" id="cf-editor">${cf}</div><button class="cf-add" onclick="addCF()">＋ Добавить поле</button></div></div>
+      </div>
+      <div>
+        <div class="dp-block"><div class="dp-block-label">Фото досье</div><div class="dp-block-body">
+          <div class="photo-grid" id="dp-photo-grid">${ph}<label class="photo-add-btn"><span class="pic">＋</span><span>Фото</span><input type="file" accept="image/*" multiple style="display:none" onchange="handlePhotoUpload(event)"></label></div>
+          <div style="margin-top:6px;font-family:monospace;font-size:7.5px;color:var(--text-faint)">Первое фото — основное в карточке</div>
+        </div></div>
+      </div>
+    </div>`;
+}
+
+function renderDocForm(id,isNew){
+  const d=id?documents.find(x=>x.id===id):{};
+  const newId=uid();
+  if(isNew){editingId=newId;window._newId=newId;}
+  window._editMod='doc';
+  window._editRecord=isNew?{id:editingId,photos:[]}:JSON.parse(JSON.stringify(d));
+  setEditPanel(isNew?'Новый документ':`Редактировать: ${d.title||''}`, 'doc');
+  const ph=(window._editRecord.photos||[]).map(p=>`<div class="photo-item"><img src="${p.data}" alt="" onclick="openLightbox('${p.data}')"><button class="photo-del" onclick="deletePhoto('${p.id}')">✕</button></div>`).join('');
+  document.getElementById('dp-body').innerHTML=`
+    <div class="dp-2col">
+      <div>
+        <div class="dp-block"><div class="dp-block-label">Основные поля</div><div class="dp-block-body">
+          <div class="form-field"><label class="form-label">Название *</label><input type="text" id="ef-title" value="${esc(d.title||'')}" placeholder="Название документа"></div>
+          <div class="form-grid" style="margin-top:9px">
+            <div class="form-field"><label class="form-label">Тип документа</label><select id="ef-doctype"><option value="">—</option><option value="отчёт"${(d.docType||'')==='отчёт'?' selected':''}>Отчёт</option><option value="заметка"${(d.docType||'')==='заметка'?' selected':''}>Заметка</option><option value="аналитика"${(d.docType||'')==='аналитика'?' selected':''}>Аналитика</option><option value="срочно"${(d.docType||'')==='срочно'?' selected':''}>Срочно</option><option value="архивная запись"${(d.docType||'')==='архивная запись'?' selected':''}>Архивная запись</option><option value="служебная заметка"${(d.docType||'')==='служебная заметка'?' selected':''}>Служебная заметка</option></select></div>
+            <div class="form-field"><label class="form-label">Дата</label><input type="date" id="ef-date" value="${d.date||today()}"></div>
+            <div class="form-field"><label class="form-label">Автор</label><input type="text" id="ef-author" value="${esc(d.author||'')}" placeholder="Позывной автора"></div>
+            <div class="form-field"><label class="form-label">Связано с</label><input type="text" id="ef-related" value="${esc(d.related||'')}" placeholder="Образец, сталкер..."></div>
+          </div>
+          <div class="form-field" style="margin-top:9px"><label class="form-label">Краткое описание</label><textarea id="ef-summary" rows="2">${esc(d.summary||'')}</textarea></div>
+          <div class="form-field" style="margin-top:9px"><label class="form-label">Полный текст</label><textarea id="ef-text" rows="7">${esc(d.text||'')}</textarea></div>
+        </div></div>
+        <div class="dp-block"><div class="dp-block-label">Вложения</div><div class="dp-block-body"><div class="photo-grid" id="dp-photo-grid">${ph}<label class="photo-add-btn"><span class="pic">＋</span><span>Файл</span><input type="file" accept="image/*" multiple style="display:none" onchange="handlePhotoUpload(event)"></label></div></div></div>
+      </div>
+      <div><div class="dp-block"><div class="dp-block-label">Инфо</div><div class="dp-block-body" style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--text-dim);line-height:2">
+        <div style="color:var(--text-faint);font-size:8px">* — обязательное поле</div>
+      </div></div></div>
+    </div>`;
+}
+
+// SAVE
+window.doSave=async function(){
+  const mod=window._editMod;
+  try{
+    if(mod==='arc'){
+      const name=document.getElementById('ef-name').value.trim();
+      if(!name){showToast('⚠ Введите название');return;}
+      const ex=records.find(x=>x.id===editingId);
+      const rec={
+        id:editingId,num:ex?ex.num:window._editRecord.num,name,
+        objectType:document.getElementById('ef-type').value,
+        status:document.getElementById('ef-status').value,
+        danger:document.getElementById('ef-danger').value,
+        date:document.getElementById('ef-date').value,
+        location:document.getElementById('ef-location').value.trim(),
+        storage:document.getElementById('ef-storage').value.trim(),
+        shortDesc:document.getElementById('ef-short').value.trim(),
+        fullDesc:document.getElementById('ef-full').value.trim(),
+        photos:window._editRecord?window._editRecord.photos:[],
+        customFields:collectCF(),
+        createdAt:ex?ex.createdAt:Date.now(),updatedAt:Date.now()
+      };
+      await setDoc(doc(db,'records',rec.id),rec);
+      closeDetail();showToast(!ex?'✓ Образец добавлен':'✓ Сохранено');
+    }else if(mod==='stk'){
+      const call=document.getElementById('ef-callsign').value.trim();
+      if(!call){showToast('⚠ Введите позывной');return;}
+      const ex=stalkers.find(x=>x.id===editingId);
+      const s={
+        id:editingId,callsign:call,
+        fio:document.getElementById('ef-fio').value.trim(),
+        age:document.getElementById('ef-age').value.trim(),
+        gender:document.getElementById('ef-gender').value,
+        status:document.getElementById('ef-status').value,
+        lastActive:document.getElementById('ef-last-active').value,
+        build:document.getElementById('ef-build').value.trim(),
+        height:document.getElementById('ef-height').value.trim(),
+        appearance:document.getElementById('ef-appearance').value.trim(),
+        dossier:document.getElementById('ef-dossier').value.trim(),
+        note:document.getElementById('ef-note').value.trim(),
+        relatedDocs:document.getElementById('ef-reldocs').value.trim(),
+        relatedRecords:document.getElementById('ef-relrec').value.trim(),
+        photos:window._editRecord?window._editRecord.photos:[],
+        customFields:collectCF(),
+        createdDate:ex?ex.createdDate:today(),
+        createdAt:ex?ex.createdAt:Date.now(),updatedAt:Date.now()
+      };
+      await setDoc(doc(db,'stalkers',s.id),s);
+      closeDetail();showToast(!ex?'✓ Досье добавлено':'✓ Сохранено');
+    }else if(mod==='doc'){
+      const title=document.getElementById('ef-title').value.trim();
+      if(!title){showToast('⚠ Введите название');return;}
+      const ex=documents.find(x=>x.id===editingId);
+      const d={
+        id:editingId,title,
+        docType:document.getElementById('ef-doctype').value,
+        date:document.getElementById('ef-date').value,
+        author:document.getElementById('ef-author').value.trim(),
+        related:document.getElementById('ef-related').value.trim(),
+        summary:document.getElementById('ef-summary').value.trim(),
+        text:document.getElementById('ef-text').value.trim(),
+        photos:window._editRecord?window._editRecord.photos:[],
+        createdAt:ex?ex.createdAt:Date.now(),updatedAt:Date.now()
+      };
+      await setDoc(doc(db,'documents',d.id),d);
+      closeDetail();showToast(!ex?'✓ Документ добавлен':'✓ Сохранено');
+    }
+  }catch(e){showToast('⚠ Ошибка: '+e.message);}
+}
+
+window.cancelEdit=function(id,isNew,mod){
+  if(isNew==='true'){closeDetail();return;}
+  const realId=id&&id!=='undefined'?id:null;
+  if(realId){openDetail(realId,mod);}else{closeDetail();}
+}
+
+// DELETE
+window.confirmDel=function(id,mod){
+  const name=mod==='arc'?(records.find(x=>x.id===id)||{}).name:
+             mod==='stk'?(stalkers.find(x=>x.id===id)||{}).callsign:
+             (documents.find(x=>x.id===id)||{}).title;
+  showConfirm(`Удалить «${name||'запись'}»?`,async()=>{
+    const col=mod==='stk'?'stalkers':mod==='doc'?'documents':'records';
+    await deleteDoc(doc(db,col,id));
+    closeDetail();showToast('Удалено');
+  });
+}
+
+// PHOTOS
+window.handlePhotoUpload=async function(event){
+  const files=Array.from(event.target.files);
+  if(!files.length||!window._editRecord)return;
+  const cur=(window._editRecord.photos||[]).length;
+  const allowed=Math.max(0,8-cur);
+  if(!allowed){showToast('⚠ Максимум 8 фото');event.target.value='';return;}
+  for(const file of files.slice(0,allowed)){
+    const data=await compressImg(file);
+    window._editRecord.photos.push({id:uid(),data});
+  }
+  refreshPhotoGrid();showToast('✓ Фото добавлено');event.target.value='';
+}
+function compressImg(file){
+  return new Promise(resolve=>{
+    const r=new FileReader();
+    r.onload=e=>{
+      const img=new Image();
+      img.onload=()=>{
+        const MAX=800;let w=img.width,h=img.height;
+        if(w>MAX||h>MAX){if(w>h){h=Math.round(h*MAX/w);w=MAX;}else{w=Math.round(w*MAX/h);h=MAX;}}
+        const c=document.createElement('canvas');c.width=w;c.height=h;
+        c.getContext('2d').drawImage(img,0,0,w,h);
+        resolve(c.toDataURL('image/jpeg',0.65));
+      };
+      img.src=e.target.result;
+    };
+    r.readAsDataURL(file);
+  });
+}
+window.deletePhoto=function(pid){
+  if(!window._editRecord)return;
+  window._editRecord.photos=(window._editRecord.photos||[]).filter(p=>p.id!==pid);
+  refreshPhotoGrid();
+}
+function refreshPhotoGrid(){
+  const g=document.getElementById('dp-photo-grid');
+  if(!g||!window._editRecord)return;
+  g.innerHTML=(window._editRecord.photos||[]).map(p=>`<div class="photo-item"><img src="${p.data}" alt="" onclick="openLightbox('${p.data}')"><button class="photo-del" onclick="deletePhoto('${p.id}')">✕</button></div>`).join('')
+    +`<label class="photo-add-btn"><span class="pic">＋</span><span>Фото</span><input type="file" accept="image/*" multiple style="display:none" onchange="handlePhotoUpload(event)"></label>`;
+}
+
+// CUSTOM FIELDS
 window.addCF=function(){
-  const editor=document.getElementById('cf-editor');
-  const idx=editor.querySelectorAll('.cf-pair').length;
-  const div=document.createElement('div');
-  div.className='cf-pair';div.id=`cfp-${idx}`;
-  div.innerHTML=`<input type="text" value="" placeholder="Поле" class="cf-key-inp"><input type="text" value="" placeholder="Значение" class="cf-val-inp"><button class="cf-rm" onclick="removeCF(${idx})">✕</button>`;
-  editor.appendChild(div);
+  const e=document.getElementById('cf-editor');
+  const i=e.querySelectorAll('.cf-pair').length;
+  const d=document.createElement('div');d.className='cf-pair';d.id=`cfp-${i}`;
+  d.innerHTML=`<input type="text" value="" placeholder="Поле" class="cf-key-inp"><input type="text" value="" placeholder="Значение" class="cf-val-inp"><button class="cf-rm" onclick="removeCF(${i})">✕</button>`;
+  e.appendChild(d);
 }
-window.removeCF=function(idx){const el=document.getElementById(`cfp-${idx}`);if(el)el.remove();}
-
+window.removeCF=function(i){const el=document.getElementById(`cfp-${i}`);if(el)el.remove();}
 function collectCF(){
   return Array.from(document.querySelectorAll('.cf-pair'))
     .map(p=>({key:p.querySelector('.cf-key-inp').value.trim(),val:p.querySelector('.cf-val-inp').value.trim()}))
     .filter(f=>f.key);
 }
 
-window.handlePhotoUpload=async function(event){
-  const files=Array.from(event.target.files);
-  if(!files.length||!window._editRecord)return;
-  const current=(window._editRecord.photos||[]).length;
-  const allowed=Math.max(0,8-current);
-  if(allowed===0){showToast('⚠ Максимум 8 фото на запись');event.target.value='';return;}
-  const toLoad=files.slice(0,allowed);
-  if(files.length>allowed)showToast(`⚠ Добавлено ${toLoad.length} из ${files.length} фото (лимит 8)`);
-  for(const file of toLoad){
-    const data=await fileToBase64(file);
-    const pid=uid();
-    if(!window._editRecord.photos)window._editRecord.photos=[];
-    window._editRecord.photos.push({id:pid,data});
-  }
-  refreshPhotoGrid();
-  showToast('✓ Фото добавлено');
-  event.target.value='';
-}
-
-window.deletePhoto=function(pid){
-  if(!window._editRecord)return;
-  window._editRecord.photos=(window._editRecord.photos||[]).filter(p=>p.id!==pid);
-  refreshPhotoGrid();
-}
-
-function refreshPhotoGrid(){
-  const grid=document.getElementById('dp-photo-grid');
-  if(!grid||!window._editRecord)return;
-  const photos=window._editRecord.photos||[];
-  grid.innerHTML=photos.map(p=>`<div class="photo-item">
-    <img src="${p.data}" alt="" onclick="openLightbox('${p.data}')">
-    <button class="photo-del" onclick="deletePhoto('${p.id}')">✕</button></div>`).join('')
-  +`<label class="photo-add-btn"><span class="ico">＋</span><span>Фото</span>
-    <input type="file" accept="image/*" multiple style="display:none" onchange="handlePhotoUpload(event)"></label>`;
-}
-
-window.doSaveRecord=async function(){
-  const name=document.getElementById('ef-name').value.trim();
-  if(!name){showToast('⚠ Введите название');return;}
-  const existing=records.find(x=>x.id===editingId);
-  const maxNum=records.length?Math.max(...records.map(r=>+(r.num||0))):0;
-  const rec={
-    id:editingId||uid(),
-    num:existing?existing.num:maxNum+1,
-    name,
-    category:document.getElementById('ef-cat').value,
-    status:document.getElementById('ef-status').value,
-    date:document.getElementById('ef-date').value,
-    shortDesc:document.getElementById('ef-short').value.trim(),
-    fullDesc:document.getElementById('ef-full').value.trim(),
-    photos:window._editRecord?window._editRecord.photos:[],
-    customFields:collectCF(),
-  };
-  try{ await saveRecord(rec); closeDetail(); showToast(existing?'✓ Сохранено':'✓ Запись добавлена'); }
-  catch(e){ showToast('⚠ Ошибка сохранения'); }
-}
-
-window.doCancelEdit=function(id,wasNew){
-  if(wasNew==='true'){closeDetail();return;}
-  const r=records.find(x=>x.id===id);
-  if(r)openDetail(id); else closeDetail();
-}
-
-window.confirmDeleteRecord=function(id){
-  const r=records.find(x=>x.id===id);
-  if(!r)return;
-  showConfirm(`Удалить запись «${r.name}»?`,async()=>{
-    await deleteRecord(id); closeDetail(); showToast('Запись удалена');
-  });
-}
-
-// ══ CATEGORIES ══
-window.openAddCat=function(){
-  catEditId=null;
-  document.getElementById('cat-modal-title').textContent='Новый раздел';
-  document.getElementById('cat-name-input').value='';
-  openModal('modal-cat');
-  setTimeout(()=>document.getElementById('cat-name-input').focus(),100);
-}
-window.openRenameCat=function(id){
-  catEditId=id;
-  const c=categories.find(x=>x.id===id);
-  if(!c)return;
-  document.getElementById('cat-modal-title').textContent='Переименовать раздел';
-  document.getElementById('cat-name-input').value=c.name;
-  openModal('modal-cat');
-  setTimeout(()=>document.getElementById('cat-name-input').focus(),100);
-}
-window.saveCat=async function(){
-  const name=document.getElementById('cat-name-input').value.trim();
-  if(!name){showToast('⚠ Введите название');return;}
-  const cat=catEditId?{id:catEditId,name}:{id:uid(),name};
-  await saveCatToDb(cat);
-  closeModal('modal-cat');
-  showToast(catEditId?'✓ Переименовано':'✓ Раздел добавлен');
-  catEditId=null;
-}
-window.confirmDeleteCat=function(id){
-  const c=categories.find(x=>x.id===id);
-  if(!c)return;
-  showConfirm(`Удалить раздел «${c.name}»?`,async()=>{
-    await deleteCatFromDb(id);
-    if(currentCat===id){currentCat=null;document.getElementById('nav-all').classList.add('active');}
-    showToast('Раздел удалён');
-  });
-}
-
-// ══ FILTERS / SORT / VIEW ══
-window.filterCategory=function(id){
-  document.getElementById('detail-panel').classList.remove('open');
-  editingId=null;window._editRecord=null;
-  currentCat=id;
-  document.querySelectorAll('.sb-item').forEach(b=>b.classList.remove('active'));
-  if(id===null){document.getElementById('nav-all').classList.add('active');document.getElementById('main-title').textContent='База аномальных образцов';}
-  else{const c=categories.find(x=>x.id===id);document.getElementById('main-title').textContent=c?c.name:'Раздел';}
-  renderContent();
-}
-window.doSort=function(key){if(sortKey===key)sortDir*=-1;else{sortKey=key;sortDir=1;}renderContent();}
+// SORT / VIEW
+window.doSort=function(k){if(sortKey===k)sortDir*=-1;else{sortKey=k;sortDir=1;}renderContent();}
 window.setView=function(v){
   currentView=v;
   document.querySelectorAll('.view-btn').forEach(b=>b.classList.remove('active'));
@@ -1047,31 +1327,45 @@ window.setView=function(v){
   renderContent();
 }
 
-// ══ LIGHTBOX ══
+// LIGHTBOX
 window.openLightbox=function(src){document.getElementById('lb-img').src=src;document.getElementById('lightbox').classList.add('open');}
 window.closeLightbox=function(){document.getElementById('lightbox').classList.remove('open');}
-window.closeDetail=function(){document.getElementById('detail-panel').classList.remove('open');editingId=null;window._editRecord=null;}
 
-// ══ MODALS ══
+// MODALS
 function openModal(id){document.getElementById(id).classList.add('open');}
 window.closeModal=function(id){document.getElementById(id).classList.remove('open');}
-function showConfirm(text,cb){document.getElementById('confirm-text').textContent=text;confirmCb=cb;openModal('modal-confirm');}
-document.getElementById('confirm-ok').addEventListener('click',()=>{closeModal('modal-confirm');if(confirmCb){confirmCb();confirmCb=null;}});
-
-let toastTimer;
-function showToast(msg){
-  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
-  clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2500);
+function showConfirm(text,cb){
+  document.getElementById('confirm-text').textContent=text;confirmCb=cb;openModal('modal-confirm');
 }
-
-document.getElementById('modal-cat').addEventListener('click',e=>{if(e.target===document.getElementById('modal-cat'))closeModal('modal-cat');});
+document.getElementById('confirm-ok').addEventListener('click',()=>{closeModal('modal-confirm');if(confirmCb){confirmCb();confirmCb=null;}});
 document.getElementById('modal-confirm').addEventListener('click',e=>{if(e.target===document.getElementById('modal-confirm'))closeModal('modal-confirm');});
-document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'){closeModal('modal-cat');closeModal('modal-confirm');closeLightbox();}
-  if(e.key==='Enter'&&document.getElementById('modal-cat').classList.contains('open'))saveCat();
-});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal('modal-confirm');closeLightbox();}});
 document.getElementById('search-input').addEventListener('input',renderContent);
-document.getElementById('filter-status').addEventListener('change',renderContent);
+document.getElementById('login-pass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+document.getElementById('login-call').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+document.getElementById('reg-pass2').addEventListener('keydown',e=>{if(e.key==='Enter')doRegister();});
+
+// AUTH STATE
+onAuthStateChanged(auth,async user=>{
+  document.getElementById('loading-screen').classList.add('hidden');
+  if(user){
+    currentUser=user;
+    const cs=user.displayName||user.email.replace('@stalker.zone','');
+    document.getElementById('current-callsign').textContent=cs;
+    document.getElementById('auth-screen').classList.add('hidden');
+    document.getElementById('app').classList.remove('hidden');
+    document.getElementById('login-btn').disabled=false;
+    document.getElementById('login-btn').textContent='Войти в систему';
+    startHeartbeat();startListeners();
+    setModule('arc'); // default module
+  }else{
+    currentUser=null;stopHeartbeat();
+    document.getElementById('auth-screen').classList.remove('hidden');
+    document.getElementById('app').classList.add('hidden');
+    document.getElementById('reg-btn').disabled=false;
+    document.getElementById('reg-btn').textContent='Зарегистрироваться';
+  }
+});
 </script>
 </body>
 </html>
