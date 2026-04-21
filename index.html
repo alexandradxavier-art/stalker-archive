@@ -642,7 +642,7 @@ onAuthStateChanged(auth, async user=>{
   document.getElementById('loading-screen').classList.add('hidden');
   if(user){
     currentUser=user;
-    const callsign=user.displayName||user.email;
+    const callsign=user.displayName||user.email.replace('@stalker.zone','');
     document.getElementById('current-callsign').textContent=callsign;
     document.getElementById('auth-screen').classList.add('hidden');
     document.getElementById('app-layout').style.display='flex';
