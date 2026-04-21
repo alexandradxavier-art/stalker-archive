@@ -296,9 +296,9 @@ textarea{min-height:70px;line-height:1.6}
 
 
 /* CLOSED MODULE */
-.tn-mod.act-cls{color:var(--red);border-bottom-color:var(--red)}
-.tn-mod.cls-tab{color:var(--red-dim)}
-.tn-mod.cls-tab:hover{color:var(--red)}
+.tn-mod.act-cls{color:var(--red);border-bottom-color:var(--red);background:rgba(184,64,64,0.06)}
+.tn-mod.tn-cls{color:#7a2828;border-left:1px solid var(--border)}
+.tn-mod.tn-cls:hover{color:var(--red);background:rgba(184,64,64,0.04)}
 .access-wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:20px;background:var(--bg)}
 .access-box{width:100%;max-width:340px;border:1px solid var(--red-dim);background:var(--paper2);position:relative}
 .access-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--red),var(--red-dim),transparent)}
@@ -337,6 +337,29 @@ textarea{min-height:70px;line-height:1.6}
 .cl-note{background:#0b0808;border-left:3px solid var(--red-dim);padding:9px 12px;font-size:12px;color:var(--red);font-style:italic;line-height:1.6}
 .sb-item.act-r{border-left-color:var(--red);color:var(--red);background:rgba(184,64,64,0.06)}
 .sb-mod-title.cr{color:var(--red)}
+
+
+/* CLS MODAL */
+.cls-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.78);z-index:6000;display:none;align-items:center;justify-content:center}
+.cls-overlay.open{display:flex}
+.cls-modal{background:var(--paper2);border:1px solid var(--red-dim);width:100%;max-width:360px;position:relative;animation:mIn 0.18s ease}
+.cls-modal::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--red),var(--red-dim),transparent)}
+.cls-m-head{padding:18px 20px 14px;border-bottom:1px solid var(--border2);text-align:center}
+.cls-m-ico{font-size:24px;color:var(--red);margin-bottom:8px;opacity:0.75}
+.cls-m-title{font-family:'Oswald',sans-serif;font-size:15px;color:var(--red);letter-spacing:2px;text-transform:uppercase;margin-bottom:3px}
+.cls-m-sub{font-size:7px;color:var(--text-dim);letter-spacing:2px;text-transform:uppercase}
+.cls-m-body{padding:18px 20px}
+.cls-m-label{font-size:7.5px;letter-spacing:2px;color:var(--text-dim);text-transform:uppercase;display:block;margin-bottom:5px}
+.cls-m-input{width:100%;background:var(--paper3);border:1px solid var(--red-dim);color:var(--text);font-family:'Share Tech Mono',monospace;font-size:13px;padding:10px 12px;outline:none;letter-spacing:2px;transition:border-color 0.2s}
+.cls-m-input:focus{border-color:var(--red)}
+.cls-m-input::placeholder{color:var(--text-faint);letter-spacing:0}
+.cls-m-btn{width:100%;padding:10px;background:none;border:1px solid var(--red-dim);color:var(--red);font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;margin-top:10px;transition:all 0.2s}
+.cls-m-btn:hover{border-color:var(--red);background:rgba(184,64,64,0.07)}
+.cls-m-btn:disabled{opacity:0.4;cursor:not-allowed}
+.cls-m-err{font-size:9px;color:var(--red);letter-spacing:1px;min-height:15px;margin-top:7px;display:block;text-align:center}
+.cls-m-cancel{display:block;text-align:center;margin-top:8px;font-size:8px;color:var(--text-faint);cursor:pointer;letter-spacing:1px}
+.cls-m-cancel:hover{color:var(--text-dim)}
+.cls-m-foot{padding:9px 20px;border-top:1px solid var(--border2);background:var(--paper3);font-size:7px;color:var(--text-faint);text-align:center;letter-spacing:1px;line-height:1.8}
 
 @media(max-width:700px){
   .sidebar{display:none}
@@ -399,7 +422,7 @@ textarea{min-height:70px;line-height:1.6}
       <button class="tn-mod" id="tn-stk" onclick="setModule('stk')">◉ Сталкеры</button>
       <button class="tn-mod" id="tn-doc" onclick="setModule('doc')">▤ Документы</button>
       <button class="tn-mod" id="tn-all" onclick="setModule('all')">◈ Все записи</button>
-      <button class="tn-mod cls-tab" id="tn-cls" onclick="setModule('cls')">⊘ Закрытые материалы</button>
+      <button class="tn-mod tn-cls" id="tn-cls" onclick="handleClsClick()">⊘ Закрытые материалы</button>
     </div>
     <div class="tn-right">
       <div class="user-badge">
@@ -463,6 +486,43 @@ textarea{min-height:70px;line-height:1.6}
   <button class="lb-close" onclick="closeLightbox()">✕</button>
   <img id="lb-img" src="" alt="">
 </div>
+
+      <div class="cls-m-title">Закрытые материалы</div>
+      <div class="cls-m-sub">Требуется дополнительный допуск</div>
+    </div>
+    <div class="cls-m-body">
+      <label class="cls-m-label">Код доступа</label>
+      <input class="cls-m-input" type="password" id="cls-pw-inp" placeholder="введи код доступа" autocomplete="off">
+      <button class="cls-m-btn" id="cls-pw-btn" onclick="submitCls()">Подтвердить доступ</button>
+      <span class="cls-m-err" id="cls-pw-err"></span>
+      <span class="cls-m-cancel" onclick="closeCls()">Отмена</span>
+    </div>
+    <div class="cls-m-foot">Раздел защищён · Сессия сбрасывается при выходе из системы</div>
+  </div>
+</div>
+
+
+<!-- CLS ACCESS MODAL — поверх интерфейса, не блокирующий -->
+<div class="cls-overlay" id="cls-overlay" onclick="handleClsOverlayClick(event)">
+  <div class="cls-modal" id="cls-modal">
+    <div class="cls-m-head">
+      <div class="cls-m-ico">⊘</div>
+      <div class="cls-m-title">Закрытые материалы</div>
+      <div class="cls-m-sub">Требуется дополнительный допуск</div>
+    </div>
+    <div class="cls-m-body">
+      <label class="cls-m-label">Код доступа</label>
+      <input class="cls-m-input" type="password" id="cls-pw-inp" placeholder="введи код доступа" autocomplete="off">
+      <div style="display:flex;gap:7px;margin-top:10px">
+        <button class="cls-m-btn" id="cls-pw-btn" onclick="submitCls()" style="flex:1">Подтвердить доступ</button>
+        <button onclick="closeCls()" style="padding:9px 14px;background:none;border:1px solid var(--border);color:var(--text-dim);font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:1px;cursor:pointer;transition:all 0.15s" onmouseover="this.style.borderColor='var(--text-dim)';this.style.color='var(--text)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-dim)'">Отмена</button>
+      </div>
+      <span class="cls-m-err" id="cls-pw-err"></span>
+    </div>
+    <div class="cls-m-foot">Раздел защищён · Сессия сбрасывается при выходе из системы</div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script type="module">
@@ -581,21 +641,17 @@ function startListeners(){
 
 // MODULE SWITCHING
 window.setModule=function(mod){
-  // CLOSED MODULE: require password
-  if(mod==='cls'){
-    if(!window._clsUnlocked){
-      openClosedAccess();
-      return;
-    }
-    // already unlocked — open normally
-  }
   currentModule=mod;currentSub=null;
   document.getElementById('detail-panel').classList.remove('open');
   editingId=null;window._editRecord=null;
   // update top nav
-  ['arc','stk','doc','all','cls'].forEach(m=>{
-    document.getElementById('tn-'+m).className='tn-mod'+(m==='cls'?'cls-tab':'')+(m===mod?' act-'+m:'');
+  ['arc','stk','doc','all'].forEach(m=>{
+    const el=document.getElementById('tn-'+m);
+    if(el) el.className='tn-mod'+(m===mod?' act-'+m:'');
   });
+  // cls button keeps its own state — managed by activateClsModule
+  const clsEl=document.getElementById('tn-cls');
+  if(clsEl && mod!=='cls') clsEl.className='tn-mod tn-cls';
   // update add btn
   const addBtn=document.getElementById('add-btn');
   if(mod==='arc'){addBtn.className='add-btn g';addBtn.textContent='＋ Образец';}
@@ -912,21 +968,9 @@ function docTypeChip(t){
 
 // RENDER
 function renderContent(){
-  if(currentModule==='cls'&&!window._clsUnlocked){
-    openClosedAccess();return;
-  }
+  // cls access checked before entering module
   if(currentView==='list')renderList();else renderCards();
-  // add prot-bar for cls
-  if(currentModule==='cls'){
-    const ca=document.getElementById('content-area');
-    if(ca&&!ca.querySelector('.prot-bar')){
-      const bar=document.createElement('div');
-      bar.className='prot-bar';
-      bar.style.cssText='margin:-14px -16px 12px;';
-      bar.innerHTML='<div class="prot-dot"></div><span class="prot-text">Защищённый раздел · Сеанс активен</span>';
-      ca.insertBefore(bar,ca.firstChild);
-    }
-  }
+
 }
 
 function renderList(){
@@ -987,8 +1031,11 @@ function renderList(){
     return;
   }
   if(mod==='cls'){
-    ca.innerHTML=rows.map(r=>{
-      const tagCls=r.status==='активно'?'':(r.status==='под наблюдением'?'cl-obs':'cl-arch');
+    const protBar='<div class="prot-bar" style="margin:-14px -16px 12px"><div class="prot-dot"></div><span class="prot-text">Защищённый раздел · Сеанс активен</span></div>';
+    ca.innerHTML=protBar+(rows.length?'':emptyState('Записей нет. Нажмите ＋ Запись чтобы добавить.'));
+    if(!rows.length)return;
+    ca.innerHTML=protBar+rows.map(r=>{
+      const tagCls=r.status==='активно'?'':(r.status==='под наблюдением'?' cl-obs':' cl-arch');
       const tagLabel=(r.status||'').toUpperCase().slice(0,9)||'—';
       return`<div class="cl-card" onclick="openDetail('${r.id}','cls')">
         <div class="cl-head"><span class="cl-id">${esc(r.clId||'ЗМ-???')}</span><span class="cl-title">${esc(r.title||'Без названия')}</span><span class="cl-tag ${tagCls}">${tagLabel}</span></div>
@@ -1511,194 +1558,264 @@ document.getElementById('reg-pass2').addEventListener('keydown',e=>{if(e.key==='
 
 
 // ══ CLOSED MODULE ══
-let closedRecords=[];
-let unsubClosed=null;
-window._clsUnlocked=false;
+let closedRecords = [];
+let unsubClosed = null;
+const CLS_PASSWORD = 'Dostup#Gamma_17!';
 
-const CLS_HASH='8f2a4b1e9c6d3f7a'; // SHA-like placeholder — actual check is string compare
+// Флаг допуска — только в памяти, сбрасывается при перезагрузке/выходе
+window._clsUnlocked = false;
 
-function checkClsPassword(pw){
-  return pw==='Archiv!47_Zaslon#9';
+// Запомнить предыдущий модуль чтобы вернуться при отмене
+let _prevModule = 'arc';
+
+// Клик на вкладку — открывает модал допуска, НЕ меняет текущий модуль
+window.handleClsClick = function() {
+  if (window._clsUnlocked) {
+    // Уже разблокировано — просто переключить модуль
+    activateClsModule();
+    return;
+  }
+  // Запомнить текущий модуль
+  _prevModule = currentModule || 'arc';
+  // Открыть модал поверх текущего экрана — не трогаем currentModule
+  openClsModal();
+};
+
+// Клик по overlay (фону) — закрыть модал
+window.handleClsOverlayClick = function(e) {
+  if (e.target === document.getElementById('cls-overlay')) {
+    closeCls();
+  }
+};
+
+function openClsModal() {
+  const overlay = document.getElementById('cls-overlay');
+  overlay.classList.add('open');
+  const inp = document.getElementById('cls-pw-inp');
+  inp.value = '';
+  document.getElementById('cls-pw-err').textContent = '';
+  const btn = document.getElementById('cls-pw-btn');
+  btn.disabled = false;
+  btn.textContent = 'Подтвердить доступ';
+  setTimeout(() => inp && inp.focus(), 80);
 }
 
-function openClosedAccess(){
-  // Show access screen instead of content
-  currentModule='cls';
-  // update nav visuals
-  ['arc','stk','doc','all','cls'].forEach(m=>{
-    document.getElementById('tn-'+m).className='tn-mod'+(m==='cls'?'cls-tab act-cls':'');
-  });
-  document.getElementById('tn-cls').className='tn-mod cls-tab act-cls';
-  // render sidebar locked
-  document.getElementById('sb-title').className='sb-mod-title cr';
-  document.getElementById('sb-title').textContent='Закрытые материалы';
-  document.getElementById('sb-sub').textContent='Доступ ограничен';
-  document.getElementById('sb-nav').innerHTML=`<div style="flex:1;display:flex;align-items:center;justify-content:center;padding:16px;text-align:center"><div style="font-size:18px;color:#3a1a1a;margin-bottom:8px">⊘</div><div style="font-size:9px;color:var(--text-faint);letter-spacing:1px;line-height:2">Требуется<br>дополнительный<br>допуск</div></div>`;
-  document.getElementById('sb-stats').innerHTML='';
-  document.querySelector('.sb-foot').innerHTML='Доступ не подтверждён';
-  // render access screen
-  document.getElementById('content-area').innerHTML=`
-    <div class="access-wrap">
-      <div class="access-box">
-        <div class="acc-head">
-          <div class="acc-ico">⊘</div>
-          <div class="acc-title">Закрытые материалы</div>
-          <div class="acc-sub">Требуется дополнительный допуск</div>
-        </div>
-        <div class="acc-body">
-          <label class="acc-label">Код доступа</label>
-          <input class="acc-input" type="password" id="cls-pw-input" placeholder="введи код доступа" autocomplete="off">
-          <button class="acc-btn" id="cls-pw-btn" onclick="submitClsPassword()">Подтвердить доступ</button>
-          <span class="acc-err" id="cls-pw-err"></span>
-        </div>
-        <div class="acc-footer">Раздел защищён · Несанкционированный доступ фиксируется<br>Сессия сбрасывается при выходе из системы</div>
-      </div>
-    </div>`;
-  // hide detail panel
-  document.getElementById('detail-panel').classList.remove('open');
-  // bind enter key
-  setTimeout(()=>{
-    const inp=document.getElementById('cls-pw-input');
-    if(inp){inp.focus();inp.addEventListener('keydown',e=>{if(e.key==='Enter')submitClsPassword();});}
-  },50);
-  // hide toolbar add btn label
-  const addBtn=document.getElementById('add-btn');
-  addBtn.className='add-btn';addBtn.style.borderColor='var(--red-dim)';addBtn.style.color='var(--red-dim)';addBtn.textContent='⊘ Закрыто';addBtn.onclick=null;
-  document.getElementById('toolbar-filters').innerHTML='';
-}
+window.closeCls = function() {
+  document.getElementById('cls-overlay').classList.remove('open');
+  // Вернуться в предыдущий модуль — ничего не менять, пользователь уже там
+};
 
-window.submitClsPassword=function(){
-  const pw=document.getElementById('cls-pw-input').value;
-  const err=document.getElementById('cls-pw-err');
-  const btn=document.getElementById('cls-pw-btn');
-  if(!pw){err.textContent='⚠ Введи код доступа';return;}
-  btn.disabled=true;btn.textContent='Проверка...';
-  // small delay for UX
-  setTimeout(()=>{
-    if(checkClsPassword(pw)){
-      window._clsUnlocked=true;
-      // start listener if not started
-      if(!unsubClosed){
-        unsubClosed=onSnapshot(collection(db,'closed'),snap=>{
-          closedRecords=snap.docs.map(d=>({id:d.id,...d.data()}));
-          if(currentModule==='cls'&&window._clsUnlocked){renderSidebar();renderContent();}
+window.submitCls = function() {
+  const pw = document.getElementById('cls-pw-inp').value;
+  const errEl = document.getElementById('cls-pw-err');
+  const btn = document.getElementById('cls-pw-btn');
+  errEl.textContent = '';
+  if (!pw) { errEl.textContent = '⚠ Введи код доступа'; return; }
+  btn.disabled = true;
+  btn.textContent = 'Проверка...';
+  setTimeout(() => {
+    if (pw === CLS_PASSWORD) {
+      window._clsUnlocked = true;
+      document.getElementById('cls-overlay').classList.remove('open');
+      // Запустить слушатель Firestore только после правильного пароля
+      if (!unsubClosed) {
+        unsubClosed = onSnapshot(collection(db, 'closed'), snap => {
+          closedRecords = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+          if (currentModule === 'cls') { renderSidebar(); renderContent(); }
         });
       }
-      // restore add btn
-      const addBtn=document.getElementById('add-btn');
-      addBtn.style.borderColor='';addBtn.style.color='';
-      addBtn.className='add-btn';addBtn.style.setProperty('border-color','var(--red-dim)');addBtn.style.setProperty('color','var(--red)');
-      addBtn.textContent='＋ Запись';addBtn.onclick=()=>openAdd();
-      renderToolbarFilters();
-      renderSidebar();
-      renderContent();
-    }else{
-      err.textContent='⚠ Неверный код — доступ запрещён';
-      btn.disabled=false;btn.textContent='Подтвердить доступ';
-      document.getElementById('cls-pw-input').value='';
-      document.getElementById('cls-pw-input').focus();
+      activateClsModule();
+    } else {
+      errEl.textContent = '⚠ Неверный код — доступ запрещён';
+      btn.disabled = false;
+      btn.textContent = 'Подтвердить доступ';
+      document.getElementById('cls-pw-inp').value = '';
+      document.getElementById('cls-pw-inp').focus();
     }
-  },300);
+  }, 280);
+};
+
+function activateClsModule() {
+  currentModule = 'cls';
+  currentSub = null;
+  document.getElementById('detail-panel').classList.remove('open');
+  editingId = null; window._editRecord = null;
+  // Обновить topnav
+  ['arc','stk','doc','all'].forEach(m => {
+    const el = document.getElementById('tn-' + m);
+    if (el) el.className = 'tn-mod';
+  });
+  const clsEl = document.getElementById('tn-cls');
+  if (clsEl) clsEl.className = 'tn-mod tn-cls act-cls';
+  // Кнопка добавить
+  const ab = document.getElementById('add-btn');
+  ab.className = 'add-btn';
+  ab.removeAttribute('style');
+  ab.style.borderColor = 'var(--red-dim)';
+  ab.style.color = 'var(--red)';
+  ab.style.marginLeft = 'auto';
+  ab.textContent = '＋ Запись';
+  ab.onclick = () => openAdd();
+  renderToolbarFilters();
+  renderSidebar();
+  renderContent();
 }
 
-function renderClsDetail(r){
-  const ph=(r.photos||[]).map(p=>`<div class="photo-item"><img src="${p.data}" alt="" onclick="openLightbox('${p.data}')"></div>`).join('');
-  const tagCls=r.status==='активно'?'':(r.status==='под наблюдением'?'cl-obs':'cl-arch');
-  document.getElementById('dp-title').style.color='var(--red)';
-  document.getElementById('dp-body').innerHTML=`
-    <div class="prot-bar" style="margin-bottom:12px"><div class="prot-dot"></div><span class="prot-text">Защищённый раздел · Закрытая запись</span></div>
+function renderClsDetail(r) {
+  const ph = (r.photos || []).map(p =>
+    `<div class="photo-item"><img src="${p.data}" alt="" onclick="openLightbox('${p.data}')"></div>`
+  ).join('');
+  const tagCls = r.status === 'под наблюдением' ? ' cl-obs' : r.status === 'архив' ? ' cl-arch' : '';
+  document.getElementById('dp-title').style.color = 'var(--red)';
+  document.getElementById('dp-body').innerHTML = `
+    <div class="prot-bar" style="margin:-18px -18px 14px"><div class="prot-dot"></div><span class="prot-text">Защищённый раздел · Закрытая запись</span></div>
     <div class="dp-2col">
       <div>
-        <div class="cl-detail-block"><div class="cl-detail-label">Краткая сводка</div><div class="cl-detail-body">
-          <div class="fv-val${!r.summary?' empty':''}">${r.summary?esc(r.summary):'не внесено'}</div>
-        </div></div>
-        <div class="cl-detail-block"><div class="cl-detail-label">Подробное содержание</div><div class="cl-detail-body">
-          <div class="fv-val${!r.content?' empty':''}" style="white-space:pre-wrap;line-height:1.7">${r.content?esc(r.content):'не внесено'}</div>
-        </div></div>
-        ${r.note?`<div class="cl-detail-block"><div class="cl-detail-label">Примечание</div><div class="cl-detail-body"><div class="cl-note">${esc(r.note)}</div></div></div>`:''}
-        ${ph?`<div class="cl-detail-block"><div class="cl-detail-label">Вложения</div><div class="cl-detail-body"><div class="photo-grid">${ph}</div></div></div>`:''}
+        <div class="dp-block" style="border-color:#3a1a1a;background:#100c0c">
+          <div class="dp-block-label" style="background:#0b0808;border-color:#1e0e0e">Краткая сводка</div>
+          <div class="dp-block-body"><div class="fv-val${!r.summary ? ' empty' : ''}">${r.summary ? esc(r.summary) : 'не внесено'}</div></div>
+        </div>
+        <div class="dp-block" style="border-color:#3a1a1a;background:#100c0c">
+          <div class="dp-block-label" style="background:#0b0808;border-color:#1e0e0e">Подробное содержание</div>
+          <div class="dp-block-body"><div class="fv-val${!r.content ? ' empty' : ''}" style="white-space:pre-wrap;line-height:1.7">${r.content ? esc(r.content) : 'не внесено'}</div></div>
+        </div>
+        ${r.note ? `<div class="dp-block" style="border-color:#3a1a1a;background:#100c0c">
+          <div class="dp-block-label" style="background:#0b0808;border-color:#1e0e0e">Примечание</div>
+          <div class="dp-block-body"><div style="background:#0b0808;border-left:3px solid var(--red-dim);padding:9px 12px;font-size:12px;color:var(--red);font-style:italic;line-height:1.6">${esc(r.note)}</div></div>
+        </div>` : ''}
+        ${ph ? `<div class="dp-block" style="border-color:#3a1a1a;background:#100c0c">
+          <div class="dp-block-label" style="background:#0b0808;border-color:#1e0e0e">Вложения</div>
+          <div class="dp-block-body"><div class="photo-grid">${ph}</div></div>
+        </div>` : ''}
       </div>
       <div>
-        <div class="cl-detail-block"><div class="cl-detail-label">Параметры</div><div class="cl-detail-body">
-          <div class="fv"><div class="fv-label">Идентификатор</div><div class="fv-val" style="font-family:monospace;color:var(--red)">${esc(r.clId||'—')}</div></div>
-          <div class="fv"><div class="fv-label">Тип</div><div class="fv-val">${esc(r.clType||'—')}</div></div>
-          <div class="fv"><div class="fv-label">Статус</div><span class="cl-tag ${tagCls}">${(r.status||'—').toUpperCase()}</span></div>
-          <div class="fv"><div class="fv-label">Дата</div><div class="fv-val mono">${fmtDate(r.date)}</div></div>
-          <div class="fv"><div class="fv-label">Связанные лица</div><div class="fv-val${!r.relPersons?' empty':''}">${r.relPersons?esc(r.relPersons):'—'}</div></div>
-          <div class="fv"><div class="fv-label">Связанные документы</div><div class="fv-val${!r.relDocs?' empty':''}">${r.relDocs?esc(r.relDocs):'—'}</div></div>
-        </div></div>
+        <div class="dp-block" style="border-color:#3a1a1a;background:#100c0c">
+          <div class="dp-block-label" style="background:#0b0808;border-color:#1e0e0e">Параметры</div>
+          <div class="dp-block-body">
+            <div class="fv"><div class="fv-label">Идентификатор</div><div class="fv-val" style="font-family:monospace;color:var(--red)">${esc(r.clId || '—')}</div></div>
+            <div class="fv"><div class="fv-label">Тип</div><div class="fv-val">${esc(r.clType || '—')}</div></div>
+            <div class="fv"><div class="fv-label">Статус</div><span class="cl-tag${tagCls}">${(r.status || '—').toUpperCase()}</span></div>
+            <div class="fv"><div class="fv-label">Дата</div><div class="fv-val mono">${fmtDate(r.date)}</div></div>
+            <div class="fv"><div class="fv-label">Связанные лица</div><div class="fv-val${!r.relPersons ? ' empty' : ''}">${r.relPersons ? esc(r.relPersons) : '—'}</div></div>
+            <div class="fv"><div class="fv-label">Связанные документы</div><div class="fv-val${!r.relDocs ? ' empty' : ''}">${r.relDocs ? esc(r.relDocs) : '—'}</div></div>
+          </div>
+        </div>
       </div>
     </div>`;
 }
 
-function renderClsForm(id,isNew){
-  const r=id?closedRecords.find(x=>x.id===id):{};
-  const newId=uid();
-  if(isNew){editingId=newId;window._newId=newId;}
-  window._editMod='cls';
-  window._editRecord=isNew?{id:editingId,photos:[]}:JSON.parse(JSON.stringify(r));
-  const clsNum=isNew?('ЗМ-'+String((closedRecords.length+1)).padStart(3,'0')):(r.clId||'ЗМ-???');
+function renderClsForm(id, isNew) {
+  const r = id ? closedRecords.find(x => x.id === id) : {};
+  const newId = uid();
+  if (isNew) { editingId = newId; window._newId = newId; }
+  window._editMod = 'cls';
+  window._editRecord = isNew ? { id: editingId, photos: [] } : JSON.parse(JSON.stringify(r));
+  const clsNum = isNew
+    ? ('ЗМ-' + String(closedRecords.length + 1).padStart(3, '0'))
+    : (r.clId || 'ЗМ-???');
   document.getElementById('detail-panel').classList.add('open');
-  document.getElementById('dp-title').textContent=isNew?'Новая запись':`Редактировать: ${r.title||''}`;
-  document.getElementById('dp-title').style.color='var(--red)';
-  document.getElementById('dp-actions').innerHTML=`
+  document.getElementById('dp-title').textContent = isNew ? 'Новая запись' : `Редактировать: ${r.title || ''}`;
+  document.getElementById('dp-title').style.color = 'var(--red)';
+  document.getElementById('dp-actions').innerHTML = `
     <button class="act-btn btn-save" onclick="doSave()">✓ Сохранить</button>
-    <button class="act-btn btn-cancel" onclick="cancelEdit('${editingId||''}','${isNew}','cls')">Отмена</button>`;
-  const ph=(window._editRecord.photos||[]).map(p=>`<div class="photo-item"><img src="${p.data}" alt="" onclick="openLightbox('${p.data}')"><button class="photo-del" onclick="deletePhoto('${p.id}')">✕</button></div>`).join('');
-  document.getElementById('dp-body').innerHTML=`
-    <div class="prot-bar" style="margin-bottom:12px"><div class="prot-dot"></div><span class="prot-text">Защищённый раздел · Редактирование записи</span></div>
+    <button class="act-btn btn-cancel" onclick="cancelEdit('${editingId || ''}','${isNew}','cls')">Отмена</button>`;
+  const ph = (window._editRecord.photos || []).map(p =>
+    `<div class="photo-item"><img src="${p.data}" alt="" onclick="openLightbox('${p.data}')"><button class="photo-del" onclick="deletePhoto('${p.id}')">✕</button></div>`
+  ).join('');
+  document.getElementById('dp-body').innerHTML = `
+    <div class="prot-bar" style="margin:-18px -18px 14px"><div class="prot-dot"></div><span class="prot-text">Защищённый раздел · Редактирование</span></div>
     <div class="dp-2col">
       <div>
         <div class="dp-block"><div class="dp-block-label">Основные поля</div><div class="dp-block-body">
-          <div class="form-field"><label class="form-label">Название *</label><input type="text" id="ef-cls-title" value="${esc(r.title||'')}" placeholder="Название записи"></div>
+          <div class="form-field"><label class="form-label">Название *</label><input type="text" id="ef-cls-title" value="${esc(r.title || '')}" placeholder="Название записи"></div>
           <div class="form-grid" style="margin-top:9px">
-            <div class="form-field"><label class="form-label">Тип</label><select id="ef-cls-type"><option value="">—</option><option value="наблюдение"${(r.clType||'')==='наблюдение'?' selected':''}>Наблюдение</option><option value="досье"${(r.clType||'')==='досье'?' selected':''}>Досье</option><option value="контакт"${(r.clType||'')==='контакт'?' selected':''}>Контакт</option><option value="отчёт"${(r.clType||'')==='отчёт'?' selected':''}>Отчёт</option><option value="примечание"${(r.clType||'')==='примечание'?' selected':''}>Примечание</option></select></div>
-            <div class="form-field"><label class="form-label">Статус</label><select id="ef-cls-status"><option value="">—</option><option value="активно"${(r.status||'')==='активно'?' selected':''}>Активно</option><option value="под наблюдением"${(r.status||'')==='под наблюдением'?' selected':''}>Под наблюдением</option><option value="архив"${(r.status||'')==='архив'?' selected':''}>Архив</option></select></div>
-            <div class="form-field"><label class="form-label">Дата</label><input type="date" id="ef-cls-date" value="${r.date||today()}"></div>
-            <div class="form-field"><label class="form-label">Идентификатор</label><input type="text" value="${clsNum}" readonly style="color:var(--red);opacity:0.7;cursor:not-allowed"></div>
+            <div class="form-field"><label class="form-label">Тип</label>
+              <select id="ef-cls-type">
+                <option value="">—</option>
+                <option value="наблюдение"${(r.clType||'')==='наблюдение'?' selected':''}>Наблюдение</option>
+                <option value="досье"${(r.clType||'')==='досье'?' selected':''}>Досье</option>
+                <option value="контакт"${(r.clType||'')==='контакт'?' selected':''}>Контакт</option>
+                <option value="отчёт"${(r.clType||'')==='отчёт'?' selected':''}>Отчёт</option>
+                <option value="примечание"${(r.clType||'')==='примечание'?' selected':''}>Примечание</option>
+              </select></div>
+            <div class="form-field"><label class="form-label">Статус</label>
+              <select id="ef-cls-status">
+                <option value="">—</option>
+                <option value="активно"${(r.status||'')==='активно'?' selected':''}>Активно</option>
+                <option value="под наблюдением"${(r.status||'')==='под наблюдением'?' selected':''}>Под наблюдением</option>
+                <option value="архив"${(r.status||'')==='архив'?' selected':''}>Архив</option>
+              </select></div>
+            <div class="form-field"><label class="form-label">Дата</label><input type="date" id="ef-cls-date" value="${r.date || today()}"></div>
+            <div class="form-field"><label class="form-label">Идентификатор</label>
+              <input type="text" value="${clsNum}" readonly style="color:var(--red);opacity:0.7;cursor:not-allowed"></div>
           </div>
         </div></div>
         <div class="dp-block"><div class="dp-block-label">Содержание</div><div class="dp-block-body">
-          <div class="form-field"><label class="form-label">Краткая сводка</label><textarea id="ef-cls-summary" rows="3">${esc(r.summary||'')}</textarea></div>
-          <div class="form-field" style="margin-top:9px"><label class="form-label">Подробное содержание</label><textarea id="ef-cls-content" rows="6">${esc(r.content||'')}</textarea></div>
-          <div class="form-field" style="margin-top:9px"><label class="form-label">Примечание</label><textarea id="ef-cls-note" rows="2">${esc(r.note||'')}</textarea></div>
+          <div class="form-field"><label class="form-label">Краткая сводка</label><textarea id="ef-cls-summary" rows="3">${esc(r.summary || '')}</textarea></div>
+          <div class="form-field" style="margin-top:9px"><label class="form-label">Подробное содержание</label><textarea id="ef-cls-content" rows="6">${esc(r.content || '')}</textarea></div>
+          <div class="form-field" style="margin-top:9px"><label class="form-label">Примечание</label><textarea id="ef-cls-note" rows="2">${esc(r.note || '')}</textarea></div>
         </div></div>
         <div class="dp-block"><div class="dp-block-label">Связи</div><div class="dp-block-body">
-          <div class="form-field"><label class="form-label">Связанные лица</label><input type="text" id="ef-cls-persons" value="${esc(r.relPersons||'')}" placeholder="Позывные, имена..."></div>
-          <div class="form-field" style="margin-top:8px"><label class="form-label">Связанные документы</label><input type="text" id="ef-cls-docs" value="${esc(r.relDocs||'')}" placeholder="Названия документов..."></div>
+          <div class="form-field"><label class="form-label">Связанные лица</label><input type="text" id="ef-cls-persons" value="${esc(r.relPersons || '')}" placeholder="Позывные, имена..."></div>
+          <div class="form-field" style="margin-top:8px"><label class="form-label">Связанные документы</label><input type="text" id="ef-cls-docs" value="${esc(r.relDocs || '')}" placeholder="Названия документов..."></div>
         </div></div>
-        <div class="dp-block"><div class="dp-block-label">Вложения</div><div class="dp-block-body"><div class="photo-grid" id="dp-photo-grid">${ph}<label class="photo-add-btn"><span class="pic">＋</span><span>Файл</span><input type="file" accept="image/*" multiple style="display:none" onchange="handlePhotoUpload(event)"></label></div></div></div>
+        <div class="dp-block"><div class="dp-block-label">Вложения</div><div class="dp-block-body">
+          <div class="photo-grid" id="dp-photo-grid">${ph}
+            <label class="photo-add-btn"><span class="pic">＋</span><span>Файл</span>
+              <input type="file" accept="image/*" multiple style="display:none" onchange="handlePhotoUpload(event)">
+            </label>
+          </div>
+        </div></div>
       </div>
-      <div><div class="dp-block"><div class="dp-block-label">Инфо</div><div class="dp-block-body" style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--text-dim);line-height:2">
-        <div>ID: <span style="color:var(--red)">${clsNum}</span></div>
-        <div style="color:var(--text-faint);font-size:8px;margin-top:4px">* — обязательное поле</div>
-        <div style="color:var(--red);font-size:8px;margin-top:8px;border:1px solid #3a1a1a;padding:6px;line-height:1.6;background:#100c0c">⊘ Закрытый раздел<br>Запись доступна только<br>при активном допуске</div>
-      </div></div></div>
+      <div><div class="dp-block" style="border-color:#3a1a1a;background:#100c0c">
+        <div class="dp-block-label" style="background:#0b0808;border-color:#1e0e0e">Инфо</div>
+        <div class="dp-block-body" style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--text-dim);line-height:2">
+          <div>ID: <span style="color:var(--red)">${clsNum}</span></div>
+          <div style="color:var(--text-faint);font-size:8px;margin-top:4px">* — обязательное поле</div>
+          <div style="color:var(--red);font-size:8px;margin-top:8px;border:1px solid #3a1a1a;padding:6px;line-height:1.6;background:#100c0c">⊘ Закрытый раздел<br>Запись изолирована<br>от общей базы</div>
+        </div>
+      </div></div>
     </div>`;
 }
 
-function sbItemCls(val,label,cnt,dotColor='var(--red)'){
-  const isActive=(!val&&!currentSub)||(currentSub&&currentSub.val===val);
-  return`<button class="sb-item${isActive?' act-r':''}" onclick="setClsSub('${val||''}')" style="width:100%">
-    <div class="sb-dot" style="background:${dotColor}"></div>
-    <span style="flex:1;text-align:left">${label}</span>
-    ${cnt!==undefined?`<span class="sb-cnt">${cnt}</span>`:''}
+function sbItemCls(val, label, cnt, dotColor='var(--red)') {
+  const isActive = (!val && !currentSub) || (currentSub && currentSub.val === val);
+  return `<button class="sb-item${isActive ? ' act-r' : ''}" onclick="setClsSub('${val || ''}')" style="width:100%;display:flex;align-items:center;gap:6px;padding:7px 12px;background:${isActive ? 'rgba(184,64,64,0.06)' : 'none'};border:none;border-left:2px solid ${isActive ? 'var(--red)' : 'transparent'};font-family:monospace;font-size:9px;letter-spacing:0.5px;text-align:left;cursor:pointer;color:${isActive ? 'var(--red)' : 'var(--text-dim)'}">
+    <div style="width:5px;height:5px;border-radius:50%;background:${dotColor};flex-shrink:0"></div>
+    <span style="flex:1">${label}</span>
+    ${cnt !== undefined ? `<span style="font-size:8px;color:var(--text-faint)">${cnt}</span>` : ''}
   </button>`;
 }
 
-window.setClsSub=function(val){
-  currentSub=val?{group:'cls',val}:null;
-  renderSidebar();renderContent();
+window.setClsSub = function(val) {
+  currentSub = val ? { group: 'cls', val } : null;
+  renderSidebar();
+  renderContent();
+};
+
+function resetClosedAccess() {
+  window._clsUnlocked = false;
+  if (unsubClosed) { unsubClosed(); unsubClosed = null; }
+  closedRecords = [];
+  document.getElementById('cls-overlay').classList.remove('open');
 }
 
-// RESET on logout
-function resetClosedAccess(){
-  window._clsUnlocked=false;
-  if(unsubClosed){unsubClosed();unsubClosed=null;}
-  closedRecords=[];
-}
+// Escape закрывает модал допуска (но не блокирует навигацию)
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && document.getElementById('cls-overlay').classList.contains('open')) {
+    closeCls();
+  }
+});
+
+// Enter в поле пароля
+setTimeout(() => {
+  const inp = document.getElementById('cls-pw-inp');
+  if (inp) inp.addEventListener('keydown', e => { if (e.key === 'Enter') submitCls(); });
+}, 500);
 
 // ══ END CLOSED MODULE ══
+
+
 
 // AUTH STATE
 onAuthStateChanged(auth,async user=>{
