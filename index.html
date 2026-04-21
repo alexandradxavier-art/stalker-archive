@@ -294,6 +294,50 @@ textarea{min-height:70px;line-height:1.6}
 .ld-bar::after{content:'';position:absolute;left:-60%;top:0;width:60%;height:100%;background:var(--green);animation:lda 1s linear infinite}
 @keyframes lda{to{left:100%}}
 
+
+/* CLOSED MODULE */
+.tn-mod.act-cls{color:var(--red);border-bottom-color:var(--red)}
+.tn-mod.cls-tab{color:var(--red-dim)}
+.tn-mod.cls-tab:hover{color:var(--red)}
+.access-wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:20px;background:var(--bg)}
+.access-box{width:100%;max-width:340px;border:1px solid var(--red-dim);background:var(--paper2);position:relative}
+.access-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--red),var(--red-dim),transparent)}
+.acc-head{padding:18px 20px 14px;border-bottom:1px solid var(--border2);text-align:center}
+.acc-ico{font-size:22px;color:var(--red);margin-bottom:7px;opacity:0.75}
+.acc-title{font-family:'Oswald',sans-serif;font-size:14px;color:var(--red);letter-spacing:2px;text-transform:uppercase;margin-bottom:3px}
+.acc-sub{font-size:7px;color:var(--text-dim);letter-spacing:2px;text-transform:uppercase}
+.acc-body{padding:16px 20px}
+.acc-label{font-size:7.5px;letter-spacing:2px;color:var(--text-dim);text-transform:uppercase;display:block;margin-bottom:5px}
+.acc-input{width:100%;background:var(--paper3);border:1px solid var(--red-dim);color:var(--text);font-family:'Share Tech Mono',monospace;font-size:12px;padding:9px 11px;outline:none;letter-spacing:2px;transition:border-color 0.2s}
+.acc-input:focus{border-color:var(--red)}
+.acc-input::placeholder{color:var(--text-faint);letter-spacing:0}
+.acc-btn{width:100%;padding:9px;background:none;border:1px solid var(--red-dim);color:var(--red);font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;margin-top:10px;transition:all 0.2s}
+.acc-btn:hover{border-color:var(--red);background:rgba(184,64,64,0.07)}
+.acc-btn:disabled{opacity:0.4;cursor:not-allowed}
+.acc-err{font-size:9px;color:var(--red);letter-spacing:1px;min-height:14px;margin-top:6px;display:block;text-align:center}
+.acc-footer{padding:9px 20px;border-top:1px solid var(--border2);background:var(--paper3);font-size:7px;color:var(--text-faint);text-align:center;letter-spacing:1px;line-height:1.8}
+.prot-bar{padding:5px 16px;background:rgba(184,64,64,0.04);border-bottom:1px solid #3a1a1a;display:flex;align-items:center;gap:7px;flex-shrink:0}
+.prot-dot{width:5px;height:5px;border-radius:50%;background:var(--red);animation:pulse 2s infinite;flex-shrink:0}
+.prot-text{font-size:7px;color:var(--red);letter-spacing:2px;text-transform:uppercase}
+.cl-card{border:1px solid #3a1a1a;background:#100c0c;margin-bottom:2px;cursor:pointer;transition:border-color 0.2s}
+.cl-card:hover{border-color:var(--red-dim)}
+.cl-head{padding:7px 12px;border-bottom:1px solid #1e0e0e;display:flex;align-items:center;gap:8px}
+.cl-id{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--red);letter-spacing:1px;flex-shrink:0}
+.cl-title{font-family:'Oswald',sans-serif;font-size:12px;color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;letter-spacing:0.5px}
+.cl-tag{font-size:7px;letter-spacing:2px;color:var(--red);border:1px solid var(--red-dim);padding:1px 5px;flex-shrink:0;font-family:'Share Tech Mono',monospace}
+.cl-tag.cl-obs{color:var(--amber);border-color:var(--amber-dim)}
+.cl-tag.cl-arch{color:var(--text-dim);border-color:var(--border)}
+.cl-meta{padding:4px 12px;border-bottom:1px solid #1e0e0e;display:flex;gap:10px;background:#0b0808}
+.cl-mi{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--text-dim)}
+.cl-mi span{color:var(--text)}
+.cl-body{padding:7px 12px;font-size:11px;color:var(--text-dim);line-height:1.55}
+.cl-detail-block{border:1px solid #3a1a1a;background:#100c0c;margin-bottom:10px}
+.cl-detail-label{font-family:'Share Tech Mono',monospace;font-size:7.5px;letter-spacing:2px;color:var(--text-dim);text-transform:uppercase;padding:7px 12px;border-bottom:1px solid #1e0e0e;background:#0b0808}
+.cl-detail-body{padding:12px}
+.cl-note{background:#0b0808;border-left:3px solid var(--red-dim);padding:9px 12px;font-size:12px;color:var(--red);font-style:italic;line-height:1.6}
+.sb-item.act-r{border-left-color:var(--red);color:var(--red);background:rgba(184,64,64,0.06)}
+.sb-mod-title.cr{color:var(--red)}
+
 @media(max-width:700px){
   .sidebar{display:none}
   .dp-2col{grid-template-columns:1fr}
@@ -355,6 +399,7 @@ textarea{min-height:70px;line-height:1.6}
       <button class="tn-mod" id="tn-stk" onclick="setModule('stk')">◉ Сталкеры</button>
       <button class="tn-mod" id="tn-doc" onclick="setModule('doc')">▤ Документы</button>
       <button class="tn-mod" id="tn-all" onclick="setModule('all')">◈ Все записи</button>
+      <button class="tn-mod cls-tab" id="tn-cls" onclick="setModule('cls')">⊘ Закрытые материалы</button>
     </div>
     <div class="tn-right">
       <div class="user-badge">
@@ -502,7 +547,7 @@ window.doLogin=async function(){
   try{await signInWithEmailAndPassword(auth,callToEmail(call),pass);}
   catch(e){errEl.textContent='⚠ Неверный позывной или пароль';btn.disabled=false;btn.textContent='Войти в систему';}
 }
-window.doLogout=async function(){await setUserOffline();await signOut(auth);}
+window.doLogout=async function(){resetClosedAccess();await setUserOffline();await signOut(auth);}
 
 // PRESENCE
 async function setUserOnline(){
@@ -536,18 +581,27 @@ function startListeners(){
 
 // MODULE SWITCHING
 window.setModule=function(mod){
+  // CLOSED MODULE: require password
+  if(mod==='cls'){
+    if(!window._clsUnlocked){
+      openClosedAccess();
+      return;
+    }
+    // already unlocked — open normally
+  }
   currentModule=mod;currentSub=null;
   document.getElementById('detail-panel').classList.remove('open');
   editingId=null;window._editRecord=null;
   // update top nav
-  ['arc','stk','doc','all'].forEach(m=>{
-    document.getElementById('tn-'+m).className='tn-mod'+(m===mod?' act-'+m:'');
+  ['arc','stk','doc','all','cls'].forEach(m=>{
+    document.getElementById('tn-'+m).className='tn-mod'+(m==='cls'?'cls-tab':'')+(m===mod?' act-'+m:'');
   });
   // update add btn
   const addBtn=document.getElementById('add-btn');
   if(mod==='arc'){addBtn.className='add-btn g';addBtn.textContent='＋ Образец';}
   else if(mod==='stk'){addBtn.className='add-btn a';addBtn.textContent='＋ Досье';}
   else if(mod==='doc'){addBtn.className='add-btn p';addBtn.textContent='＋ Документ';}
+  else if(mod==='cls'){addBtn.className='add-btn';addBtn.style.borderColor='var(--red-dim)';addBtn.style.color='var(--red)';addBtn.textContent='＋ Запись';}
   else{addBtn.className='add-btn g';addBtn.textContent='＋ Добавить';}
   // detail title color
   document.getElementById('dp-title').className='dp-title '+(mod==='arc'?'cg':mod==='stk'?'ca':mod==='doc'?'cp':'cg');
@@ -633,6 +687,35 @@ function renderSidebar(){
       <div class="st-box"><div class="st-n" style="color:var(--purple)">${documents.length}</div><div class="st-l">Всего</div></div>
       <div class="st-box"><div class="st-n" style="color:${urgent?'var(--red)':'var(--text-faint)'}">${urgent}</div><div class="st-l" style="color:${urgent?'var(--red)':''}">Срочных</div></div>`;
   }
+  else if(mod==='cls'){
+    titleEl.className='sb-mod-title cr';titleEl.textContent='Закрытые материалы';
+    subEl.textContent='Защищённый сеанс активен';
+    const byType={all:closedRecords.length,наблюдение:0,досье:0,контакт:0,отчёт:0,примечание:0};
+    const byStatus={активно:0,'под наблюдением':0,архив:0};
+    closedRecords.forEach(r=>{
+      const t=(r.clType||'').toLowerCase();if(byType[t]!==undefined)byType[t]++;
+      const s=(r.status||'').toLowerCase();if(byStatus[s]!==undefined)byStatus[s]++;
+    });
+    navEl.innerHTML=`
+      <div class="sb-sec">Подразделы</div>
+      ${sbItemCls(null,'Все записи',closedRecords.length)}
+      ${sbItemCls('наблюдение','Наблюдения',byType.наблюдение,'var(--amber)')}
+      ${sbItemCls('досье','Досье',byType.досье,'var(--blue)')}
+      ${sbItemCls('контакт','Контакты',byType.контакт,'var(--purple)')}
+      ${sbItemCls('отчёт','Отчёты',byType['отчёт'],'var(--green)')}
+      ${sbItemCls('примечание','Примечания',byType.примечание,'var(--text-dim)')}
+      <div class="sb-div"></div>
+      <div class="sb-sec">По статусу</div>
+      ${sbItemCls('st:активно','Активно',byStatus['активно'],'var(--red)')}
+      ${sbItemCls('st:под наблюдением','Под наблюдением',byStatus['под наблюдением'],'var(--amber)')}
+      ${sbItemCls('st:архив','Архив',byStatus['архив'],'var(--text-dim)')}`;
+    statsEl.innerHTML=`
+      <div class="st-box"><div class="st-n" style="color:var(--red)">${closedRecords.length}</div><div class="st-l">Всего</div></div>
+      <div class="st-box"><div class="st-n" style="color:var(--amber)">${byStatus['активно']}</div><div class="st-l">Активных</div></div>`;
+    // protected session badge
+    const foot=document.querySelector('.sb-foot');
+    if(foot&&mod==='cls'){foot.innerHTML='<div style="display:flex;align-items:center;gap:5px;margin-bottom:3px"><div style="width:5px;height:5px;border-radius:50%;background:var(--red);animation:pulse 2s infinite"></div><span style="color:var(--red)">Защищённый сеанс</span></div>Доступ подтверждён';}
+  }
   else{
     titleEl.className='sb-mod-title ct';titleEl.textContent='Все записи';
     subEl.textContent='Общий обзор';
@@ -690,6 +773,17 @@ window.setSub=function(group,val){
 function renderToolbarFilters(){
   const el=document.getElementById('toolbar-filters');
   const mod=currentModule;
+  if(mod==='cls'){
+    el.innerHTML=`<select class="tb-select" id="f-cltype" onchange="renderContent()">
+      <option value="">Все типы</option>
+      <option value="наблюдение">Наблюдение</option>
+      <option value="досье">Досье</option>
+      <option value="контакт">Контакт</option>
+      <option value="отчёт">Отчёт</option>
+      <option value="примечание">Примечание</option>
+    </select>`;
+    return;
+  }
   if(mod==='arc'){
     el.innerHTML=`<select class="tb-select" id="f-danger" onchange="renderContent()">
       <option value="">Все опасности</option>
@@ -752,7 +846,17 @@ function getFiltered(){
       return true;
     }).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
   }
-  // all
+  if(mod==='cls'){
+    const fType=getVal('f-cltype');
+    return closedRecords.filter(r=>{
+      if(currentSub&&currentSub.val&&!currentSub.val.startsWith('st:')&&(r.clType||'').toLowerCase()!==currentSub.val)return false;
+      if(currentSub&&currentSub.val&&currentSub.val.startsWith('st:')&&(r.status||'').toLowerCase()!==currentSub.val.slice(3))return false;
+      if(fType&&(r.clType||'').toLowerCase()!==fType)return false;
+      if(q&&!(r.title||'').toLowerCase().includes(q))return false;
+      return true;
+    }).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+  }
+  // all — STRICTLY no closed records
   const all=[
     ...records.map(r=>({...r,_mod:'arc',_name:r.name})),
     ...stalkers.map(s=>({...s,_mod:'stk',_name:s.callsign})),
@@ -808,7 +912,21 @@ function docTypeChip(t){
 
 // RENDER
 function renderContent(){
+  if(currentModule==='cls'&&!window._clsUnlocked){
+    openClosedAccess();return;
+  }
   if(currentView==='list')renderList();else renderCards();
+  // add prot-bar for cls
+  if(currentModule==='cls'){
+    const ca=document.getElementById('content-area');
+    if(ca&&!ca.querySelector('.prot-bar')){
+      const bar=document.createElement('div');
+      bar.className='prot-bar';
+      bar.style.cssText='margin:-14px -16px 12px;';
+      bar.innerHTML='<div class="prot-dot"></div><span class="prot-text">Защищённый раздел · Сеанс активен</span>';
+      ca.insertBefore(bar,ca.firstChild);
+    }
+  }
 }
 
 function renderList(){
@@ -868,6 +986,22 @@ function renderList(){
     </div>`).join('');
     return;
   }
+  if(mod==='cls'){
+    ca.innerHTML=rows.map(r=>{
+      const tagCls=r.status==='активно'?'':(r.status==='под наблюдением'?'cl-obs':'cl-arch');
+      const tagLabel=(r.status||'').toUpperCase().slice(0,9)||'—';
+      return`<div class="cl-card" onclick="openDetail('${r.id}','cls')">
+        <div class="cl-head"><span class="cl-id">${esc(r.clId||'ЗМ-???')}</span><span class="cl-title">${esc(r.title||'Без названия')}</span><span class="cl-tag ${tagCls}">${tagLabel}</span></div>
+        <div class="cl-meta">
+          <div class="cl-mi">Тип: <span>${esc(r.clType||'—')}</span></div>
+          <div class="cl-mi">Дата: <span>${fmtDate(r.date)}</span></div>
+          ${r.relPersons?`<div class="cl-mi">Связано: <span>${esc(r.relPersons)}</span></div>`:''}
+        </div>
+        <div class="cl-body">${esc((r.summary||'').slice(0,120))}${(r.summary||'').length>120?'…':''}</div>
+      </div>`;
+    }).join('');
+    return;
+  }
   // all
   ca.innerHTML=`<table class="list-table"><thead><tr>
     <th>#</th><th>Название</th><th>Раздел</th><th>Статус/Тип</th><th>Дата</th>
@@ -910,7 +1044,7 @@ function renderCards(){
     }).join('')}</div>`;
     return;
   }
-  if(mod==='doc'){renderList();return;}
+  if(mod==='doc'||mod==='cls'){renderList();return;}
 
   // arc + all
   ca.innerHTML=`<div class="card-grid">${rows.map(r=>{
@@ -931,6 +1065,13 @@ function renderCards(){
 window.openDetail=function(id,mod){
   const panel=document.getElementById('detail-panel');
   panel.classList.add('open');
+  if(mod==='cls'){
+    const r=closedRecords.find(x=>x.id===id);if(!r)return;
+    document.getElementById('dp-title').textContent=`${r.clId||'ЗМ-???'} · ${r.title||'—'}`;
+    document.getElementById('dp-actions').innerHTML=`<button class="act-btn btn-edit" onclick="openEdit('${id}','cls')">✎ Редактировать</button><button class="act-btn btn-del" onclick="confirmDel('${id}','cls')">✕ Удалить</button>`;
+    renderClsDetail(r);
+    return;
+  }
   if(mod==='arc'){
     const r=records.find(x=>x.id===id);if(!r)return;
     document.getElementById('dp-title').textContent=`#${padNum(r.num)} · ${r.name}`;
@@ -1044,12 +1185,13 @@ window.closeDetail=function(){
 }
 
 // ADD / EDIT
-window.openAdd=function(){openEdit(null,currentModule==='all'?'arc':currentModule);}
+window.openAdd=function(){openEdit(null,currentModule==='all'?'arc':currentModule==='cls'?'cls':currentModule);}
 window.openEdit=function(id,mod){
   editingId=id;
   if(mod==='arc')renderArcForm(id,!id);
   else if(mod==='stk')renderStkForm(id,!id);
   else if(mod==='doc')renderDocForm(id,!id);
+  else if(mod==='cls')renderClsForm(id,!id);
 }
 
 function setEditPanel(title,mod){
@@ -1240,6 +1382,27 @@ window.doSave=async function(){
       await setDoc(doc(db,'documents',d.id),d);
       closeDetail();showToast(!ex?'✓ Документ добавлен':'✓ Сохранено');
     }
+    else if(mod==='cls'){
+      const title=document.getElementById('ef-cls-title').value.trim();
+      if(!title){showToast('⚠ Введите название');return;}
+      const ex=closedRecords.find(x=>x.id===editingId);
+      const clsNum=ex?ex.clId:('ЗМ-'+String((closedRecords.length+1)).padStart(3,'0'));
+      const r={
+        id:editingId,title,clId:clsNum,
+        clType:document.getElementById('ef-cls-type').value,
+        status:document.getElementById('ef-cls-status').value,
+        date:document.getElementById('ef-cls-date').value,
+        summary:document.getElementById('ef-cls-summary').value.trim(),
+        content:document.getElementById('ef-cls-content').value.trim(),
+        relPersons:document.getElementById('ef-cls-persons').value.trim(),
+        relDocs:document.getElementById('ef-cls-docs').value.trim(),
+        note:document.getElementById('ef-cls-note').value.trim(),
+        photos:window._editRecord?window._editRecord.photos:[],
+        createdAt:ex?ex.createdAt:Date.now(),updatedAt:Date.now()
+      };
+      await setDoc(doc(db,'closed',r.id),r);
+      closeDetail();showToast(!ex?'✓ Запись добавлена':'✓ Сохранено');
+    }
   }catch(e){showToast('⚠ Ошибка: '+e.message);}
 }
 
@@ -1253,9 +1416,10 @@ window.cancelEdit=function(id,isNew,mod){
 window.confirmDel=function(id,mod){
   const name=mod==='arc'?(records.find(x=>x.id===id)||{}).name:
              mod==='stk'?(stalkers.find(x=>x.id===id)||{}).callsign:
+             mod==='cls'?(closedRecords.find(x=>x.id===id)||{}).title:
              (documents.find(x=>x.id===id)||{}).title;
   showConfirm(`Удалить «${name||'запись'}»?`,async()=>{
-    const col=mod==='stk'?'stalkers':mod==='doc'?'documents':'records';
+    const col=mod==='stk'?'stalkers':mod==='doc'?'documents':mod==='cls'?'closed':'records';
     await deleteDoc(doc(db,col,id));
     closeDetail();showToast('Удалено');
   });
@@ -1345,6 +1509,197 @@ document.getElementById('login-pass').addEventListener('keydown',e=>{if(e.key===
 document.getElementById('login-call').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
 document.getElementById('reg-pass2').addEventListener('keydown',e=>{if(e.key==='Enter')doRegister();});
 
+
+// ══ CLOSED MODULE ══
+let closedRecords=[];
+let unsubClosed=null;
+window._clsUnlocked=false;
+
+const CLS_HASH='8f2a4b1e9c6d3f7a'; // SHA-like placeholder — actual check is string compare
+
+function checkClsPassword(pw){
+  return pw==='Archiv!47_Zaslon#9';
+}
+
+function openClosedAccess(){
+  // Show access screen instead of content
+  currentModule='cls';
+  // update nav visuals
+  ['arc','stk','doc','all','cls'].forEach(m=>{
+    document.getElementById('tn-'+m).className='tn-mod'+(m==='cls'?'cls-tab act-cls':'');
+  });
+  document.getElementById('tn-cls').className='tn-mod cls-tab act-cls';
+  // render sidebar locked
+  document.getElementById('sb-title').className='sb-mod-title cr';
+  document.getElementById('sb-title').textContent='Закрытые материалы';
+  document.getElementById('sb-sub').textContent='Доступ ограничен';
+  document.getElementById('sb-nav').innerHTML=`<div style="flex:1;display:flex;align-items:center;justify-content:center;padding:16px;text-align:center"><div style="font-size:18px;color:#3a1a1a;margin-bottom:8px">⊘</div><div style="font-size:9px;color:var(--text-faint);letter-spacing:1px;line-height:2">Требуется<br>дополнительный<br>допуск</div></div>`;
+  document.getElementById('sb-stats').innerHTML='';
+  document.querySelector('.sb-foot').innerHTML='Доступ не подтверждён';
+  // render access screen
+  document.getElementById('content-area').innerHTML=`
+    <div class="access-wrap">
+      <div class="access-box">
+        <div class="acc-head">
+          <div class="acc-ico">⊘</div>
+          <div class="acc-title">Закрытые материалы</div>
+          <div class="acc-sub">Требуется дополнительный допуск</div>
+        </div>
+        <div class="acc-body">
+          <label class="acc-label">Код доступа</label>
+          <input class="acc-input" type="password" id="cls-pw-input" placeholder="введи код доступа" autocomplete="off">
+          <button class="acc-btn" id="cls-pw-btn" onclick="submitClsPassword()">Подтвердить доступ</button>
+          <span class="acc-err" id="cls-pw-err"></span>
+        </div>
+        <div class="acc-footer">Раздел защищён · Несанкционированный доступ фиксируется<br>Сессия сбрасывается при выходе из системы</div>
+      </div>
+    </div>`;
+  // hide detail panel
+  document.getElementById('detail-panel').classList.remove('open');
+  // bind enter key
+  setTimeout(()=>{
+    const inp=document.getElementById('cls-pw-input');
+    if(inp){inp.focus();inp.addEventListener('keydown',e=>{if(e.key==='Enter')submitClsPassword();});}
+  },50);
+  // hide toolbar add btn label
+  const addBtn=document.getElementById('add-btn');
+  addBtn.className='add-btn';addBtn.style.borderColor='var(--red-dim)';addBtn.style.color='var(--red-dim)';addBtn.textContent='⊘ Закрыто';addBtn.onclick=null;
+  document.getElementById('toolbar-filters').innerHTML='';
+}
+
+window.submitClsPassword=function(){
+  const pw=document.getElementById('cls-pw-input').value;
+  const err=document.getElementById('cls-pw-err');
+  const btn=document.getElementById('cls-pw-btn');
+  if(!pw){err.textContent='⚠ Введи код доступа';return;}
+  btn.disabled=true;btn.textContent='Проверка...';
+  // small delay for UX
+  setTimeout(()=>{
+    if(checkClsPassword(pw)){
+      window._clsUnlocked=true;
+      // start listener if not started
+      if(!unsubClosed){
+        unsubClosed=onSnapshot(collection(db,'closed'),snap=>{
+          closedRecords=snap.docs.map(d=>({id:d.id,...d.data()}));
+          if(currentModule==='cls'&&window._clsUnlocked){renderSidebar();renderContent();}
+        });
+      }
+      // restore add btn
+      const addBtn=document.getElementById('add-btn');
+      addBtn.style.borderColor='';addBtn.style.color='';
+      addBtn.className='add-btn';addBtn.style.setProperty('border-color','var(--red-dim)');addBtn.style.setProperty('color','var(--red)');
+      addBtn.textContent='＋ Запись';addBtn.onclick=()=>openAdd();
+      renderToolbarFilters();
+      renderSidebar();
+      renderContent();
+    }else{
+      err.textContent='⚠ Неверный код — доступ запрещён';
+      btn.disabled=false;btn.textContent='Подтвердить доступ';
+      document.getElementById('cls-pw-input').value='';
+      document.getElementById('cls-pw-input').focus();
+    }
+  },300);
+}
+
+function renderClsDetail(r){
+  const ph=(r.photos||[]).map(p=>`<div class="photo-item"><img src="${p.data}" alt="" onclick="openLightbox('${p.data}')"></div>`).join('');
+  const tagCls=r.status==='активно'?'':(r.status==='под наблюдением'?'cl-obs':'cl-arch');
+  document.getElementById('dp-title').style.color='var(--red)';
+  document.getElementById('dp-body').innerHTML=`
+    <div class="prot-bar" style="margin-bottom:12px"><div class="prot-dot"></div><span class="prot-text">Защищённый раздел · Закрытая запись</span></div>
+    <div class="dp-2col">
+      <div>
+        <div class="cl-detail-block"><div class="cl-detail-label">Краткая сводка</div><div class="cl-detail-body">
+          <div class="fv-val${!r.summary?' empty':''}">${r.summary?esc(r.summary):'не внесено'}</div>
+        </div></div>
+        <div class="cl-detail-block"><div class="cl-detail-label">Подробное содержание</div><div class="cl-detail-body">
+          <div class="fv-val${!r.content?' empty':''}" style="white-space:pre-wrap;line-height:1.7">${r.content?esc(r.content):'не внесено'}</div>
+        </div></div>
+        ${r.note?`<div class="cl-detail-block"><div class="cl-detail-label">Примечание</div><div class="cl-detail-body"><div class="cl-note">${esc(r.note)}</div></div></div>`:''}
+        ${ph?`<div class="cl-detail-block"><div class="cl-detail-label">Вложения</div><div class="cl-detail-body"><div class="photo-grid">${ph}</div></div></div>`:''}
+      </div>
+      <div>
+        <div class="cl-detail-block"><div class="cl-detail-label">Параметры</div><div class="cl-detail-body">
+          <div class="fv"><div class="fv-label">Идентификатор</div><div class="fv-val" style="font-family:monospace;color:var(--red)">${esc(r.clId||'—')}</div></div>
+          <div class="fv"><div class="fv-label">Тип</div><div class="fv-val">${esc(r.clType||'—')}</div></div>
+          <div class="fv"><div class="fv-label">Статус</div><span class="cl-tag ${tagCls}">${(r.status||'—').toUpperCase()}</span></div>
+          <div class="fv"><div class="fv-label">Дата</div><div class="fv-val mono">${fmtDate(r.date)}</div></div>
+          <div class="fv"><div class="fv-label">Связанные лица</div><div class="fv-val${!r.relPersons?' empty':''}">${r.relPersons?esc(r.relPersons):'—'}</div></div>
+          <div class="fv"><div class="fv-label">Связанные документы</div><div class="fv-val${!r.relDocs?' empty':''}">${r.relDocs?esc(r.relDocs):'—'}</div></div>
+        </div></div>
+      </div>
+    </div>`;
+}
+
+function renderClsForm(id,isNew){
+  const r=id?closedRecords.find(x=>x.id===id):{};
+  const newId=uid();
+  if(isNew){editingId=newId;window._newId=newId;}
+  window._editMod='cls';
+  window._editRecord=isNew?{id:editingId,photos:[]}:JSON.parse(JSON.stringify(r));
+  const clsNum=isNew?('ЗМ-'+String((closedRecords.length+1)).padStart(3,'0')):(r.clId||'ЗМ-???');
+  document.getElementById('detail-panel').classList.add('open');
+  document.getElementById('dp-title').textContent=isNew?'Новая запись':`Редактировать: ${r.title||''}`;
+  document.getElementById('dp-title').style.color='var(--red)';
+  document.getElementById('dp-actions').innerHTML=`
+    <button class="act-btn btn-save" onclick="doSave()">✓ Сохранить</button>
+    <button class="act-btn btn-cancel" onclick="cancelEdit('${editingId||''}','${isNew}','cls')">Отмена</button>`;
+  const ph=(window._editRecord.photos||[]).map(p=>`<div class="photo-item"><img src="${p.data}" alt="" onclick="openLightbox('${p.data}')"><button class="photo-del" onclick="deletePhoto('${p.id}')">✕</button></div>`).join('');
+  document.getElementById('dp-body').innerHTML=`
+    <div class="prot-bar" style="margin-bottom:12px"><div class="prot-dot"></div><span class="prot-text">Защищённый раздел · Редактирование записи</span></div>
+    <div class="dp-2col">
+      <div>
+        <div class="dp-block"><div class="dp-block-label">Основные поля</div><div class="dp-block-body">
+          <div class="form-field"><label class="form-label">Название *</label><input type="text" id="ef-cls-title" value="${esc(r.title||'')}" placeholder="Название записи"></div>
+          <div class="form-grid" style="margin-top:9px">
+            <div class="form-field"><label class="form-label">Тип</label><select id="ef-cls-type"><option value="">—</option><option value="наблюдение"${(r.clType||'')==='наблюдение'?' selected':''}>Наблюдение</option><option value="досье"${(r.clType||'')==='досье'?' selected':''}>Досье</option><option value="контакт"${(r.clType||'')==='контакт'?' selected':''}>Контакт</option><option value="отчёт"${(r.clType||'')==='отчёт'?' selected':''}>Отчёт</option><option value="примечание"${(r.clType||'')==='примечание'?' selected':''}>Примечание</option></select></div>
+            <div class="form-field"><label class="form-label">Статус</label><select id="ef-cls-status"><option value="">—</option><option value="активно"${(r.status||'')==='активно'?' selected':''}>Активно</option><option value="под наблюдением"${(r.status||'')==='под наблюдением'?' selected':''}>Под наблюдением</option><option value="архив"${(r.status||'')==='архив'?' selected':''}>Архив</option></select></div>
+            <div class="form-field"><label class="form-label">Дата</label><input type="date" id="ef-cls-date" value="${r.date||today()}"></div>
+            <div class="form-field"><label class="form-label">Идентификатор</label><input type="text" value="${clsNum}" readonly style="color:var(--red);opacity:0.7;cursor:not-allowed"></div>
+          </div>
+        </div></div>
+        <div class="dp-block"><div class="dp-block-label">Содержание</div><div class="dp-block-body">
+          <div class="form-field"><label class="form-label">Краткая сводка</label><textarea id="ef-cls-summary" rows="3">${esc(r.summary||'')}</textarea></div>
+          <div class="form-field" style="margin-top:9px"><label class="form-label">Подробное содержание</label><textarea id="ef-cls-content" rows="6">${esc(r.content||'')}</textarea></div>
+          <div class="form-field" style="margin-top:9px"><label class="form-label">Примечание</label><textarea id="ef-cls-note" rows="2">${esc(r.note||'')}</textarea></div>
+        </div></div>
+        <div class="dp-block"><div class="dp-block-label">Связи</div><div class="dp-block-body">
+          <div class="form-field"><label class="form-label">Связанные лица</label><input type="text" id="ef-cls-persons" value="${esc(r.relPersons||'')}" placeholder="Позывные, имена..."></div>
+          <div class="form-field" style="margin-top:8px"><label class="form-label">Связанные документы</label><input type="text" id="ef-cls-docs" value="${esc(r.relDocs||'')}" placeholder="Названия документов..."></div>
+        </div></div>
+        <div class="dp-block"><div class="dp-block-label">Вложения</div><div class="dp-block-body"><div class="photo-grid" id="dp-photo-grid">${ph}<label class="photo-add-btn"><span class="pic">＋</span><span>Файл</span><input type="file" accept="image/*" multiple style="display:none" onchange="handlePhotoUpload(event)"></label></div></div></div>
+      </div>
+      <div><div class="dp-block"><div class="dp-block-label">Инфо</div><div class="dp-block-body" style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--text-dim);line-height:2">
+        <div>ID: <span style="color:var(--red)">${clsNum}</span></div>
+        <div style="color:var(--text-faint);font-size:8px;margin-top:4px">* — обязательное поле</div>
+        <div style="color:var(--red);font-size:8px;margin-top:8px;border:1px solid #3a1a1a;padding:6px;line-height:1.6;background:#100c0c">⊘ Закрытый раздел<br>Запись доступна только<br>при активном допуске</div>
+      </div></div></div>
+    </div>`;
+}
+
+function sbItemCls(val,label,cnt,dotColor='var(--red)'){
+  const isActive=(!val&&!currentSub)||(currentSub&&currentSub.val===val);
+  return`<button class="sb-item${isActive?' act-r':''}" onclick="setClsSub('${val||''}')" style="width:100%">
+    <div class="sb-dot" style="background:${dotColor}"></div>
+    <span style="flex:1;text-align:left">${label}</span>
+    ${cnt!==undefined?`<span class="sb-cnt">${cnt}</span>`:''}
+  </button>`;
+}
+
+window.setClsSub=function(val){
+  currentSub=val?{group:'cls',val}:null;
+  renderSidebar();renderContent();
+}
+
+// RESET on logout
+function resetClosedAccess(){
+  window._clsUnlocked=false;
+  if(unsubClosed){unsubClosed();unsubClosed=null;}
+  closedRecords=[];
+}
+
+// ══ END CLOSED MODULE ══
+
 // AUTH STATE
 onAuthStateChanged(auth,async user=>{
   document.getElementById('loading-screen').classList.add('hidden');
@@ -1360,6 +1715,7 @@ onAuthStateChanged(auth,async user=>{
     setModule('arc'); // default module
   }else{
     currentUser=null;stopHeartbeat();
+    resetClosedAccess();
     document.getElementById('auth-screen').classList.remove('hidden');
     document.getElementById('app').classList.add('hidden');
     document.getElementById('reg-btn').disabled=false;
