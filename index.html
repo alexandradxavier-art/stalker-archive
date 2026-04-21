@@ -487,21 +487,6 @@ textarea{min-height:70px;line-height:1.6}
   <img id="lb-img" src="" alt="">
 </div>
 
-      <div class="cls-m-title">Закрытые материалы</div>
-      <div class="cls-m-sub">Требуется дополнительный допуск</div>
-    </div>
-    <div class="cls-m-body">
-      <label class="cls-m-label">Код доступа</label>
-      <input class="cls-m-input" type="password" id="cls-pw-inp" placeholder="введи код доступа" autocomplete="off">
-      <button class="cls-m-btn" id="cls-pw-btn" onclick="submitCls()">Подтвердить доступ</button>
-      <span class="cls-m-err" id="cls-pw-err"></span>
-      <span class="cls-m-cancel" onclick="closeCls()">Отмена</span>
-    </div>
-    <div class="cls-m-foot">Раздел защищён · Сессия сбрасывается при выходе из системы</div>
-  </div>
-</div>
-
-
 <!-- CLS ACCESS MODAL — поверх интерфейса, не блокирующий -->
 <div class="cls-overlay" id="cls-overlay" onclick="handleClsOverlayClick(event)">
   <div class="cls-modal" id="cls-modal">
@@ -1561,63 +1546,80 @@ document.getElementById('reg-pass2').addEventListener('keydown',e=>{if(e.key==='
 let closedRecords = [];
 let unsubClosed = null;
 const CLS_PASSWORD = 'Dostup#Gamma_17!';
-
-// Флаг допуска — только в памяти, сбрасывается при перезагрузке/выходе
 window._clsUnlocked = false;
+let _prevModule = 'arc'; // модуль до попытки входа
 
-// Запомнить предыдущий модуль чтобы вернуться при отмене
-let _prevModule = 'arc';
+// ── Открыть модал допуска поверх текущего экрана ──
+function openClsModal() {
+  const overlay = document.getElementById('cls-overlay');
+  const inp     = document.getElementById('cls-pw-inp');
+  const errEl   = document.getElementById('cls-pw-err');
+  const btn     = document.getElementById('cls-pw-btn');
+  // Сброс состояния
+  inp.value            = '';
+  errEl.textContent    = '';
+  btn.disabled         = false;
+  btn.textContent      = 'Подтвердить доступ';
+  // Показать
+  overlay.classList.add('open');
+  setTimeout(() => inp.focus(), 80);
+}
 
-// Клик на вкладку — открывает модал допуска, НЕ меняет текущий модуль
+// ── Закрыть модал и вернуть предыдущий вид ──
+window.closeCls = function() {
+  const overlay = document.getElementById('cls-overlay');
+  overlay.classList.remove('open');
+  // Сброс полей
+  document.getElementById('cls-pw-inp').value = '';
+  document.getElementById('cls-pw-err').textContent = '';
+  // Если текущий модуль — cls (вдруг успели переключить), вернуть в prev
+  if (currentModule === 'cls' && !window._clsUnlocked) {
+    setModule(_prevModule);
+  }
+};
+
+// ── Клик по тёмному фону — то же что Отмена ──
+window.handleClsOverlayClick = function(e) {
+  if (e.target === document.getElementById('cls-overlay')) closeCls();
+};
+
+// ── Клик по вкладке ──
 window.handleClsClick = function() {
   if (window._clsUnlocked) {
-    // Уже разблокировано — просто переключить модуль
     activateClsModule();
     return;
   }
-  // Запомнить текущий модуль
   _prevModule = currentModule || 'arc';
-  // Открыть модал поверх текущего экрана — не трогаем currentModule
   openClsModal();
 };
 
-// Клик по overlay (фону) — закрыть модал
-window.handleClsOverlayClick = function(e) {
-  if (e.target === document.getElementById('cls-overlay')) {
-    closeCls();
-  }
-};
-
-function openClsModal() {
-  const overlay = document.getElementById('cls-overlay');
-  overlay.classList.add('open');
-  const inp = document.getElementById('cls-pw-inp');
-  inp.value = '';
-  document.getElementById('cls-pw-err').textContent = '';
-  const btn = document.getElementById('cls-pw-btn');
-  btn.disabled = false;
-  btn.textContent = 'Подтвердить доступ';
-  setTimeout(() => inp && inp.focus(), 80);
-}
-
-window.closeCls = function() {
-  document.getElementById('cls-overlay').classList.remove('open');
-  // Вернуться в предыдущий модуль — ничего не менять, пользователь уже там
-};
-
+// ── Подтвердить код доступа ──
 window.submitCls = function() {
-  const pw = document.getElementById('cls-pw-inp').value;
+  const pw    = document.getElementById('cls-pw-inp').value.trim();
   const errEl = document.getElementById('cls-pw-err');
-  const btn = document.getElementById('cls-pw-btn');
+  const btn   = document.getElementById('cls-pw-btn');
   errEl.textContent = '';
-  if (!pw) { errEl.textContent = '⚠ Введи код доступа'; return; }
-  btn.disabled = true;
+
+  if (!pw) {
+    errEl.textContent = '⚠ Введите код доступа';
+    return;
+  }
+
+  btn.disabled    = true;
   btn.textContent = 'Проверка...';
+
+  // Небольшая задержка для UX
   setTimeout(() => {
     if (pw === CLS_PASSWORD) {
+      // ── Успех ──
       window._clsUnlocked = true;
       document.getElementById('cls-overlay').classList.remove('open');
-      // Запустить слушатель Firestore только после правильного пароля
+      document.getElementById('cls-pw-inp').value = '';
+      document.getElementById('cls-pw-err').textContent = '';
+      btn.disabled    = false;
+      btn.textContent = 'Подтвердить доступ';
+
+      // Запустить Firestore слушатель если ещё не запущен
       if (!unsubClosed) {
         unsubClosed = onSnapshot(collection(db, 'closed'), snap => {
           closedRecords = snap.docs.map(d => ({ id: d.id, ...d.data() }));
@@ -1626,41 +1628,47 @@ window.submitCls = function() {
       }
       activateClsModule();
     } else {
-      errEl.textContent = '⚠ Неверный код — доступ запрещён';
-      btn.disabled = false;
-      btn.textContent = 'Подтвердить доступ';
+      // ── Ошибка ──
+      errEl.textContent   = '⚠ Неверный код — доступ запрещён';
+      btn.disabled        = false;
+      btn.textContent     = 'Подтвердить доступ';
       document.getElementById('cls-pw-inp').value = '';
       document.getElementById('cls-pw-inp').focus();
     }
   }, 280);
 };
 
+// ── Активировать модуль после успешного входа ──
 function activateClsModule() {
   currentModule = 'cls';
-  currentSub = null;
+  currentSub    = null;
   document.getElementById('detail-panel').classList.remove('open');
   editingId = null; window._editRecord = null;
-  // Обновить topnav
+
+  // Topnav
   ['arc','stk','doc','all'].forEach(m => {
     const el = document.getElementById('tn-' + m);
     if (el) el.className = 'tn-mod';
   });
   const clsEl = document.getElementById('tn-cls');
   if (clsEl) clsEl.className = 'tn-mod tn-cls act-cls';
-  // Кнопка добавить
+
+  // Кнопка «＋ Запись»
   const ab = document.getElementById('add-btn');
-  ab.className = 'add-btn';
+  ab.className    = 'add-btn';
   ab.removeAttribute('style');
   ab.style.borderColor = 'var(--red-dim)';
-  ab.style.color = 'var(--red)';
-  ab.style.marginLeft = 'auto';
-  ab.textContent = '＋ Запись';
-  ab.onclick = () => openAdd();
+  ab.style.color       = 'var(--red)';
+  ab.style.marginLeft  = 'auto';
+  ab.textContent  = '＋ Запись';
+  ab.onclick      = () => openAdd();
+
   renderToolbarFilters();
   renderSidebar();
   renderContent();
 }
 
+// ── Карточка подробно ──
 function renderClsDetail(r) {
   const ph = (r.photos || []).map(p =>
     `<div class="photo-item"><img src="${p.data}" alt="" onclick="openLightbox('${p.data}')"></div>`
@@ -1668,22 +1676,33 @@ function renderClsDetail(r) {
   const tagCls = r.status === 'под наблюдением' ? ' cl-obs' : r.status === 'архив' ? ' cl-arch' : '';
   document.getElementById('dp-title').style.color = 'var(--red)';
   document.getElementById('dp-body').innerHTML = `
-    <div class="prot-bar" style="margin:-18px -18px 14px"><div class="prot-dot"></div><span class="prot-text">Защищённый раздел · Закрытая запись</span></div>
+    <div class="prot-bar" style="margin:-18px -18px 14px">
+      <div class="prot-dot"></div>
+      <span class="prot-text">Защищённый раздел · Закрытая запись</span>
+    </div>
     <div class="dp-2col">
       <div>
         <div class="dp-block" style="border-color:#3a1a1a;background:#100c0c">
           <div class="dp-block-label" style="background:#0b0808;border-color:#1e0e0e">Краткая сводка</div>
-          <div class="dp-block-body"><div class="fv-val${!r.summary ? ' empty' : ''}">${r.summary ? esc(r.summary) : 'не внесено'}</div></div>
+          <div class="dp-block-body">
+            <div class="fv-val${!r.summary ? ' empty' : ''}">${r.summary ? esc(r.summary) : 'не внесено'}</div>
+          </div>
         </div>
         <div class="dp-block" style="border-color:#3a1a1a;background:#100c0c">
           <div class="dp-block-label" style="background:#0b0808;border-color:#1e0e0e">Подробное содержание</div>
-          <div class="dp-block-body"><div class="fv-val${!r.content ? ' empty' : ''}" style="white-space:pre-wrap;line-height:1.7">${r.content ? esc(r.content) : 'не внесено'}</div></div>
+          <div class="dp-block-body">
+            <div class="fv-val${!r.content ? ' empty' : ''}" style="white-space:pre-wrap;line-height:1.7">${r.content ? esc(r.content) : 'не внесено'}</div>
+          </div>
         </div>
-        ${r.note ? `<div class="dp-block" style="border-color:#3a1a1a;background:#100c0c">
+        ${r.note ? `
+        <div class="dp-block" style="border-color:#3a1a1a;background:#100c0c">
           <div class="dp-block-label" style="background:#0b0808;border-color:#1e0e0e">Примечание</div>
-          <div class="dp-block-body"><div style="background:#0b0808;border-left:3px solid var(--red-dim);padding:9px 12px;font-size:12px;color:var(--red);font-style:italic;line-height:1.6">${esc(r.note)}</div></div>
+          <div class="dp-block-body">
+            <div style="background:#0b0808;border-left:3px solid var(--red-dim);padding:9px 12px;font-size:12px;color:var(--red);font-style:italic;line-height:1.6">${esc(r.note)}</div>
+          </div>
         </div>` : ''}
-        ${ph ? `<div class="dp-block" style="border-color:#3a1a1a;background:#100c0c">
+        ${ph ? `
+        <div class="dp-block" style="border-color:#3a1a1a;background:#100c0c">
           <div class="dp-block-label" style="background:#0b0808;border-color:#1e0e0e">Вложения</div>
           <div class="dp-block-body"><div class="photo-grid">${ph}</div></div>
         </div>` : ''}
@@ -1704,60 +1723,70 @@ function renderClsDetail(r) {
     </div>`;
 }
 
+// ── Форма редактирования ──
 function renderClsForm(id, isNew) {
   const r = id ? closedRecords.find(x => x.id === id) : {};
   const newId = uid();
   if (isNew) { editingId = newId; window._newId = newId; }
-  window._editMod = 'cls';
+  window._editMod    = 'cls';
   window._editRecord = isNew ? { id: editingId, photos: [] } : JSON.parse(JSON.stringify(r));
   const clsNum = isNew
     ? ('ЗМ-' + String(closedRecords.length + 1).padStart(3, '0'))
     : (r.clId || 'ЗМ-???');
   document.getElementById('detail-panel').classList.add('open');
-  document.getElementById('dp-title').textContent = isNew ? 'Новая запись' : `Редактировать: ${r.title || ''}`;
-  document.getElementById('dp-title').style.color = 'var(--red)';
-  document.getElementById('dp-actions').innerHTML = `
-    <button class="act-btn btn-save" onclick="doSave()">✓ Сохранить</button>
+  document.getElementById('dp-title').textContent  = isNew ? 'Новая запись' : `Редактировать: ${r.title || ''}`;
+  document.getElementById('dp-title').style.color  = 'var(--red)';
+  document.getElementById('dp-actions').innerHTML  = `
+    <button class="act-btn btn-save"   onclick="doSave()">✓ Сохранить</button>
     <button class="act-btn btn-cancel" onclick="cancelEdit('${editingId || ''}','${isNew}','cls')">Отмена</button>`;
   const ph = (window._editRecord.photos || []).map(p =>
     `<div class="photo-item"><img src="${p.data}" alt="" onclick="openLightbox('${p.data}')"><button class="photo-del" onclick="deletePhoto('${p.id}')">✕</button></div>`
   ).join('');
   document.getElementById('dp-body').innerHTML = `
-    <div class="prot-bar" style="margin:-18px -18px 14px"><div class="prot-dot"></div><span class="prot-text">Защищённый раздел · Редактирование</span></div>
+    <div class="prot-bar" style="margin:-18px -18px 14px">
+      <div class="prot-dot"></div><span class="prot-text">Защищённый раздел · Редактирование</span>
+    </div>
     <div class="dp-2col">
       <div>
         <div class="dp-block"><div class="dp-block-label">Основные поля</div><div class="dp-block-body">
-          <div class="form-field"><label class="form-label">Название *</label><input type="text" id="ef-cls-title" value="${esc(r.title || '')}" placeholder="Название записи"></div>
+          <div class="form-field"><label class="form-label">Название *</label>
+            <input type="text" id="ef-cls-title" value="${esc(r.title||'')}" placeholder="Название записи"></div>
           <div class="form-grid" style="margin-top:9px">
             <div class="form-field"><label class="form-label">Тип</label>
               <select id="ef-cls-type">
                 <option value="">—</option>
-                <option value="наблюдение"${(r.clType||'')==='наблюдение'?' selected':''}>Наблюдение</option>
-                <option value="досье"${(r.clType||'')==='досье'?' selected':''}>Досье</option>
-                <option value="контакт"${(r.clType||'')==='контакт'?' selected':''}>Контакт</option>
-                <option value="отчёт"${(r.clType||'')==='отчёт'?' selected':''}>Отчёт</option>
-                <option value="примечание"${(r.clType||'')==='примечание'?' selected':''}>Примечание</option>
+                <option value="наблюдение"  ${(r.clType||'')==='наблюдение'  ?' selected':''}>Наблюдение</option>
+                <option value="досье"        ${(r.clType||'')==='досье'        ?' selected':''}>Досье</option>
+                <option value="контакт"      ${(r.clType||'')==='контакт'      ?' selected':''}>Контакт</option>
+                <option value="отчёт"        ${(r.clType||'')==='отчёт'        ?' selected':''}>Отчёт</option>
+                <option value="примечание"   ${(r.clType||'')==='примечание'   ?' selected':''}>Примечание</option>
               </select></div>
             <div class="form-field"><label class="form-label">Статус</label>
               <select id="ef-cls-status">
                 <option value="">—</option>
-                <option value="активно"${(r.status||'')==='активно'?' selected':''}>Активно</option>
-                <option value="под наблюдением"${(r.status||'')==='под наблюдением'?' selected':''}>Под наблюдением</option>
-                <option value="архив"${(r.status||'')==='архив'?' selected':''}>Архив</option>
+                <option value="активно"          ${(r.status||'')==='активно'          ?' selected':''}>Активно</option>
+                <option value="под наблюдением"  ${(r.status||'')==='под наблюдением'  ?' selected':''}>Под наблюдением</option>
+                <option value="архив"            ${(r.status||'')==='архив'            ?' selected':''}>Архив</option>
               </select></div>
-            <div class="form-field"><label class="form-label">Дата</label><input type="date" id="ef-cls-date" value="${r.date || today()}"></div>
+            <div class="form-field"><label class="form-label">Дата</label>
+              <input type="date" id="ef-cls-date" value="${r.date||today()}"></div>
             <div class="form-field"><label class="form-label">Идентификатор</label>
               <input type="text" value="${clsNum}" readonly style="color:var(--red);opacity:0.7;cursor:not-allowed"></div>
           </div>
         </div></div>
         <div class="dp-block"><div class="dp-block-label">Содержание</div><div class="dp-block-body">
-          <div class="form-field"><label class="form-label">Краткая сводка</label><textarea id="ef-cls-summary" rows="3">${esc(r.summary || '')}</textarea></div>
-          <div class="form-field" style="margin-top:9px"><label class="form-label">Подробное содержание</label><textarea id="ef-cls-content" rows="6">${esc(r.content || '')}</textarea></div>
-          <div class="form-field" style="margin-top:9px"><label class="form-label">Примечание</label><textarea id="ef-cls-note" rows="2">${esc(r.note || '')}</textarea></div>
+          <div class="form-field"><label class="form-label">Краткая сводка</label>
+            <textarea id="ef-cls-summary" rows="3">${esc(r.summary||'')}</textarea></div>
+          <div class="form-field" style="margin-top:9px"><label class="form-label">Подробное содержание</label>
+            <textarea id="ef-cls-content" rows="6">${esc(r.content||'')}</textarea></div>
+          <div class="form-field" style="margin-top:9px"><label class="form-label">Примечание</label>
+            <textarea id="ef-cls-note" rows="2">${esc(r.note||'')}</textarea></div>
         </div></div>
         <div class="dp-block"><div class="dp-block-label">Связи</div><div class="dp-block-body">
-          <div class="form-field"><label class="form-label">Связанные лица</label><input type="text" id="ef-cls-persons" value="${esc(r.relPersons || '')}" placeholder="Позывные, имена..."></div>
-          <div class="form-field" style="margin-top:8px"><label class="form-label">Связанные документы</label><input type="text" id="ef-cls-docs" value="${esc(r.relDocs || '')}" placeholder="Названия документов..."></div>
+          <div class="form-field"><label class="form-label">Связанные лица</label>
+            <input type="text" id="ef-cls-persons" value="${esc(r.relPersons||'')}" placeholder="Позывные, имена..."></div>
+          <div class="form-field" style="margin-top:8px"><label class="form-label">Связанные документы</label>
+            <input type="text" id="ef-cls-docs" value="${esc(r.relDocs||'')}" placeholder="Названия документов..."></div>
         </div></div>
         <div class="dp-block"><div class="dp-block-label">Вложения</div><div class="dp-block-body">
           <div class="photo-grid" id="dp-photo-grid">${ph}
@@ -1767,20 +1796,28 @@ function renderClsForm(id, isNew) {
           </div>
         </div></div>
       </div>
-      <div><div class="dp-block" style="border-color:#3a1a1a;background:#100c0c">
-        <div class="dp-block-label" style="background:#0b0808;border-color:#1e0e0e">Инфо</div>
-        <div class="dp-block-body" style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--text-dim);line-height:2">
-          <div>ID: <span style="color:var(--red)">${clsNum}</span></div>
-          <div style="color:var(--text-faint);font-size:8px;margin-top:4px">* — обязательное поле</div>
-          <div style="color:var(--red);font-size:8px;margin-top:8px;border:1px solid #3a1a1a;padding:6px;line-height:1.6;background:#100c0c">⊘ Закрытый раздел<br>Запись изолирована<br>от общей базы</div>
+      <div>
+        <div class="dp-block" style="border-color:#3a1a1a;background:#100c0c">
+          <div class="dp-block-label" style="background:#0b0808;border-color:#1e0e0e">Инфо</div>
+          <div class="dp-block-body" style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--text-dim);line-height:2">
+            <div>ID: <span style="color:var(--red)">${clsNum}</span></div>
+            <div style="color:var(--text-faint);font-size:8px;margin-top:4px">* — обязательное поле</div>
+            <div style="color:var(--red);font-size:8px;margin-top:8px;border:1px solid #3a1a1a;padding:6px;line-height:1.6;background:#100c0c">
+              ⊘ Закрытый раздел<br>Запись изолирована<br>от общей базы
+            </div>
+          </div>
         </div>
-      </div></div>
+      </div>
     </div>`;
 }
 
+// ── Sidebar items для cls ──
 function sbItemCls(val, label, cnt, dotColor='var(--red)') {
   const isActive = (!val && !currentSub) || (currentSub && currentSub.val === val);
-  return `<button class="sb-item${isActive ? ' act-r' : ''}" onclick="setClsSub('${val || ''}')" style="width:100%;display:flex;align-items:center;gap:6px;padding:7px 12px;background:${isActive ? 'rgba(184,64,64,0.06)' : 'none'};border:none;border-left:2px solid ${isActive ? 'var(--red)' : 'transparent'};font-family:monospace;font-size:9px;letter-spacing:0.5px;text-align:left;cursor:pointer;color:${isActive ? 'var(--red)' : 'var(--text-dim)'}">
+  return `<button
+    class="sb-item${isActive ? ' act-r' : ''}"
+    onclick="setClsSub('${val || ''}')"
+    style="width:100%;display:flex;align-items:center;gap:6px;padding:7px 12px;background:${isActive ? 'rgba(184,64,64,0.06)' : 'none'};border:none;border-left:2px solid ${isActive ? 'var(--red)' : 'transparent'};font-family:monospace;font-size:9px;letter-spacing:0.5px;text-align:left;cursor:pointer;color:${isActive ? 'var(--red)' : 'var(--text-dim)'}">
     <div style="width:5px;height:5px;border-radius:50%;background:${dotColor};flex-shrink:0"></div>
     <span style="flex:1">${label}</span>
     ${cnt !== undefined ? `<span style="font-size:8px;color:var(--text-faint)">${cnt}</span>` : ''}
@@ -1793,17 +1830,20 @@ window.setClsSub = function(val) {
   renderContent();
 };
 
+// ── Сброс при выходе ──
 function resetClosedAccess() {
   window._clsUnlocked = false;
   if (unsubClosed) { unsubClosed(); unsubClosed = null; }
   closedRecords = [];
-  document.getElementById('cls-overlay').classList.remove('open');
+  const overlay = document.getElementById('cls-overlay');
+  if (overlay) overlay.classList.remove('open');
 }
 
-// Escape закрывает модал допуска (но не блокирует навигацию)
+// Escape → закрыть модал
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape' && document.getElementById('cls-overlay').classList.contains('open')) {
-    closeCls();
+  if (e.key === 'Escape') {
+    const overlay = document.getElementById('cls-overlay');
+    if (overlay && overlay.classList.contains('open')) closeCls();
   }
 });
 
@@ -1811,9 +1851,10 @@ document.addEventListener('keydown', e => {
 setTimeout(() => {
   const inp = document.getElementById('cls-pw-inp');
   if (inp) inp.addEventListener('keydown', e => { if (e.key === 'Enter') submitCls(); });
-}, 500);
+}, 300);
 
 // ══ END CLOSED MODULE ══
+
 
 
 
