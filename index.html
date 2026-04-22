@@ -869,7 +869,7 @@ details.dp-block > .dp-block-body{animation:fadeIn 0.15s ease}
       <button class="tn-mod" id="tn-stk" onclick="setModule('stk')">◉ Сталкеры</button>
       <button class="tn-mod" id="tn-doc" onclick="setModule('doc')">▤ Документы</button>
       <button class="tn-mod tn-photo" id="tn-photo" onclick="setModule('photo')">⊞ Фотоархив</button>
-      <button class="tn-mod" id="tn-all" onclick="setModule('all')">◈ Все записи</button>
+      
       <button class="tn-mod tn-cls" id="tn-cls" onclick="handleClsClick()">⊘ Закрытые материалы</button>
     </div>
     <div class="tn-right">
@@ -1535,7 +1535,7 @@ window.setModule=function(mod){
   document.getElementById('detail-panel').classList.remove('open');
   editingId=null;window._editRecord=null;
   // update top nav
-  ['arc','stk','doc','all','photo'].forEach(m=>{
+  ['arc','stk','doc','photo'].forEach(m=>{
     const el=document.getElementById('tn-'+m);
     if(el) el.className='tn-mod'+(m==='photo'?' tn-photo':'')+(m===mod?' act-'+m:'');
   });
@@ -3054,7 +3054,7 @@ function activateClsModule(){
   currentModule='cls';currentSub=null;
   document.getElementById('detail-panel').classList.remove('open');
   editingId=null;window._editRecord=null;
-  ['arc','stk','doc','all','photo'].forEach(m=>{
+  ['arc','stk','doc','photo'].forEach(m=>{
     const el=document.getElementById('tn-'+m);
     if(el)el.className='tn-mod'+(m==='photo'?' tn-photo':'');
   });
