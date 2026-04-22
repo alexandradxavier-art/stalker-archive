@@ -1254,6 +1254,7 @@ function renderPhotoDetail(p){
         ${!videoBlock&&phs?`<div class="dp-block"><div class="dp-block-label">Материал</div><div class="dp-block-body"><div class="photo-grid">${phs}</div></div></div>`:''}
         ${tl==='видео'&&phs&&videoBlock?`<div class="dp-block"><div class="dp-block-label">Превью-кадр</div><div class="dp-block-body"><div class="photo-grid">${phs}</div></div></div>`:''}
         ${p.note?`<div class="dp-block"><div class="dp-block-label">Заметка</div><div class="dp-block-body"><div class="fv-val" style="white-space:pre-wrap">${esc(p.note)}</div></div></div>`:''}
+        ${renderAttachInDetail(p.attachUrl)}
         ${p.attachUrl&&!videoBlock?`<div class="dp-block"><div class="dp-block-label">Ссылка / вложение</div><div class="dp-block-body">
           ${p.attachUrl.match(/\.(jpg|jpeg|png|gif|webp)(\?.*)?$/i)?`<img src="${esc(p.attachUrl)}" style="max-width:100%;border:1px solid var(--border)" onerror="this.style.display='none'">`:``}
           <a href="${esc(p.attachUrl)}" target="_blank" class="video-link-btn">⬡ Открыть ссылку<span style="font-size:7px;opacity:0.6;margin-left:6px;overflow:hidden;text-overflow:ellipsis;max-width:200px">${esc(p.attachUrl.slice(0,50))}${p.attachUrl.length>50?'…':''}</span></a>
@@ -1318,41 +1319,18 @@ function renderPhotoForm(id,isNew){
                 <textarea id="ef-photo-note" rows="3">${esc(p.note||'')}</textarea></div>
             </div>
           </div>
-          <div class="dp-block"><div class="dp-block-label">Превью-кадр (опц.)</div><div class="dp-block-body">
-            <div class="photo-grid" id="dp-photo-grid">${ph}
-              <label class="photo-add-btn"><span class="pic">＋</span><span>Кадр</span>
-                <input type="file" accept="image/*" multiple style="display:none" onchange="handlePhotoUpload(event)">
-              </label>
-            </div>
-            <div style="font-size:7px;color:var(--text-faint);margin-top:4px;font-family:monospace">Скриншот из видео</div>
-          </div></div>
+          <div class="dp-block">${renderAttachBlock('photo-video-attach',er.photos||[],er.attachUrl||p.attachUrl||'')} </div>
         </div>
 
         <div id="photo-photo-section" style="display:${isVideo?'none':'block'}">
-          <div class="dp-block"><div class="dp-block-label">Вложение</div><div class="dp-block-body">
-            <div style="display:flex;gap:6px;margin-bottom:10px">
-              <button type="button" id="attach-mode-file" onclick="setAttachMode('file')" style="flex:1;padding:6px;font-family:'Share Tech Mono',monospace;font-size:8px;text-transform:uppercase;letter-spacing:1px;cursor:pointer;border:1px solid var(--green-dark);color:var(--green);background:rgba(122,182,72,0.08)">▤ Файл</button>
-              <button type="button" id="attach-mode-url" onclick="setAttachMode('url')" style="flex:1;padding:6px;font-family:'Share Tech Mono',monospace;font-size:8px;text-transform:uppercase;letter-spacing:1px;cursor:pointer;border:1px solid var(--border);color:var(--text-dim);background:none">⬡ Ссылка</button>
-            </div>
-            <div id="attach-file-block">
-              <div class="photo-grid" id="${isVideo?'ph-grid-hidden':'dp-photo-grid'}">${isVideo?'':ph}
-                <label class="photo-add-btn"><span class="pic">＋</span><span>Файл</span>
-                  <input type="file" accept="image/*" multiple style="display:none" onchange="handlePhotoUpload(event)">
-                </label>
-              </div>
-            </div>
-            <div id="attach-url-block" style="display:none">
-              <input type="url" id="ef-photo-attachurl" value="${esc(p.attachUrl||'')}" placeholder="https://... ссылка на изображение или страницу" style="width:100%;background:var(--paper3);border:1px solid var(--border);color:var(--text);font-family:monospace;font-size:11px;padding:8px 10px;outline:none">
-              <div style="font-size:7px;color:var(--text-faint);margin-top:3px;font-family:monospace">Прямая ссылка на изображение или страницу</div>
-              ${p.attachUrl?`<div style="margin-top:7px;border:1px solid var(--border)"><img src="${esc(p.attachUrl)}" style="max-width:100%;display:block" onerror="this.parentElement.style.display='none'"></div>`:''}
-            </div>
-          </div></div>
+          <div class="dp-block">${renderAttachBlock('photo-attach',er.photos||[],er.attachUrl||p.attachUrl||'')}</div>
           <div class="dp-block"><div class="dp-block-label">Описание</div><div class="dp-block-body">
             <div class="form-field"><label class="form-label">Автор / источник</label>
               <input type="text" id="ef-photo-author" value="${esc(p.photoAuthor||'')}" placeholder="Позывной, источник..."></div>
             <div class="form-field" style="margin-top:9px"><label class="form-label">Заметка</label>
               <textarea id="ef-photo-note" rows="3">${esc(p.note||'')}</textarea></div>
           </div></div>
+        </div>
         </div>
       </div>
       <div><div class="dp-block"><div class="dp-block-label">Инфо</div>
@@ -1417,6 +1395,80 @@ window.setModule=function(mod){
 }
 
 // SIDEBAR
+
+// ══ ВЛОЖЕНИЯ ══
+function isImageUrl(u){return!!(u&&/\.(jpg|jpeg|png|gif|webp)(\?.*)?$/i.test(u));}
+
+function renderAttachBlock(blockId,existingPhotos,existingUrl){
+  var ph='';
+  (existingPhotos||[]).forEach(function(p){
+    ph+='<div class="photo-item"><img src="'+p.data+'" alt="">'
+       +'<button class="photo-del" onclick="deletePhoto('+JSON.stringify(p.id)+')">✕</button></div>';
+  });
+  var hasUrl=!!(existingUrl&&existingUrl.trim());
+  var prevHtml=hasUrl&&isImageUrl(existingUrl)
+    ? '<img src="'+existingUrl+'" style="max-width:100%;border:1px solid var(--border);margin-top:6px;display:block">'
+    : '';
+  var fBdr=hasUrl?'var(--border)':'var(--green-dark)',fClr=hasUrl?'var(--text-dim)':'var(--green)',fBg=hasUrl?'none':'rgba(122,182,72,0.08)';
+  var uBdr=hasUrl?'var(--blue-dim)':'var(--border)',uClr=hasUrl?'var(--blue)':'var(--text-dim)',uBg=hasUrl?'rgba(58,143,212,0.08)':'none';
+  return '<div class="dp-block-label">Вложения</div>'
+   +'<div class="dp-block-body">'
+   +'<div style="display:flex;gap:6px;margin-bottom:9px">'
+   +'<button type="button" onclick="setAttachMode('+JSON.stringify('file')+','+JSON.stringify(blockId)+')" id="'+blockId+'-btn-file"'
+   +' style="flex:1;padding:6px;font-family:monospace;font-size:8px;text-transform:uppercase;letter-spacing:1px;cursor:pointer;border:1px solid '+fBdr+';color:'+fClr+';background:'+fBg+'">▤ Файл</button>'
+   +'<button type="button" onclick="setAttachMode('+JSON.stringify('url')+','+JSON.stringify(blockId)+')" id="'+blockId+'-btn-url"'
+   +' style="flex:1;padding:6px;font-family:monospace;font-size:8px;text-transform:uppercase;letter-spacing:1px;cursor:pointer;border:1px solid '+uBdr+';color:'+uClr+';background:'+uBg+'">⬡ Ссылка</button>'
+   +'</div>'
+   +'<div id="'+blockId+'-file" style="display:'+(hasUrl?'none':'block')+'">'
+   +'<div class="photo-grid" id="dp-photo-grid">'+ph
+   +'<label class="photo-add-btn"><span class="pic">＋</span><span>Файл</span>'
+   +'<input type="file" accept="image/*" multiple style="display:none" onchange="handlePhotoUpload(event)"></label>'
+   +'</div></div>'
+   +'<div id="'+blockId+'-url" style="display:'+(hasUrl?'block':'none')+'">'
+   +'<input type="url" id="'+blockId+'-url-inp" value="'+(existingUrl||'')+'" placeholder="https://..."'
+   +' style="width:100%;background:var(--paper3);border:1px solid var(--border);color:var(--text);font-family:monospace;font-size:11px;padding:8px 10px;outline:none"'
+   +' oninput="previewAttachUrl('+JSON.stringify(blockId)+')">'
+   +'<div id="'+blockId+'-url-preview">'+prevHtml+'</div>'
+   +'</div></div>';
+}
+
+function getAttachUrl(blockId){var el=document.getElementById(blockId+'-url-inp');return el?el.value.trim():'';}
+
+function renderAttachInDetail(attachUrl){
+  if(!attachUrl)return '';
+  var safe=esc(attachUrl);
+  var imgPart=isImageUrl(attachUrl)
+    ? '<img src="'+safe+'" style="max-width:100%;border:1px solid var(--border);display:block;margin-bottom:6px">'
+    : '';
+  return '<div class="dp-block"><div class="dp-block-label">Вложение / ссылка</div>'
+        +'<div class="dp-block-body">'+imgPart
+        +'<a href="'+safe+'" target="_blank" class="video-link-btn">⬡ Открыть вложение</a>'
+        +'</div></div>';
+}
+
+window.setAttachMode=function(mode,blockId){
+  var fb=document.getElementById(blockId+'-file'),ub=document.getElementById(blockId+'-url');
+  var bF=document.getElementById(blockId+'-btn-file'),bU=document.getElementById(blockId+'-btn-url');
+  if(!fb||!ub)return;
+  if(mode==='file'){
+    fb.style.display='';ub.style.display='none';
+    if(bF){bF.style.borderColor='var(--green-dark)';bF.style.color='var(--green)';bF.style.background='rgba(122,182,72,0.08)';}
+    if(bU){bU.style.borderColor='var(--border)';bU.style.color='var(--text-dim)';bU.style.background='none';}
+  }else{
+    fb.style.display='none';ub.style.display='';
+    if(bU){bU.style.borderColor='var(--blue-dim)';bU.style.color='var(--blue)';bU.style.background='rgba(58,143,212,0.08)';}
+    if(bF){bF.style.borderColor='var(--border)';bF.style.color='var(--text-dim)';bF.style.background='none';}
+  }
+};
+
+window.previewAttachUrl=function(blockId){
+  var inp=document.getElementById(blockId+'-url-inp'),prev=document.getElementById(blockId+'-url-preview');
+  if(!inp||!prev)return;
+  var url=inp.value.trim();
+  prev.innerHTML=url&&isImageUrl(url)?'<img src="'+url+'" style="max-width:100%;border:1px solid var(--border)">':'';
+};
+// ══ END ВЛОЖЕНИЯ ══
+
 // ── CHIP / LABEL HELPERS ──
 function statusChipArc(s){
   const map={'в работе':'var(--amber)','изучен':'var(--green)','на хранении':'var(--blue)','опасен':'var(--red)','утерян':'var(--text-dim)'};
@@ -1961,6 +2013,7 @@ function renderArcDetail(r){
         </div></div>
         ${cf?`<div class="dp-block"><div class="dp-block-label">Дополнительные поля</div><div class="dp-block-body">${cf}</div></div>`:''}
         ${ph?`<div class="dp-block"><div class="dp-block-label">Фотоматериалы</div><div class="dp-block-body"><div class="photo-grid">${ph}</div></div></div>`:''}
+        ${renderAttachInDetail(r.attachUrl)}
       </div>
       <div>
         <div class="dp-block"><div class="dp-block-label">Параметры</div><div class="dp-block-body">
@@ -2030,6 +2083,7 @@ function renderDocDetail(d){
           <div class="fv" style="${d.summary?'margin-top:9px':''}"><div class="fv-label">Полный текст</div><div class="fv-val${!d.text?' empty':''}">${d.text?esc(d.text):'не внесено'}</div></div>
         </div></div>
         ${ph?`<div class="dp-block"><div class="dp-block-label">Вложения</div><div class="dp-block-body"><div class="photo-grid">${ph}</div></div></div>`:''}
+        ${renderAttachInDetail(d.attachUrl)}
       </div>
       <div>
         <div class="dp-block"><div class="dp-block-label">Реквизиты</div><div class="dp-block-body">
@@ -2177,13 +2231,7 @@ function renderArcForm(id,isNew){
         </div></div>
 
         <!-- Секция 5: Фото -->
-        <div class="dp-block"><div class="dp-block-label">Фотоматериалы</div><div class="dp-block-body">
-          <div class="photo-grid" id="dp-photo-grid">${ph}
-            <label class="photo-add-btn"><span class="pic">＋</span><span>Фото</span>
-              <input type="file" accept="image/*" multiple style="display:none" onchange="handlePhotoUpload(event)">
-            </label>
-          </div>
-        </div></div>
+        <div class="dp-block">${renderAttachBlock('arc-attach',window._editRecord?window._editRecord.photos:[],window._editRecord?window._editRecord.attachUrl:'')}</div>
       </div>
 
       <div>
@@ -2398,13 +2446,7 @@ function renderDocForm(id,isNew){
           <div class="form-field" style="margin-top:9px"><label class="form-label">Полный текст</label>
             <textarea id="ef-text" rows="7">${esc(d.text||'')}</textarea></div>
         </div></div>
-        <div class="dp-block"><div class="dp-block-label">Вложения</div><div class="dp-block-body">
-          <div class="photo-grid" id="dp-photo-grid">${ph}
-            <label class="photo-add-btn"><span class="pic">＋</span><span>Файл</span>
-              <input type="file" accept="image/*" multiple style="display:none" onchange="handlePhotoUpload(event)">
-            </label>
-          </div>
-        </div></div>
+        <div class="dp-block">${renderAttachBlock('doc-attach',window._editRecord?window._editRecord.photos:[],window._editRecord?window._editRecord.attachUrl:'')}</div>
       </div>
       <div><div class="dp-block"><div class="dp-block-label">Инфо</div>
         <div class="dp-block-body" style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--text-dim);line-height:2">
@@ -2436,6 +2478,7 @@ window.doSave=async function(){
         fullDesc:document.getElementById('ef-full').value.trim(),
         author:callsign,
         photos:window._editRecord?window._editRecord.photos:[],
+        attachUrl:getAttachUrl('arc-attach'),
         customFields:collectCF(),
         createdAt:ex?ex.createdAt:Date.now(),
         updatedAt:Date.now()
@@ -2484,6 +2527,7 @@ window.doSave=async function(){
         summary:document.getElementById('ef-summary').value.trim(),
         text:document.getElementById('ef-text').value.trim(),
         photos:window._editRecord?window._editRecord.photos:[],
+        attachUrl:getAttachUrl('doc-attach'),
         createdAt:ex?ex.createdAt:Date.now(),updatedAt:Date.now()
       };
       await setDoc(doc(db,'documents',d.id),d);
@@ -2496,7 +2540,6 @@ window.doSave=async function(){
       const photoAuthorEl=document.getElementById('ef-photo-author');
       const photoNoteEl=document.getElementById('ef-photo-note');
       const photoVideoEl=document.getElementById('ef-photo-videourl');
-      const photoAttachEl=document.getElementById('ef-photo-attachurl');
       const p={
         id:editingId,title,
         photoType:document.getElementById('ef-photo-type').value,
@@ -2505,7 +2548,7 @@ window.doSave=async function(){
         related:document.getElementById('ef-photo-related').value.trim(),
         note:photoNoteEl?photoNoteEl.value.trim():'',
         videoUrl:photoVideoEl?photoVideoEl.value.trim():'',
-        attachUrl:photoAttachEl?photoAttachEl.value.trim():'',
+        attachUrl:getAttachUrl('photo-attach')||getAttachUrl('photo-video-attach'),
         photos:window._editRecord?window._editRecord.photos:[],
         createdAt:ex?ex.createdAt:Date.now(),updatedAt:Date.now()
       };
@@ -3111,6 +3154,9 @@ function renderClsFormBody(tKey,r,isNew){
           <label class="photo-add-btn"><span class="pic">＋</span><span>Фото</span><input type="file" accept="image/*" multiple style="display:none" onchange="handlePhotoUpload(event)"></label>
         </div>
         <div style="font-size:8px;color:var(--text-faint);margin-top:4px;font-family:monospace">Первое фото — основное</div>
+      </div></div>
+      <div class="dp-block">${renderAttachBlock('cls-attach',[],er.attachUrl||r.attachUrl||'')} </div>
+      <div style="display:none"><!-- pad -->
       </div></div>
       <div class="dp-block"><div class="dp-block-label">Идентификация</div><div class="dp-block-body">
         <div class="form-field"><label class="form-label">Позывной *</label><input type="text" id="ef-cls-callsign" value="${esc(r.callsign||'')}" placeholder="позывной или имя" style="font-size:14px"></div>
