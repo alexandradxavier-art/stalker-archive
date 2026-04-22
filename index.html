@@ -67,8 +67,8 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
 .ub-dot{width:5px;height:5px;border-radius:50%;background:var(--green);box-shadow:0 0 4px var(--green);animation:pulse 2s infinite;flex-shrink:0}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
 .ub-call{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--green);letter-spacing:1px}
-.ub-logout{background:none;border:none;color:var(--text-faint);cursor:pointer;font-family:'Share Tech Mono',monospace;font-size:8px;padding:0 3px;transition:color 0.15s}
-.ub-logout:hover{color:var(--red)}
+.ub-logout{background:none;border:1px solid transparent;color:var(--text-dim);cursor:pointer;font-family:'Share Tech Mono',monospace;font-size:8px;padding:3px 7px;transition:all 0.15s;letter-spacing:1px;text-transform:uppercase}
+.ub-logout:hover{color:var(--red);border-color:var(--red-dim);background:rgba(184,64,64,0.06)}
 .red-tag{background:var(--red);padding:3px 8px;font-family:'Share Tech Mono',monospace;font-size:7px;letter-spacing:2px;color:#ffd0d0;white-space:nowrap}
 
 /* BODY LAYOUT */
@@ -485,7 +485,7 @@ textarea{min-height:70px;line-height:1.6}
       <div class="user-badge">
         <div class="ub-dot"></div>
         <span class="ub-call" id="current-callsign">—</span>
-        <button class="ub-logout" onclick="doLogout()">✕</button>
+        <button class="ub-logout" onclick="doLogout()" title="Выйти из аккаунта">выход</button>
       </div>
       <div class="red-tag">ЗАСЕКРЕЧЕНО</div>
     </div>
@@ -649,7 +649,23 @@ window.doLogin=async function(){
   try{await signInWithEmailAndPassword(auth,callToEmail(call),pass);}
   catch(e){errEl.textContent='⚠ Неверный позывной или пароль';btn.disabled=false;btn.textContent='Войти в систему';}
 }
-window.doLogout=async function(){resetClosedAccess();await setUserOffline();await signOut(auth);}
+window.doLogout=async function(){
+  try{
+    // Сначала сбросить закрытый доступ
+    resetClosedAccess();
+    // Попытаться обновить присутствие (не критично если упадёт)
+    try{await setUserOffline();}catch(e){}
+    // Выйти из Firebase Auth
+    await signOut(auth);
+    // onAuthStateChanged сам переключит интерфейс
+  }catch(e){
+    // Даже при ошибке — принудительно показать экран входа
+    currentUser=null;
+    document.getElementById('auth-screen').classList.remove('hidden');
+    document.getElementById('app').classList.add('hidden');
+    showToast('⚠ Выход выполнен');
+  }
+}
 
 // PRESENCE
 async function setUserOnline(){
@@ -2360,12 +2376,26 @@ onAuthStateChanged(auth,async user=>{
     startHeartbeat();startListeners();
     setModule('arc'); // default module
   }else{
-    currentUser=null;stopHeartbeat();
+    currentUser=null;
+    stopHeartbeat();
     resetClosedAccess();
+    // Остановить все Firestore слушатели
+    if(typeof unsubRecords==='function'){try{unsubRecords();}catch(e){}}
+    if(typeof unsubStalkers==='function'){try{unsubStalkers();}catch(e){}}
+    if(typeof unsubDocs==='function'){try{unsubDocs();}catch(e){}}
+    // Очистить данные в памяти
+    records=[];stalkers=[];documents=[];
+    // Показать экран входа
     document.getElementById('auth-screen').classList.remove('hidden');
     document.getElementById('app').classList.add('hidden');
-    document.getElementById('reg-btn').disabled=false;
-    document.getElementById('reg-btn').textContent='Зарегистрироваться';
+    // Сбросить форму входа
+    const lb=document.getElementById('login-btn');
+    if(lb){lb.disabled=false;lb.textContent='Войти в систему';}
+    const rb=document.getElementById('reg-btn');
+    if(rb){rb.disabled=false;rb.textContent='Зарегистрироваться';}
+    document.getElementById('login-err').textContent='';
+    document.getElementById('login-call').value='';
+    document.getElementById('login-pass').value='';
   }
 });
 </script>
