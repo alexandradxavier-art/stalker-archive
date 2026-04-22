@@ -1940,7 +1940,25 @@ window.closeDetail=function(){
 }
 
 // ADD / EDIT
-window.openAdd=function(){const m=currentModule==='all'?'arc':currentModule==='cls'?'cls':currentModule;openEdit(null,m);}
+window.openAdd=function(){
+  const m=currentModule==='all'?'arc':currentModule==='cls'?'cls':currentModule;
+  if(m==='cls'){
+    // Определить тип по активному подразделу
+    let clsType=null;
+    if(currentSub&&currentSub.group==='cls-type') clsType=currentSub.val;
+    else if(currentSub&&currentSub.group==='cls-sec'){
+      // Найти тип по подразделу
+      const secs=getClosedSections();
+      for(const [typeKey,typeSecs] of Object.entries(secs)){
+        if(typeSecs.find(s=>s.name===currentSub.val)){clsType=typeKey;break;}
+      }
+    }
+    window._pendingClsType=clsType||null;
+    openEdit(null,'cls');
+    return;
+  }
+  openEdit(null,m);
+}
 window.openAddWithDocType=function(type){
   openEdit(null,'doc');
   setTimeout(()=>{
@@ -1961,7 +1979,7 @@ window.openEdit=function(id,mod){
   if(mod==='arc')renderArcForm(id,!id);
   else if(mod==='stk')renderStkForm(id,!id);
   else if(mod==='doc')renderDocForm(id,!id);
-  else if(mod==='cls'){window._pendingClsType=null;renderClsForm(id,!id);}
+  else if(mod==='cls'){if(!id){}else{window._pendingClsType=null;}renderClsForm(id,!id);}
   else if(mod==='photo')renderPhotoForm(id,!id);
 }
 
@@ -2905,8 +2923,7 @@ function renderClsForm(id,isNew){
   window._editMod='cls';
   window._editRecord=isNew?{id:editingId,photos:[]}:JSON.parse(JSON.stringify(r||{}));
   document.getElementById('detail-panel').classList.add('open');
-  // При новой записи — по умолчанию выбираем первый тип
-  if(isNew && !window._pendingClsType) window._pendingClsType='лицо';
+  // При новой записи без типа — показываем экран выбора типа (tKey будет пустым)
   const tKey=(r.clType||window._pendingClsType||'').toLowerCase();
   const tColor=clsTypeColor(tKey);
   const tLabel=tKey?clsTypeLabel(tKey):'Новая запись';
@@ -3030,12 +3047,12 @@ function renderClsFormBody(tKey,r,isNew){
     <div class="prot-bar" style="margin:-18px -18px 14px"><div class="prot-dot"></div><span class="prot-text">Защищённый раздел · Редактирование</span></div>
     <div class="dp-2col">
       <div>
-        ${!tKey?`<div class="dp-block"><div class="dp-block-label">Тип записи</div><div class="dp-block-body">
-          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px">
-            ${CLS_TYPES.map(t=>{
-              const isAct=t.key===tKey||(!tKey&&t.key==='лицо');
-              return `<button type="button" onclick="window._pendingClsType='${esc(t.key)}';renderClsFormBody('${esc(t.key)}',window._editRecord||{},${isNew})" style="display:block;width:100%;padding:10px 6px;background:${isAct?t.color+'22':'none'};border:1px solid ${isAct?t.color:t.color+'66'};color:${t.color};font-family:'Share Tech Mono',monospace;font-size:9px;cursor:pointer;transition:all 0.15s;text-transform:uppercase;letter-spacing:1px;line-height:1.3;pointer-events:auto;${isAct?'box-shadow:0 0 6px '+t.color+'44':''}">${t.label}</button>`;
-            }).join('')}
+        ${!tKey?`<div class="dp-block"><div class="dp-block-label">Выберите тип записи</div><div class="dp-block-body">
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px">
+            ${CLS_TYPES.map(t=>`<button type="button" onclick="window._pendingClsType='${t.key}';renderClsFormBody('${t.key}',window._editRecord||{},${isNew})" style="display:flex;align-items:center;gap:8px;padding:11px 12px;background:none;border:1px solid ${t.color}55;color:${t.color};font-family:'Share Tech Mono',monospace;font-size:9px;cursor:pointer;transition:all 0.15s;text-transform:uppercase;letter-spacing:1px;pointer-events:auto;text-align:left;width:100%" onmouseover="this.style.background='${t.color}18'" onmouseout="this.style.background='none'">
+              <div style="width:7px;height:7px;border-radius:50%;background:${t.color};flex-shrink:0"></div>
+              ${t.label}
+            </button>`).join('')}
           </div>
         </div></div>`:typeFields}
       </div>
