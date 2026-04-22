@@ -1428,62 +1428,9 @@ function renderSidebar(){
     statsEl.innerHTML=`
       <div class="st-box"><div class="st-n" style="color:var(--purple)">${photos.length}</div><div class="st-l">Всего</div></div>
       <div class="st-box"><div class="st-n" style="color:var(--blue)">${byPhType['фото']}</div><div class="st-l">Фото</div></div>`;
-  }
-  else if(mod==='cls'){
-    titleEl.className='sb-mod-title cr';titleEl.textContent='Закрытые материалы';
-    subEl.textContent='Защищённый сеанс активен';
-    // Подразделы из closedSections + встроенные
-    const bySection={};
-    const byStatus={}; getClosedStatuses().forEach(s=>{byStatus[s.name.toLowerCase()]=0;});
-    const allTags=new Set();
-    closedRecords.forEach(r=>{
-      const sec=r.section||'без раздела';
-      bySection[sec]=(bySection[sec]||0)+1;
-      const s=(r.status||'').toLowerCase();if(s) byStatus[s]=(byStatus[s]||0)+1;
-      (r.tags||[]).forEach(t=>allTags.add(t));
-    });
-    const sections=getClosedSections();
-    const sectionItems=sections.map(s=>{
-      const cnt=bySection[s.name]||0;
-      const isAct=!!(currentSub&&currentSub.group==='sec'&&currentSub.val===s.name);
-      return `<div class="sb-item${isAct?' act-r':''}" style="cursor:pointer;display:flex;align-items:center;gap:6px;padding:7px 12px;border-left:2px solid ${isAct?'var(--red)':'transparent'};background:${isAct?'rgba(184,64,64,0.06)':'none'}" onclick="setClsSub('sec:${esc(s.name)}')">
-        <div style="width:5px;height:5px;border-radius:50%;background:${s.color||'var(--red)'};flex-shrink:0"></div>
-        <span style="flex:1;font-family:monospace;font-size:9px;color:${isAct?'var(--red)':'var(--text-dim)'}">${esc(s.name)}</span>
-        <span style="font-size:8px;color:var(--text-faint)">${cnt}</span>
-        <button onclick="event.stopPropagation();editClsSection('${esc(s.name)}')" style="background:none;border:none;color:var(--text-faint);font-size:9px;cursor:pointer;padding:0 2px;opacity:0;font-family:monospace" class="si-edit-btn">⋯</button>
-      </div>`;
-    }).join('');
-    const tagItems=[...allTags].map(t=>{
-      const isAct=!!(currentSub&&currentSub.group==='tag'&&currentSub.val===t);
-      return `<div class="sb-item${isAct?' act-r':''}" style="cursor:pointer;padding:4px 12px;border-left:2px solid ${isAct?'var(--red)':'transparent'}" onclick="setClsSub('tag:${esc(t)}')">
-        <span style="font-size:8px;padding:1px 6px;border:1px solid #3a1a1a;color:${isAct?'var(--red)':'var(--text-faint)'};">${esc(t)}</span>
-      </div>`;
-    }).join('');
-    navEl.innerHTML=`
-      <div class="sb-sec" style="display:flex;align-items:center;justify-content:space-between;padding:6px 12px 2px">
-        <span style="font-size:7px;color:var(--text-faint);letter-spacing:2px;text-transform:uppercase">Подразделы</span>
-        <button onclick="openClsSectionManager()" style="background:none;border:none;color:var(--text-faint);font-size:11px;cursor:pointer;font-family:monospace;padding:0 2px;transition:color 0.15s" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--text-faint)'">⚙</button>
-      </div>
-      ${sbItemCls(null,'Все записи',closedRecords.length)}
-      ${sectionItems}
-      <div class="sb-div"></div>
-      <div class="sb-sec" style="display:flex;align-items:center;justify-content:space-between;padding:6px 12px 2px">
-        <span style="font-size:7px;color:var(--text-faint);letter-spacing:2px;text-transform:uppercase">По статусу</span>
-        <button onclick="openClsStatusManager()" style="background:none;border:none;color:var(--text-faint);font-size:11px;cursor:pointer;font-family:monospace;padding:0 2px;transition:color 0.15s" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--text-faint)'">⚙</button>
-      </div>
-      ${getClosedStatuses().map(s=>{
-        const cnt=byStatus[s.name.toLowerCase()]||0;
-        const isAct=currentSub&&currentSub.group==='st'&&currentSub.val===s.name.toLowerCase();
-        return sbItemCls('st:'+s.name.toLowerCase(),s.name.charAt(0).toUpperCase()+s.name.slice(1),cnt,s.color||'var(--red)');
-      }).join('')}
-      ${tagItems?`<div class="sb-div"></div><div class="sb-sec">Теги</div>${tagItems}`:''}`;
-    statsEl.innerHTML=`
-      <div class="st-box"><div class="st-n" style="color:var(--red)">${closedRecords.length}</div><div class="st-l">Всего</div></div>
-      <div class="st-box"><div class="st-n" style="color:var(--amber)">${byStatus['активно']}</div><div class="st-l">Активных</div></div>`;
-    const foot=document.querySelector('.sb-foot');
-    if(foot){foot.innerHTML='<div style="display:flex;align-items:center;gap:5px;margin-bottom:3px"><div style="width:5px;height:5px;border-radius:50%;background:var(--red);animation:pulse 2s infinite"></div><span style="color:var(--red)">Защищённый сеанс</span></div>Доступ подтверждён';}
-  }
-  else{
+  }else if(mod==='cls'){
+    renderClsSidebar(titleEl,subEl,navEl,statsEl);
+  }else{
     titleEl.className='sb-mod-title ct';titleEl.textContent='Все записи';
     subEl.textContent='Общий обзор';
     const total=records.length+stalkers.length+documents.length;
@@ -1548,44 +1495,8 @@ function renderToolbarFilters(){
   const el=document.getElementById('toolbar-filters');
   const mod=currentModule;
   if(mod==='cls'){
-    const allTags=[...new Set(closedRecords.flatMap(r=>r.tags||[]))].sort();
-    const customTypes=[...new Set(closedRecords.map(r=>r.clType).filter(Boolean))].sort();
-    const baseTypes=['наблюдение','досье','контакт','отчёт','примечание'];
-    const types=[...new Set([...baseTypes,...customTypes])];
-    el.innerHTML=`
-      <select class="tb-select" id="f-cltype" onchange="renderContent()">
-        <option value="">Все типы</option>
-        ${types.map(t=>`<option value="${esc(t)}">${esc(t)}</option>`).join('')}
-      </select>
-      <select class="tb-select" id="f-clstatus" onchange="renderContent()">
-        <option value="">Все статусы</option>
-        ${getClosedStatuses().map(s=>`<option value="${esc(s.name.toLowerCase())}">${esc(s.name.charAt(0).toUpperCase()+s.name.slice(1))}</option>`).join('')}
-      </select>
-      ${allTags.length?`<select class="tb-select" id="f-cltag" onchange="renderContent()">
-        <option value="">Все теги</option>
-        ${allTags.map(t=>`<option value="${esc(t)}">${esc(t)}</option>`).join('')}
-      </select>`:''}`;
+    renderClsToolbarFilters(el);
     return;
-  }
-  if(mod==='arc'){
-    el.innerHTML=`
-      <select class="tb-select" id="f-type-tb" onchange="filterByTypeFromTb(this.value)">
-        <option value="">Все типы</option>
-        <option value="артефакт">Артефакты</option>
-        <option value="аномалия">Аномалии</option>
-        <option value="мутант">Мутанты</option>
-        <option value="прочее">Прочее</option>
-      </select>
-      <select class="tb-select" id="f-status" onchange="renderContent()">
-        <option value="">Все статусы</option>
-        <option value="в работе">В работе</option>
-        <option value="изучен">Изучен</option>
-        <option value="на хранении">На хранении</option>
-        <option value="опасен">Опасен</option>
-        <option value="утерян">Утерян</option>
-      </select>`;
-  }else if(mod==='stk'){
-    el.innerHTML='';
   }else if(mod==='doc'){
     el.innerHTML=`
       <select class="tb-select" id="f-doctype" onchange="renderContent()">
@@ -1665,152 +1576,7 @@ function getFiltered(){
       return true;
     }).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
   }
-  if(mod==='cls'){
-    const fType=getVal('f-cltype');
-    const fSt=getVal('f-clstatus');
-    const fTag=getVal('f-cltag');
-    return closedRecords.filter(r=>{
-      // sub filter
-      if(currentSub&&currentSub.group==='st'&&(r.status||'').toLowerCase()!==currentSub.val)return false;
-      if(currentSub&&currentSub.group==='sec'&&(r.section||'без раздела')!==currentSub.val)return false;
-      if(currentSub&&currentSub.group==='tag'&&!(r.tags||[]).includes(currentSub.val))return false;
-      // toolbar filters
-      if(fType&&(r.clType||'').toLowerCase()!==fType)return false;
-      if(fSt&&(r.status||'').toLowerCase()!==fSt)return false;
-      if(fTag&&!(r.tags||[]).includes(fTag))return false;
-      // search
-      if(q&&!(r.title||'').toLowerCase().includes(q)&&!(r.summary||'').toLowerCase().includes(q)&&!(r.content||'').toLowerCase().includes(q))return false;
-      return true;
-    }).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
-  }
-  // all — STRICTLY no closed records
-  const all=[
-    ...records.map(r=>({...r,_mod:'arc',_name:r.name})),
-    ...stalkers.map(s=>({...s,_mod:'stk',_name:s.callsign})),
-    ...documents.map(d=>({...d,_mod:'doc',_name:d.title}))
-  ];
-  return all.filter(r=>!q||(r._name||'').toLowerCase().includes(q));
-}
-
-// CHIPS
-function statusChipArc(s){
-  if(!s)return'<span class="chip ch-d">—</span>';
-  const sl=s.toLowerCase();
-  if(sl==='изучен')return`<span class="chip ch-g">${esc(s)}</span>`;
-  if(sl==='в работе')return`<span class="chip ch-a">${esc(s)}</span>`;
-  if(sl==='опасен')return`<span class="chip ch-r">${esc(s)}</span>`;
-  if(sl==='на хранении')return`<span class="chip ch-b">${esc(s)}</span>`;
-  if(sl==='утерян')return`<span class="chip ch-d">${esc(s)}</span>`;
-  return`<span class="chip ch-d">${esc(s)}</span>`;
-}
-function statusChipStk(s){
-  if(!s)return'<span class="chip ch-d">—</span>';
-  const sl=s.toLowerCase();
-  if(sl==='жив')return`<span class="chip ch-g">${esc(s)}</span>`;
-  if(sl==='мёртв')return`<span class="chip ch-r">${esc(s)}</span>`;
-  if(sl==='пропал')return`<span class="chip ch-a">${esc(s)}</span>`;
-  if(sl==='неизвестно')return`<span class="chip ch-d">${esc(s)}</span>`;
-  return`<span class="chip ch-d">${esc(s)}</span>`;
-}
-function dangerChip(d){
-  if(!d)return'<span class="chip ch-d">—</span>';
-  const dl=d.toLowerCase();
-  if(dl==='высокая')return`<span class="chip ch-r">${esc(d)}</span>`;
-  if(dl==='средняя')return`<span class="chip ch-a">${esc(d)}</span>`;
-  if(dl==='низкая')return`<span class="chip ch-g">${esc(d)}</span>`;
-  return`<span class="chip ch-d">${esc(d)}</span>`;
-}
-function typeLabel(t){
-  const tl=(t||'').toLowerCase();
-  if(tl==='артефакт')return`<span class="td-art">${esc(t)}</span>`;
-  if(tl==='аномалия')return`<span class="td-an">${esc(t)}</span>`;
-  if(tl==='мутант')return`<span class="td-mut">${esc(t)}</span>`;
-  return`<span class="td-dim">${esc(t||'—')}</span>`;
-}
-function docTypeChip(t){
-  if(!t)return'<span class="chip ch-d">—</span>';
-  const tl=t.toLowerCase();
-  if(tl==='отчёт')return`<span class="chip ch-g">${esc(t)}</span>`;
-  if(tl==='заметка')return`<span class="chip ch-a">${esc(t)}</span>`;
-  if(tl==='аналитика')return`<span class="chip ch-b">${esc(t)}</span>`;
-  if(tl==='срочно')return`<span class="chip ch-r">${esc(t)}</span>`;
-  return`<span class="chip ch-p">${esc(t)}</span>`;
-}
-
-// RENDER
-function renderContent(){
-  // cls access checked before entering module
-  if(currentView==='list')renderList();else renderCards();
-
-}
-
-function renderList(){
-  const rows=getFiltered();
-  const ca=document.getElementById('content-area');
-  if(!rows.length){ca.innerHTML=emptyState('',mod);return;}
-  const mod=currentModule;
-
-  if(mod==='arc'){
-    ca.innerHTML=`<div class="content-header"><span class="content-count">Найдено: <strong>${rows.length}</strong></span></div><table class="list-table"><thead><tr>
-      <th onclick="doSort('num')">#</th>
-      <th onclick="doSort('name')">Название</th>
-      <th onclick="doSort('objectType')">Тип</th>
-      <th>Опасность</th>
-      <th onclick="doSort('status')">Статус</th>
-      <th onclick="doSort('date')">Дата</th>
-      <th>Автор</th>
-    </tr></thead><tbody>${rows.map(r=>`<tr class="dr" onclick="openDetail('${r.id}','arc')">
-      <td class="td-mono">${padNum(r.num||0)}</td>
-      <td><strong>${esc(r.name||'—')}</strong></td>
-      <td>${typeLabel(r.objectType)}</td>
-      <td>${dangerChip(r.danger)}</td>
-      <td>${statusChipArc(r.status)}</td>
-      <td class="td-dim">${fmtDate(r.date)}</td>
-    </tr>`).join('')}</tbody></table>`;
-    return;
-  }
-  if(mod==='stk'){
-    ca.innerHTML=`<div class="content-header"><span class="content-count">Найдено: <strong>${rows.length}</strong></span></div><table class="list-table"><thead><tr>
-      <th>Фото</th>
-      <th onclick="doSort('callsign')">Позывной</th>
-      <th onclick="doSort('fio')">ФИО</th>
-      <th>Возраст</th>
-      <th>Статус</th>
-      <th>Последняя активность</th>
-    </tr></thead><tbody>${rows.map(s=>{
-      const ph=s.photos&&s.photos.length?`<img src="${s.photos[0].data}" style="width:30px;height:36px;object-fit:cover;border:1px solid var(--border2)">`:`<div style="width:30px;height:36px;background:var(--paper3);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:7px;color:var(--text-faint)">—</div>`;
-      return`<tr class="dr" onclick="openDetail('${s.id}','stk')">
-        <td style="padding:4px 8px">${ph}</td>
-        <td class="td-call">${esc(s.callsign||'—')}</td>
-        <td class="td-dim">${esc(s.fio||'—')}</td>
-        <td class="td-dim">${esc(s.age||'—')}</td>
-        <td>${statusChipStk(s.status)}</td>
-        <td class="td-dim">${fmtDate(s.lastActive)}</td>
-      </tr>`;
-    }).join('')}</tbody></table>`;
-    return;
-  }
-  if(mod==='doc'){
-    const headerHtml=`<div class="content-header"><span class="content-count">Найдено: <strong>${rows.length}</strong></span></div>`;
-    ca.innerHTML=headerHtml+rows.map(d=>{
-      const tl=(d.docType||'').toLowerCase();
-      let chipCls='dc-rep';
-      if(tl==='сводка')chipCls='dc-svd';
-      else if(tl==='карта')chipCls='dc-map';
-      else if(tl==='справка')chipCls='dc-ref';
-      const subL=d.docSubsection?`<span class="doc-card-sub">${esc(d.docSubsection)}</span>`:'';
-      return`<div class="doc-card" onclick="openDetail('${d.id}','doc')">
-        <div class="doc-card-head"><span class="dc-chip ${chipCls}">${esc(d.docType||'—')}</span><span class="doc-card-title">${esc(d.title||'Без названия')}</span>${subL}</div>
-        <div class="doc-card-meta">
-          <div class="doc-meta-item">Дата: <span>${fmtDate(d.date)}</span></div>
-          <div class="doc-meta-item">Автор: <span>${esc(d.author||'—')}</span></div>
-          ${d.related?`<div class="doc-meta-item">Связано: <span>${esc(d.related)}</span></div>`:''}
-        </div>
-        <div class="doc-card-body">${esc((d.summary||d.text||'').slice(0,110))}${(d.summary||d.text||'').length>110?'…':''}</div>
-      </div>`;
-    }).join('');
-    return;
-  }
+  if(mod==='cls'){return getFilteredCls();}
   if(mod==='photo'){
     if(currentView==='list'){
       ca.innerHTML=`<div class="content-header"><span class="content-count">Найдено: <strong>${rows.length}</strong></span></div>
@@ -1844,31 +1610,7 @@ function renderList(){
     return;
   }
   if(mod==='cls'){
-    const protBar='<div class="prot-bar" style="margin:-14px -16px 12px"><div class="prot-dot"></div><span class="prot-text">Защищённый раздел · Сеанс активен</span></div>';
-    if(!rows.length){ca.innerHTML=protBar+emptyState('',"cls");return;}
-    ca.innerHTML=protBar+rows.map(r=>{
-      const statusList=getClosedStatuses();
-  const statusObj=statusList.find(s=>s.name.toLowerCase()===(r.status||'').toLowerCase());
-  const tagColor=statusObj?statusObj.color:'var(--text-dim)';
-      const _stO=getClosedStatuses().find(s=>s.name.toLowerCase()===(r.status||'').toLowerCase());
-      const tagCls=r.status==='под наблюдением'?' cl-obs':r.status==='архив'?' cl-arch':'';
-      const tagLabel=(r.status||'').toUpperCase().slice(0,11)||'—';
-      const persons=(r.persons||[]);
-      const tags=(r.tags||[]);
-      const tagsHtml=tags.length?`<div style="padding:3px 12px;border-bottom:1px solid #1e0e0e;display:flex;gap:4px;flex-wrap:wrap;background:#0b0808">${tags.map(t=>`<span class="tag-pill-view">${esc(t)}</span>`).join('')}</div>`:'';
-      const personsInfo=persons.length?`${persons.length} чел.`:(r.relPersons?esc(r.relPersons):'');
-      return`<div class="cl-card" onclick="openDetail('${r.id}','cls')">
-        <div class="cl-head"><span class="cl-id">${esc(r.clId||'ЗМ-???')}</span><span class="cl-title">${esc(r.title||'Без названия')}</span><span class="cl-tag${tagCls}">${tagLabel}</span></div>
-        <div class="cl-meta">
-          <div class="cl-mi">Тип: <span>${esc(r.clType||'—')}</span></div>
-          ${r.section?`<div class="cl-mi">Раздел: <span>${esc(r.section)}</span></div>`:''}
-          <div class="cl-mi">Дата: <span>${fmtDate(r.date)}</span></div>
-          ${personsInfo?`<div class="cl-mi">Лица: <span>${personsInfo}</span></div>`:''}
-        </div>
-        ${tagsHtml}
-        <div class="cl-body">${esc((r.summary||'').slice(0,110))}${(r.summary||'').length>110?'…':''}</div>
-      </div>`;
-    }).join('');
+    renderClsList(ca);
     return;
   }
   // all
@@ -1935,10 +1677,7 @@ window.openDetail=function(id,mod){
   const panel=document.getElementById('detail-panel');
   panel.classList.add('open');
   if(mod==='cls'){
-    const r=closedRecords.find(x=>x.id===id);if(!r)return;
-    document.getElementById('dp-title').textContent=`${r.clId||'ЗМ-???'} · ${r.title||'—'}`;
-    document.getElementById('dp-actions').innerHTML=`<button class="act-btn btn-edit" onclick="openEdit('${id}','cls')">✎ Редактировать</button><button class="act-btn btn-del" onclick="confirmDel('${id}','cls')">✕ Удалить</button>`;
-    renderClsDetail(r);
+    openClsDetail(id);
     return;
   }
   if(mod==='arc'){
@@ -2084,7 +1823,7 @@ window.openEdit=function(id,mod){
   if(mod==='arc')renderArcForm(id,!id);
   else if(mod==='stk')renderStkForm(id,!id);
   else if(mod==='doc')renderDocForm(id,!id);
-  else if(mod==='cls')renderClsForm(id,!id);
+  else if(mod==='cls'){window._pendingClsType=null;renderClsForm(id,!id);}
   else if(mod==='photo')renderPhotoForm(id,!id);
 }
 
@@ -2503,35 +2242,11 @@ window.doSave=async function(){
       closeDetail();showToast(!ex?'✓ Материал добавлен':'✓ Сохранено');
     }
     else if(mod==='cls'){
-      const title=document.getElementById('ef-cls-title').value.trim();
-      if(!title){showToast('⚠ Введите название');return;}
-      const ex=closedRecords.find(x=>x.id===editingId);
-      const clsNum=ex?ex.clId:('ЗМ-'+String(closedRecords.length+1).padStart(3,'0'));
-      let clsType=document.getElementById('ef-cls-type')?document.getElementById('ef-cls-type').value:'';
-      if(clsType==='__custom__'){
-        const ci=document.getElementById('ef-cls-type-custom');
-        clsType=ci?ci.value.trim():'';
-      }
-      const personInputs=document.querySelectorAll('.person-row-edit input');
-      const persons=[...personInputs].map(i=>i.value.trim()).filter(Boolean);
-      const tags=window._editRecord?(window._editRecord.tags||[]):[];
-      const blocks=window._editRecord?(window._editRecord.blocks||[]):[];
-      const r={
-        id:editingId,title,clId:clsNum,
-        clType,
-        section:document.getElementById('ef-cls-section')?document.getElementById('ef-cls-section').value:'',
-        status:document.getElementById('ef-cls-status').value,
-        date:document.getElementById('ef-cls-date').value,
-        summary:document.getElementById('ef-cls-summary').value.trim(),
-        content:document.getElementById('ef-cls-content').value.trim(),
-        note:document.getElementById('ef-cls-note').value.trim(),
-        author:ex?ex.author:callsign,
-        persons,tags,blocks,
-        photos:window._editRecord?window._editRecord.photos:[],
-        createdAt:ex?ex.createdAt:Date.now(),updatedAt:Date.now()
-      };
-      await setDoc(doc(db,'closed',r.id),r);
-      closeDetail();showToast(!ex?'✓ Запись добавлена':'✓ Сохранено');
+      const rec=doSaveCls();
+      if(!rec)return;
+      const exRec=closedRecords.find(x=>x.id===rec.id);
+      await setDoc(doc(db,'closed',rec.id),rec);
+      closeDetail();showToast(!exRec?'✓ Запись добавлена':'✓ Сохранено');
     }
   }catch(e){showToast('⚠ Ошибка: '+e.message);}
 }
@@ -2546,7 +2261,7 @@ window.cancelEdit=function(id,isNew,mod){
 window.confirmDel=function(id,mod){
   const name=mod==='arc'?(records.find(x=>x.id===id)||{}).name:
              mod==='stk'?(stalkers.find(x=>x.id===id)||{}).callsign:
-             mod==='cls'?(closedRecords.find(x=>x.id===id)||{}).title:
+             mod==='cls'?(r=>{return r.callsign||r.groupName||r.kpkUser||r.title||'запись';})(closedRecords.find(x=>x.id===id)||{}):
              mod==='photo'?(photos.find(x=>x.id===id)||{}).title:
              (documents.find(x=>x.id===id)||{}).title;
   showConfirm(`Удалить «${name||'запись'}»?`,async()=>{
@@ -2646,696 +2361,816 @@ let closedRecords = [];
 let unsubClosed = null;
 const CLS_PASSWORD = 'Dostup#Gamma_17!';
 window._clsUnlocked = false;
-let _prevModule = 'arc'; // модуль до попытки входа
+let _prevModule = 'arc';
 
-// ── Открыть модал допуска поверх текущего экрана ──
-function openClsModal() {
-  const overlay = document.getElementById('cls-overlay');
-  const inp     = document.getElementById('cls-pw-inp');
-  const errEl   = document.getElementById('cls-pw-err');
-  const btn     = document.getElementById('cls-pw-btn');
-  // Сброс состояния
-  inp.value            = '';
-  errEl.textContent    = '';
-  btn.disabled         = false;
-  btn.textContent      = 'Подтвердить доступ';
-  // Показать
-  overlay.classList.add('open');
-  setTimeout(() => inp.focus(), 80);
+// ── Типы записей закрытого раздела ──
+const CLS_TYPES = [
+  {key:'лицо',     label:'Лицо',           color:'var(--amber)'},
+  {key:'группа',   label:'Группа',         color:'var(--blue)'},
+  {key:'кпк',      label:'КПК',            color:'var(--green)'},
+  {key:'контакт',  label:'Контакт',        color:'var(--purple)'},
+  {key:'операция', label:'Операция',       color:'var(--red)'},
+  {key:'обстановка',label:'Обстановка',    color:'var(--text-dim)'},
+];
+
+function clsTypeColor(key){
+  const t=CLS_TYPES.find(x=>x.key===(key||'').toLowerCase());
+  return t?t.color:'var(--text-dim)';
+}
+function clsTypeLabel(key){
+  const t=CLS_TYPES.find(x=>x.key===(key||'').toLowerCase());
+  return t?t.label:(key||'—');
 }
 
-// ── Закрыть модал и вернуть предыдущий вид ──
-window.closeCls = function() {
-  const overlay = document.getElementById('cls-overlay');
-  overlay.classList.remove('open');
-  // Сброс полей
-  document.getElementById('cls-pw-inp').value = '';
-  document.getElementById('cls-pw-err').textContent = '';
-  // Если текущий модуль — cls (вдруг успели переключить), вернуть в prev
-  if (currentModule === 'cls' && !window._clsUnlocked) {
-    setModule(_prevModule);
-  }
-};
+// ── Секции закрытого раздела ──
+function getClosedSections(){
+  try{const s=localStorage.getItem('cls_sections');return s?JSON.parse(s):{};}
+  catch(e){return {};}
+}
+function saveClosedSections(obj){localStorage.setItem('cls_sections',JSON.stringify(obj));}
 
-// ── Клик по тёмному фону — то же что Отмена ──
-window.handleClsOverlayClick = function(e) {
-  if (e.target === document.getElementById('cls-overlay')) closeCls();
-};
+// ── Статусы закрытого раздела ──
+const CLS_DEFAULT_STATUSES=[
+  {name:'активно',color:'var(--red)'},
+  {name:'под наблюдением',color:'var(--amber)'},
+  {name:'архив',color:'var(--text-dim)'},
+  {name:'завершено',color:'var(--green)'},
+];
+function getClosedStatuses(){
+  try{const s=localStorage.getItem('cls_statuses');return s?JSON.parse(s):CLS_DEFAULT_STATUSES;}
+  catch(e){return CLS_DEFAULT_STATUSES;}
+}
+function saveClosedStatuses(arr){localStorage.setItem('cls_statuses',JSON.stringify(arr));}
 
-// ── Клик по вкладке ──
-window.handleClsClick = function() {
-  if (window._clsUnlocked) {
-    activateClsModule();
-    return;
-  }
-  _prevModule = currentModule || 'arc';
+
+// ── Модальное окно допуска ──
+function openClsModal(){
+  const o=document.getElementById('cls-overlay');
+  o.classList.add('open');
+  const inp=document.getElementById('cls-pw-inp');
+  inp.value='';
+  document.getElementById('cls-pw-err').textContent='';
+  document.getElementById('cls-pw-btn').disabled=false;
+  document.getElementById('cls-pw-btn').textContent='Подтвердить доступ';
+  setTimeout(()=>inp&&inp.focus(),80);
+}
+window.closeCls=function(){
+  document.getElementById('cls-overlay').classList.remove('open');
+  document.getElementById('cls-pw-inp').value='';
+  document.getElementById('cls-pw-err').textContent='';
+  if(currentModule==='cls'&&!window._clsUnlocked) setModule(_prevModule);
+};
+window.handleClsOverlayClick=function(e){
+  if(e.target===document.getElementById('cls-overlay'))closeCls();
+};
+window.handleClsClick=function(){
+  if(window._clsUnlocked){activateClsModule();return;}
+  _prevModule=currentModule||'arc';
   openClsModal();
 };
-
-// ── Подтвердить код доступа ──
-window.submitCls = function() {
-  const pw    = document.getElementById('cls-pw-inp').value.trim();
-  const errEl = document.getElementById('cls-pw-err');
-  const btn   = document.getElementById('cls-pw-btn');
-  errEl.textContent = '';
-
-  if (!pw) {
-    errEl.textContent = '⚠ Введите код доступа';
-    return;
-  }
-
-  btn.disabled    = true;
-  btn.textContent = 'Проверка...';
-
-  // Небольшая задержка для UX
-  setTimeout(() => {
-    if (pw === CLS_PASSWORD) {
-      // ── Успех ──
-      window._clsUnlocked = true;
+window.submitCls=function(){
+  const pw=document.getElementById('cls-pw-inp').value;
+  const err=document.getElementById('cls-pw-err');
+  const btn=document.getElementById('cls-pw-btn');
+  err.textContent='';
+  if(!pw){err.textContent='⚠ Введите код доступа';return;}
+  btn.disabled=true;btn.textContent='Проверка...';
+  setTimeout(()=>{
+    if(pw===CLS_PASSWORD){
+      window._clsUnlocked=true;
       document.getElementById('cls-overlay').classList.remove('open');
-      document.getElementById('cls-pw-inp').value = '';
-      document.getElementById('cls-pw-err').textContent = '';
-      btn.disabled    = false;
-      btn.textContent = 'Подтвердить доступ';
-
-      // Запустить Firestore слушатель если ещё не запущен
-      if (!unsubClosed) {
-        unsubClosed = onSnapshot(collection(db, 'closed'), snap => {
-          closedRecords = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-          if (currentModule === 'cls') { renderSidebar(); renderContent(); }
+      if(!unsubClosed){
+        unsubClosed=onSnapshot(collection(db,'closed'),snap=>{
+          closedRecords=snap.docs.map(d=>({id:d.id,...d.data()}));
+          if(currentModule==='cls'){renderSidebar();renderContent();}
         });
       }
       activateClsModule();
-    } else {
-      // ── Ошибка ──
-      errEl.textContent   = '⚠ Неверный код — доступ запрещён';
-      btn.disabled        = false;
-      btn.textContent     = 'Подтвердить доступ';
-      document.getElementById('cls-pw-inp').value = '';
+    }else{
+      err.textContent='⚠ Неверный код — доступ запрещён';
+      btn.disabled=false;btn.textContent='Подтвердить доступ';
+      document.getElementById('cls-pw-inp').value='';
       document.getElementById('cls-pw-inp').focus();
     }
-  }, 280);
+  },280);
 };
 
-// ── Активировать модуль после успешного входа ──
-function activateClsModule() {
-  currentModule = 'cls';
-  currentSub    = null;
+function activateClsModule(){
+  currentModule='cls';currentSub=null;
   document.getElementById('detail-panel').classList.remove('open');
-  editingId = null; window._editRecord = null;
-
-  // Topnav
-  ['arc','stk','doc','all','photo'].forEach(m => {
-    const el = document.getElementById('tn-' + m);
-    if (el) el.className = 'tn-mod'+(m==='photo'?' tn-photo':'');
+  editingId=null;window._editRecord=null;
+  ['arc','stk','doc','all','photo'].forEach(m=>{
+    const el=document.getElementById('tn-'+m);
+    if(el)el.className='tn-mod'+(m==='photo'?' tn-photo':'');
   });
-  // Placeholder поиска под модуль
-  const searchInput=document.getElementById('search-input');
-  if(searchInput){
-    const placeholders={arc:'поиск по названию...',stk:'позывной, ФИО...',doc:'поиск по документам...',all:'поиск по всей базе...',cls:'поиск по записям...'};
-    searchInput.placeholder=placeholders[mod]||'поиск...';
+  const clsEl=document.getElementById('tn-cls');
+  if(clsEl)clsEl.className='tn-mod tn-cls act-cls';
+  const ab=document.getElementById('add-btn');
+  ab.className='add-btn';ab.removeAttribute('style');
+  ab.style.cssText='border-color:var(--red-dim);color:var(--red);background:rgba(184,64,64,0.08);font-family:monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all 0.2s;white-space:nowrap;margin-left:auto;height:30px;padding:0 14px;border:1px solid var(--red-dim)';
+  ab.textContent='＋ Запись';ab.onclick=()=>openAdd();
+  renderToolbarFilters();renderSidebar();renderContent();
+}
+
+function resetClosedAccess(){
+  window._clsUnlocked=false;
+  if(unsubClosed){unsubClosed();unsubClosed=null;}
+  closedRecords=[];
+  const o=document.getElementById('cls-overlay');
+  if(o)o.classList.remove('open');
+}
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    const o=document.getElementById('cls-overlay');
+    if(o&&o.classList.contains('open'))closeCls();
   }
-  const clsEl = document.getElementById('tn-cls');
-  if (clsEl) clsEl.className = 'tn-mod tn-cls act-cls';
+});
+setTimeout(()=>{
+  const inp=document.getElementById('cls-pw-inp');
+  if(inp)inp.addEventListener('keydown',e=>{if(e.key==='Enter')submitCls();});
+},300);
 
-  // Кнопка «＋ Запись»
-  const ab = document.getElementById('add-btn');
-  ab.className    = 'add-btn';
-  ab.removeAttribute('style');
-  ab.style.borderColor = 'var(--red-dim)';
-  ab.style.color       = 'var(--red)';
-  ab.style.marginLeft  = 'auto';
-  ab.textContent  = '＋ Запись';
-  ab.onclick      = () => openAdd();
 
-  renderToolbarFilters();
-  renderSidebar();
-  renderContent();
-}
+// ── САЙДБАР ──
+function renderClsSidebar(titleEl,subEl,navEl,statsEl){
+  titleEl.className='sb-mod-title cr';titleEl.textContent='Закрытые материалы';
+  subEl.textContent='Защищённый сеанс активен';
 
-// ── Карточка подробно ──
-
-// ══ CLOSED SECTIONS ══
-
-// Встроенные дефолтные подразделы
-const CLS_DEFAULT_SECTIONS=[
-  {name:'Наблюдения',color:'var(--amber)'},
-  {name:'Досье',color:'var(--blue)'},
-  {name:'Контакты',color:'var(--purple)'},
-  {name:'Отчёты',color:'var(--green)'},
-  {name:'Примечания',color:'var(--text-dim)'},
-];
-
-function getClosedSections(){
-  const custom=JSON.parse(localStorage.getItem('cls_sections')||'null');
-  return custom||CLS_DEFAULT_SECTIONS;
-}
-function saveClosedSections(arr){
-  localStorage.setItem('cls_sections',JSON.stringify(arr));
-}
-
-// ── Менеджер подразделов ──
-window.openClsSectionManager=function(){
-  document.getElementById('detail-panel').classList.add('open');
-  document.getElementById('dp-title').textContent='Управление подразделами';
-  document.getElementById('dp-title').style.color='var(--red)';
-  document.getElementById('dp-actions').innerHTML=`<button class="act-btn btn-cancel" onclick="closeDetail()">✕ Закрыть</button>`;
-  renderSectionManager();
-}
-
-function renderSectionManager(){
-  const sections=getClosedSections();
-  const bySection={};
-  closedRecords.forEach(r=>{const s=r.section||'без раздела';bySection[s]=(bySection[s]||0)+1;});
-  document.getElementById('dp-body').innerHTML=`
-    <div class="sec-manage-wrap">
-      <div class="sec-manage-title">Подразделы закрытого раздела</div>
-      <div id="sections-list">${sections.map((s,i)=>`
-        <div class="cls-section-item" id="sec-item-${i}">
-          <div class="cls-section-drag" title="перетащить">⠿</div>
-          <div class="cls-section-dot" style="background:${s.color||'var(--red)'}"></div>
-          <span class="cls-section-name">${esc(s.name)}</span>
-          <span class="cls-section-cnt">${bySection[s.name]||0} зап.</span>
-          <button class="cls-sm-btn" onclick="startEditSection(${i})">✎</button>
-          <button class="cls-sm-btn del" onclick="deleteSection(${i})">✕</button>
-        </div>`).join('')}
-      </div>
-      <div id="new-section-form" style="display:none;margin-top:8px">
-        <div class="cls-section-item" style="border-style:dashed">
-          <div class="cls-section-dot" style="background:#b84040;border:1px solid #3a1a1a"></div>
-          <input id="new-sec-name" class="f-inp" placeholder="Название подраздела" style="flex:1;background:none;border:none;border-bottom:1px solid #3a1a1a;outline:none;font-family:monospace;font-size:10px;color:var(--text)">
-          <button class="cls-sm-btn" onclick="addSection()" style="border-color:#7a2828;color:#b84040">✓</button>
-          <button class="cls-sm-btn" onclick="cancelNewSection()">✕</button>
-        </div>
-      </div>
-      <button onclick="showNewSectionForm()" style="width:100%;margin-top:8px;padding:7px;background:none;border:1px dashed #3a1a1a;color:var(--text-faint);font-family:monospace;font-size:8px;text-transform:uppercase;letter-spacing:1px;cursor:pointer;transition:all 0.15s" onmouseover="this.style.borderColor='#7a2828';this.style.color='var(--red)'" onmouseout="this.style.borderColor='#3a1a1a';this.style.color='var(--text-faint)'">＋ Добавить подраздел</button>
-    </div>`;
-}
-
-window.showNewSectionForm=function(){document.getElementById('new-section-form').style.display='';document.getElementById('new-sec-name').focus();}
-window.cancelNewSection=function(){document.getElementById('new-section-form').style.display='none';}
-window.addSection=function(){
-  const name=document.getElementById('new-sec-name').value.trim();
-  if(!name)return;
-  const sections=getClosedSections();
-  const colors=['var(--amber)','var(--blue)','var(--purple)','var(--green)','var(--text-dim)','var(--red)'];
-  sections.push({name,color:colors[sections.length%colors.length]});
-  saveClosedSections(sections);
-  renderSectionManager();
-  renderSidebar();
-  showToast('✓ Подраздел добавлен');
-}
-window.deleteSection=function(i){
-  const sections=getClosedSections();
-  const name=sections[i].name;
-  showConfirm(`Удалить подраздел «${name}»? Записи не удалятся.`,()=>{
-    sections.splice(i,1);
-    saveClosedSections(sections);
-    renderSectionManager();
-    renderSidebar();
-    showToast('Подраздел удалён');
+  const secs=getClosedSections();
+  const bySec={};const byStatus={};const byType={};
+  closedRecords.forEach(r=>{
+    const t=(r.clType||'').toLowerCase();
+    byType[t]=(byType[t]||0)+1;
+    const st=(r.status||'').toLowerCase();
+    byStatus[st]=(byStatus[st]||0)+1;
+    const sec=r.section||'';
+    if(sec)bySec[sec]=(bySec[sec]||0)+1;
   });
-}
-window.startEditSection=function(i){
-  const sections=getClosedSections();
-  const item=document.getElementById('sec-item-'+i);
-  if(!item)return;
-  const nameEl=item.querySelector('.cls-section-name');
-  const origName=sections[i].name;
-  nameEl.innerHTML=`<input value="${esc(origName)}" style="background:none;border:none;border-bottom:1px solid #7a2828;outline:none;font-family:monospace;font-size:10px;color:var(--text);width:100%" id="edit-sec-inp-${i}">`;
-  const inp=document.getElementById('edit-sec-inp-'+i);
-  inp.focus();
-  inp.select();
-  inp.addEventListener('keydown',e=>{
-    if(e.key==='Enter'){saveEditSection(i,origName,inp.value.trim());}
-    if(e.key==='Escape'){renderSectionManager();}
-  });
-  inp.addEventListener('blur',()=>setTimeout(()=>saveEditSection(i,origName,inp.value.trim()),150));
-}
-function saveEditSection(i,origName,newName){
-  if(!newName||newName===origName){renderSectionManager();return;}
-  const sections=getClosedSections();
-  sections[i].name=newName;
-  saveClosedSections(sections);
-  // Обновить записи с этим разделом
-  const batch=closedRecords.filter(r=>r.section===origName);
-  Promise.all(batch.map(r=>setDoc(doc(db,'closed',r.id),{...r,section:newName})));
-  renderSectionManager();
-  renderSidebar();
-  showToast('✓ Подраздел переименован');
-}
-window.editClsSection=function(name){openClsSectionManager();}
 
-// ── setSub обновлён ──
+  // Основные типы
+  const typeItems=CLS_TYPES.map(t=>{
+    const isAct=currentSub&&currentSub.group==='cls-type'&&currentSub.val===t.key;
+    const cnt=byType[t.key]||0;
+    const typeSecs=secs[t.key]||[];
+    const subItems=typeSecs.map(s=>{
+      const isSubAct=currentSub&&currentSub.group==='cls-sec'&&currentSub.val===s.name;
+      return `<button class="sb-sub-item${isSubAct?' act-sub act-sub-r':''}" onclick="setClsSub('cls-sec:${esc(s.name)}')" style="padding:4px 12px 4px 24px;border-left:2px solid ${isSubAct?'var(--red)':'transparent'};color:${isSubAct?'var(--red)':'var(--text-faint)'}">
+        <div style="width:4px;height:4px;border-radius:50%;background:${s.color||t.color};flex-shrink:0"></div>
+        <span style="flex:1">${esc(s.name)}</span>
+        <span style="font-size:7px;color:var(--text-faint)">${bySec[s.name]||0}</span>
+      </button>`;
+    }).join('');
+    return `<button class="sb-item${isAct?' act-r':''}" onclick="setClsSub('cls-type:${t.key}')" style="width:100%;display:flex;align-items:center;gap:6px;padding:6px 12px;background:${isAct?'rgba(184,64,64,0.06)':'none'};border:none;border-left:2px solid ${isAct?'var(--red)':'transparent'};font-family:monospace;font-size:9px;cursor:pointer;color:${isAct?'var(--red)':'var(--text-dim)'}">
+      <div style="width:5px;height:5px;border-radius:50%;background:${t.color}"></div>
+      <span style="flex:1;text-align:left">${t.label}</span>
+      <span class="sb-cnt">${cnt}</span>
+      <button class="sb-type-gear" onclick="event.stopPropagation();openClsSecManager('${t.key}','${t.label}')" title="Подразделы">⚙</button>
+    </button>${subItems}`;
+  }).join('');
+
+  // Статусы
+  const statuses=getClosedStatuses();
+  const statusItems=statuses.map(s=>{
+    const isAct=currentSub&&currentSub.group==='cls-st'&&currentSub.val===s.name;
+    return `<button class="sb-item${isAct?' act-r':''}" onclick="setClsSub('cls-st:${esc(s.name)}')" style="width:100%;display:flex;align-items:center;gap:6px;padding:6px 12px;background:${isAct?'rgba(184,64,64,0.06)':'none'};border:none;border-left:2px solid ${isAct?'var(--red)':'transparent'};font-family:monospace;font-size:9px;cursor:pointer;color:${isAct?'var(--red)':'var(--text-dim)'}">
+      <div style="width:5px;height:5px;border-radius:50%;background:${s.color||'var(--text-dim)'}"></div>
+      <span style="flex:1;text-align:left">${esc(s.name.charAt(0).toUpperCase()+s.name.slice(1))}</span>
+      <span class="sb-cnt">${byStatus[s.name]||0}</span>
+    </button>`;
+  }).join('');
+
+  const isAllAct=!currentSub;
+  navEl.innerHTML=`
+    <div class="sb-sec" style="padding-top:10px"><span>Разделы</span></div>
+    <button class="sb-item${isAllAct?' act-r':''}" onclick="setClsSub('')" style="width:100%;display:flex;align-items:center;gap:6px;padding:6px 12px;background:${isAllAct?'rgba(184,64,64,0.06)':'none'};border:none;border-left:2px solid ${isAllAct?'var(--red)':'transparent'};font-family:monospace;font-size:9px;cursor:pointer;color:${isAllAct?'var(--red)':'var(--text-dim)'}">
+      <div style="width:5px;height:5px;border-radius:50%;background:var(--red)"></div>
+      <span style="flex:1;text-align:left">Все записи</span>
+      <span class="sb-cnt">${closedRecords.length}</span>
+    </button>
+    ${typeItems}
+    <div class="sb-div"></div>
+    <div class="sb-sec" style="display:flex;align-items:center;justify-content:space-between;padding:7px 12px 3px">
+      <span>Статусы</span>
+      <button onclick="openClsStatusManager()" style="background:none;border:none;color:var(--text-faint);font-size:10px;cursor:pointer;font-family:monospace;opacity:0.7" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--text-faint)'">⚙</button>
+    </div>
+    ${statusItems}`;
+
+  const active=byStatus['активно']||0;
+  statsEl.innerHTML=`
+    <div class="st-box"><div class="st-n" style="color:var(--red)">${closedRecords.length}</div><div class="st-l">Всего</div></div>
+    <div class="st-box"><div class="st-n" style="color:var(--amber)">${active}</div><div class="st-l">Активных</div></div>`;
+
+  const foot=document.querySelector('.sb-foot+.sb-scroll,.sidebar .sb-scroll+div');
+  const footEl=document.querySelector('.sb-foot');
+  if(footEl&&currentModule==='cls'){
+    footEl.previousElementSibling&&footEl.previousElementSibling.classList.contains('sb-div');
+  }
+}
+
 window.setClsSub=function(raw){
-  if(!raw){
-    currentSub=null;
-  } else {
-    const [group,...rest]=raw.split(':');
-    currentSub={group,val:rest.join(':')};
-  }
+  if(!raw){currentSub=null;}
+  else{const [group,...rest]=raw.split(':');currentSub={group,val:rest.join(':')};}
   document.getElementById('detail-panel').classList.remove('open');
-  editingId=null; window._editRecord=null;
-  renderSidebar();
-  renderContent();
+  editingId=null;window._editRecord=null;
+  renderSidebar();renderContent();
+};
+
+
+// ── ФИЛЬТРАЦИЯ ──
+function getFilteredCls(){
+  const q=(document.getElementById('search-input')?.value||'').toLowerCase();
+  const fType=document.getElementById('f-cltype')?document.getElementById('f-cltype').value:'';
+  const fSt=document.getElementById('f-clstatus')?document.getElementById('f-clstatus').value:'';
+  return closedRecords.filter(r=>{
+    if(currentSub){
+      const {group,val}=currentSub;
+      if(group==='cls-type'&&(r.clType||'').toLowerCase()!==val)return false;
+      if(group==='cls-sec'&&(r.section||'')!==val)return false;
+      if(group==='cls-st'&&(r.status||'').toLowerCase()!==val)return false;
+    }
+    if(fType&&(r.clType||'').toLowerCase()!==fType)return false;
+    if(fSt&&(r.status||'').toLowerCase()!==fSt)return false;
+    if(q&&!(r.title||r.callsign||'').toLowerCase().includes(q)&&!(r.summary||'').toLowerCase().includes(q))return false;
+    return true;
+  }).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
 }
 
-// ── ГИБКОЕ ДЕТАЛЬНОЕ ОТОБРАЖЕНИЕ ──
-function renderClsDetail(r){
-  document.getElementById('dp-title').style.color='var(--red)';
-  document.getElementById('dp-actions').innerHTML=`
-    <button class="act-btn btn-edit" onclick="openEdit('${r.id}','cls')">✎ Редактировать</button>
-    <button class="act-btn btn-del"  onclick="confirmDel('${r.id}','cls')">✕ Удалить</button>`;
-  const tagCls=r.status==='под наблюдением'?' cl-obs':r.status==='архив'?' cl-arch':'';
-  const persons=(r.persons||[]);
-  const tags=(r.tags||[]);
-  const blocks=(r.blocks||[]);
-  const photos=(r.photos||[]);
-  const photosHtml=photos.map(p=>`<div class="photo-item"><img src="${p.data}" alt="" onclick="openLightbox('${p.data}')"></div>`).join('');
+// ── ТУЛБАР ──
+function renderClsToolbarFilters(el){
+  const statuses=getClosedStatuses();
+  el.innerHTML=`
+    <select class="tb-select" id="f-cltype" onchange="renderContent()">
+      <option value="">Все типы</option>
+      ${CLS_TYPES.map(t=>`<option value="${t.key}">${t.label}</option>`).join('')}
+    </select>
+    <select class="tb-select" id="f-clstatus" onchange="renderContent()">
+      <option value="">Все статусы</option>
+      ${statuses.map(s=>`<option value="${esc(s.name)}">${esc(s.name.charAt(0).toUpperCase()+s.name.slice(1))}</option>`).join('')}
+    </select>`;
+}
 
-  // Блоки
-  let blocksHtml='';
-  // Краткая сводка
-  if(r.summary||r._showSummary!==false) blocksHtml+=`
-    <div class="cls-block">
-      <div class="cls-block-lbl">Краткая сводка</div>
-      <div class="cls-block-body"><div class="fv-val${!r.summary?' empty':''}">${r.summary?esc(r.summary):'не внесено'}</div></div>
+// ── СПИСОК ЗАПИСЕЙ ──
+function renderClsList(ca){
+  const rows=getFilteredCls();
+  const protBar='<div class="prot-bar" style="margin:-14px -16px 12px"><div class="prot-dot"></div><span class="prot-text">Защищённый раздел · Сеанс активен</span></div>';
+  if(!rows.length){ca.innerHTML=protBar+emptyState('',currentModule);return;}
+  const statuses=getClosedStatuses();
+  ca.innerHTML=protBar+`<div class="content-header"><span class="content-count">Найдено: <strong>${rows.length}</strong></span></div>`
+  +rows.map(r=>{
+    const tKey=(r.clType||'').toLowerCase();
+    const tColor=clsTypeColor(tKey);
+    const tLabel=clsTypeLabel(tKey);
+    const stObj=statuses.find(s=>s.name===(r.status||'').toLowerCase());
+    const stColor=stObj?stObj.color:'var(--text-dim)';
+    const stLabel=(r.status||'').toUpperCase().slice(0,12)||'—';
+    const subLabel=r.section?`<span style="font-size:7px;padding:1px 5px;border:1px solid var(--border);color:var(--text-dim);font-family:monospace">${esc(r.section)}</span>`:'';
+    const mainTitle=r.callsign||r.title||r.groupName||r.kpkUser||'Без названия';
+    const linkedStk=r.linkedStalker?`<div class="cl-mi">Досье: <span>${esc(r.linkedStalker)}</span></div>`:'';
+    return`<div class="cl-card" onclick="openClsDetail('${r.id}')">
+      <div class="cl-head">
+        <span style="font-family:monospace;font-size:7px;letter-spacing:1px;padding:2px 6px;border:1px solid;text-transform:uppercase;flex-shrink:0;color:${tColor};border-color:${tColor}33">${tLabel}</span>
+        <span class="cl-title">${esc(mainTitle)}</span>
+        ${subLabel}
+        <span style="font-size:7px;padding:1px 5px;border:1px solid;color:${stColor};border-color:${stColor}55;font-family:monospace;flex-shrink:0">${stLabel}</span>
+      </div>
+      <div class="cl-meta">
+        ${r.affiliation?`<div class="cl-mi">Принадл.: <span>${esc(r.affiliation)}</span></div>`:''}
+        ${r.threat?`<div class="cl-mi">Угроза: <span>${esc(r.threat)}</span></div>`:''}
+        ${linkedStk}
+        <div class="cl-mi">Дата: <span>${fmtDate(r.date||r.createdDate)}</span></div>
+      </div>
+      ${r.summary?`<div class="cl-body">${esc(r.summary.slice(0,110))}${r.summary.length>110?'…':''}</div>`:''}
+      ${r.author?`<div style="font-size:7px;color:var(--text-faint);padding:3px 12px;border-top:1px solid #1e0e0e">Добавил: ${esc(r.author)}</div>`:''}
     </div>`;
-  // Основной текст
-  if(r.content) blocksHtml+=`
-    <div class="cls-block">
-      <div class="cls-block-lbl">Подробное содержание</div>
-      <div class="cls-block-body"><div class="fv-val" style="white-space:pre-wrap;line-height:1.7">${esc(r.content)}</div></div>
-    </div>`;
-  // Доп блоки
-  blocks.forEach(b=>{
-    if(b.type==='persons'&&(r.persons||[]).length) return; // показываем ниже
-    blocksHtml+=`<div class="cls-block"><div class="cls-block-lbl">${esc(b.label||b.type)}</div><div class="cls-block-body"><div class="fv-val${!b.value?' empty':''}">${b.value?esc(b.value):'пусто'}</div></div></div>`;
-  });
-  // Лица
-  if(persons.length) blocksHtml+=`
-    <div class="cls-block">
-      <div class="cls-block-lbl">Связанные лица</div>
-      <div class="cls-block-body"><div class="persons-view">${persons.map(p=>`<div class="person-badge">${esc(p)}</div>`).join('')}</div></div>
-    </div>`;
-  // Теги
-  if(tags.length) blocksHtml+=`
-    <div class="cls-block">
-      <div class="cls-block-lbl">Теги</div>
-      <div class="cls-block-body"><div style="display:flex;flex-wrap:wrap;gap:4px">${tags.map(t=>`<span class="tag-pill-view">${esc(t)}</span>`).join('')}</div></div>
-    </div>`;
-  // Примечание
-  if(r.note) blocksHtml+=`
-    <div class="cls-block">
-      <div class="cls-block-lbl">Примечание</div>
-      <div class="cls-block-body"><div class="cls-note-view">${esc(r.note)}</div></div>
-    </div>`;
-  // Фото
-  if(photos.length) blocksHtml+=`
-    <div class="cls-block">
-      <div class="cls-block-lbl">Вложения</div>
-      <div class="cls-block-body"><div class="photo-grid">${photosHtml}</div></div>
-    </div>`;
+  }).join('');
+}
+
+
+// ── ОТКРЫТЬ ДЕТАЛЬ ──
+window.openClsDetail=function(id){
+  const r=closedRecords.find(x=>x.id===id);if(!r)return;
+  const panel=document.getElementById('detail-panel');
+  panel.classList.add('open');
+  const tLabel=clsTypeLabel(r.clType);
+  const tColor=clsTypeColor(r.clType);
+  const mainTitle=r.callsign||r.title||r.groupName||r.kpkUser||'—';
+  document.getElementById('dp-title').textContent=`${tLabel}: ${mainTitle}`;
+  document.getElementById('dp-title').style.color=tColor;
+  document.getElementById('dp-actions').innerHTML=`
+    <button class="act-btn btn-edit" onclick="openClsEdit('${id}')">✎ Редактировать</button>
+    <button class="act-btn btn-del" onclick="confirmDel('${id}','cls')">✕ Удалить</button>`;
+  renderClsDetailView(r);
+};
+
+function renderClsDetailView(r){
+  const tKey=(r.clType||'').toLowerCase();
+  const tColor=clsTypeColor(tKey);
+  const statuses=getClosedStatuses();
+  const stObj=statuses.find(s=>s.name===(r.status||'').toLowerCase());
+  const stColor=stObj?stObj.color:'var(--text-dim)';
+  const photos=(r.photos||[]).map(p=>`<div class="photo-item"><img src="${p.data}" alt="" onclick="openLightbox('${p.data}')"></div>`).join('');
+
+  // Строим блоки по типу
+  let mainBlock='';
+  if(tKey==='лицо'){
+    mainBlock=`
+      ${r.photos&&r.photos.length?`<div class="dp-block" style="border-color:#3a1a1a;background:#100c0c"><div class="dp-block-label" style="background:#0b0808;border-color:#1e0e0e">Фото</div><div class="dp-block-body"><div class="photo-grid">${photos}</div></div></div>`:''}
+      <div class="dp-block" style="border-color:#3a1a1a;background:#100c0c"><div class="dp-block-label" style="background:#0b0808;border-color:#1e0e0e">Идентификация</div><div class="dp-block-body">
+        <div class="fv"><div class="fv-label">Позывной</div><div class="fv-val" style="color:var(--amber);font-family:monospace;font-size:13px">${esc(r.callsign||'—')}</div></div>
+        ${r.altNames?`<div class="fv"><div class="fv-label">Альт. имена</div><div class="fv-val">${esc(r.altNames)}</div></div>`:''}
+        ${r.affiliation?`<div class="fv"><div class="fv-label">Принадлежность</div><div class="fv-val">${esc(r.affiliation)}</div></div>`:''}
+        ${r.role?`<div class="fv"><div class="fv-label">Роль</div><div class="fv-val">${esc(r.role)}</div></div>`:''}
+        ${r.threat?`<div class="fv"><div class="fv-label">Угроза</div><div class="fv-val">${esc(r.threat)}</div></div>`:''}
+      </div></div>
+      ${r.summary||r.details?`<div class="dp-block" style="border-color:#3a1a1a;background:#100c0c"><div class="dp-block-label" style="background:#0b0808;border-color:#1e0e0e">Данные</div><div class="dp-block-body">
+        ${r.summary?`<div class="fv"><div class="fv-label">Сводка</div><div class="fv-val">${esc(r.summary)}</div></div>`:''}
+        ${r.details?`<div class="fv"><div class="fv-label">Подробности</div><div class="fv-val" style="white-space:pre-wrap">${esc(r.details)}</div></div>`:''}
+      </div></div>`:''}
+      ${r.seenAt||r.connectedTo||r.source?`<div class="dp-block" style="border-color:#3a1a1a;background:#100c0c"><div class="dp-block-label" style="background:#0b0808;border-color:#1e0e0e">Связи</div><div class="dp-block-body">
+        ${r.seenAt?`<div class="fv"><div class="fv-label">Где замечен</div><div class="fv-val">${esc(r.seenAt)}</div></div>`:''}
+        ${r.connectedTo?`<div class="fv"><div class="fv-label">Связан с</div><div class="fv-val">${esc(r.connectedTo)}</div></div>`:''}
+        ${r.source?`<div class="fv"><div class="fv-label">Источник</div><div class="fv-val">${esc(r.source)}</div></div>`:''}
+      </div></div>`:''}`;
+  } else if(tKey==='группа'){
+    mainBlock=`<div class="dp-block" style="border-color:#3a1a1a;background:#100c0c"><div class="dp-block-label" style="background:#0b0808;border-color:#1e0e0e">Группа</div><div class="dp-block-body">
+      <div class="fv"><div class="fv-label">Название</div><div class="fv-val" style="color:var(--blue);font-family:monospace;font-size:13px">${esc(r.groupName||r.title||'—')}</div></div>
+      ${r.leader?`<div class="fv"><div class="fv-label">Лидер</div><div class="fv-val">${esc(r.leader)}</div></div>`:''}
+      ${r.members?`<div class="fv"><div class="fv-label">Состав</div><div class="fv-val">${esc(r.members)}</div></div>`:''}
+      ${r.size?`<div class="fv"><div class="fv-label">Численность</div><div class="fv-val">${esc(r.size)}</div></div>`:''}
+      ${r.area?`<div class="fv"><div class="fv-label">Базирование</div><div class="fv-val">${esc(r.area)}</div></div>`:''}
+      ${r.threat?`<div class="fv"><div class="fv-label">Угроза</div><div class="fv-val">${esc(r.threat)}</div></div>`:''}
+      ${r.summary?`<div class="fv"><div class="fv-label">Оценка</div><div class="fv-val" style="white-space:pre-wrap">${esc(r.summary)}</div></div>`:''}
+    </div></div>`;
+  } else if(tKey==='кпк'){
+    mainBlock=`<div class="dp-block" style="border-color:#2a4218;background:#0a0e09"><div class="dp-block-label" style="background:#070d07;border-color:#1e2016;color:var(--green)">Данные КПК</div><div class="dp-block-body">
+      <div class="fv"><div class="fv-label">Пользователь</div><div class="fv-val" style="color:var(--green);font-family:monospace;font-size:13px">${esc(r.kpkUser||'—')}</div></div>
+      ${r.kpkPass?`<div class="fv"><div class="fv-label">Пароль</div><div class="fv-val" style="font-family:monospace;color:var(--green)">${esc(r.kpkPass)}</div></div>`:''}
+      ${r.kpkPin?`<div class="fv"><div class="fv-label">Пин-код</div><div class="fv-val" style="font-family:monospace;color:var(--green);letter-spacing:3px">${esc(r.kpkPin)}</div></div>`:''}
+      ${r.kpkNote?`<div class="fv"><div class="fv-label">Комментарий</div><div class="fv-val">${esc(r.kpkNote)}</div></div>`:''}
+    </div></div>`;
+  } else if(tKey==='контакт'){
+    mainBlock=`<div class="dp-block" style="border-color:#3a1a1a;background:#100c0c"><div class="dp-block-label" style="background:#0b0808;border-color:#1e0e0e">Контакт</div><div class="dp-block-body">
+      <div class="fv"><div class="fv-label">Имя / позывной</div><div class="fv-val" style="color:var(--purple);font-family:monospace;font-size:13px">${esc(r.callsign||r.title||'—')}</div></div>
+      ${r.contactType?`<div class="fv"><div class="fv-label">Тип</div><div class="fv-val">${esc(r.contactType)}</div></div>`:''}
+      ${r.summary?`<div class="fv"><div class="fv-label">Назначение</div><div class="fv-val">${esc(r.summary)}</div></div>`:''}
+      ${r.details?`<div class="fv"><div class="fv-label">Подробности</div><div class="fv-val" style="white-space:pre-wrap">${esc(r.details)}</div></div>`:''}
+    </div></div>`;
+  } else if(tKey==='операция'){
+    mainBlock=`<div class="dp-block" style="border-color:#3a1a1a;background:#100c0c"><div class="dp-block-label" style="background:#0b0808;border-color:#1e0e0e">Операция</div><div class="dp-block-body">
+      <div class="fv"><div class="fv-label">Название</div><div class="fv-val" style="color:var(--red);font-family:'Oswald',sans-serif;font-size:15px">${esc(r.title||'—')}</div></div>
+      ${r.opType?`<div class="fv"><div class="fv-label">Тип</div><div class="fv-val">${esc(r.opType)}</div></div>`:''}
+      ${r.executor?`<div class="fv"><div class="fv-label">Исполнитель</div><div class="fv-val">${esc(r.executor)}</div></div>`:''}
+      ${r.target?`<div class="fv"><div class="fv-label">Цель</div><div class="fv-val">${esc(r.target)}</div></div>`:''}
+      ${r.priority?`<div class="fv"><div class="fv-label">Приоритет</div><div class="fv-val">${esc(r.priority)}</div></div>`:''}
+      ${r.summary?`<div class="fv"><div class="fv-label">Задача</div><div class="fv-val" style="white-space:pre-wrap">${esc(r.summary)}</div></div>`:''}
+      ${r.result?`<div class="fv"><div class="fv-label">Итог</div><div class="fv-val" style="white-space:pre-wrap">${esc(r.result)}</div></div>`:''}
+    </div></div>`;
+  } else {
+    mainBlock=`<div class="dp-block" style="border-color:#3a1a1a;background:#100c0c"><div class="dp-block-label" style="background:#0b0808;border-color:#1e0e0e">Обстановка</div><div class="dp-block-body">
+      <div class="fv"><div class="fv-label">Заголовок</div><div class="fv-val" style="font-family:'Oswald',sans-serif;font-size:15px">${esc(r.title||'—')}</div></div>
+      ${r.topic?`<div class="fv"><div class="fv-label">Тема</div><div class="fv-val">${esc(r.topic)}</div></div>`:''}
+      ${r.region?`<div class="fv"><div class="fv-label">Регион</div><div class="fv-val">${esc(r.region)}</div></div>`:''}
+      ${r.summary?`<div class="fv"><div class="fv-label">Сводка</div><div class="fv-val">${esc(r.summary)}</div></div>`:''}
+      ${r.details?`<div class="fv"><div class="fv-label">Содержание</div><div class="fv-val" style="white-space:pre-wrap">${esc(r.details)}</div></div>`:''}
+    </div></div>`;
+  }
 
   document.getElementById('dp-body').innerHTML=`
-    <div class="prot-bar" style="margin:-18px -18px 14px"><div class="prot-dot"></div><span class="prot-text">Защищённый раздел · Закрытая запись</span></div>
+    <div class="prot-bar" style="margin:-18px -18px 14px"><div class="prot-dot"></div><span class="prot-text">Защищённый раздел · ${tLabel}</span></div>
     <div class="dp-2col">
-      <div>${blocksHtml||'<div style="color:var(--text-faint);font-size:12px;padding:12px">Содержимое не заполнено</div>'}</div>
+      <div>${mainBlock}</div>
       <div>
-        <div class="cls-block">
-          <div class="cls-block-lbl">Параметры</div>
-          <div class="cls-block-body">
-            <div class="fv"><div class="fv-label">Идентификатор</div><div class="fv-val" style="font-family:monospace;color:var(--red)">${esc(r.clId||'—')}</div></div>
-            <div class="fv"><div class="fv-label">Тип</div><div class="fv-val">${esc(r.clType||'—')}</div></div>
-            <div class="fv"><div class="fv-label">Подраздел</div><div class="fv-val">${esc(r.section||'—')}</div></div>
-            <div class="fv"><div class="fv-label">Статус</div><span class="cl-tag${tagCls}">${(r.status||'—').toUpperCase()}</span></div>
-            <div class="fv"><div class="fv-label">Дата</div><div class="fv-val mono">${fmtDate(r.date)}</div></div>
-            <div class="fv"><div class="fv-label" style="font-size:7px;color:var(--text-faint)">Добавил</div><div class="fv-val" style="font-size:10px;color:var(--text-dim)">${r.author?esc(r.author):'—'}</div></div>
+        <div class="dp-block" style="border-color:#3a1a1a;background:#100c0c">
+          <div class="dp-block-label" style="background:#0b0808;border-color:#1e0e0e">Параметры</div>
+          <div class="dp-block-body">
+            <div class="fv"><div class="fv-label">Тип</div><span style="font-size:8px;padding:2px 7px;border:1px solid;color:${tColor};border-color:${tColor}55;font-family:monospace;text-transform:uppercase">${tLabel}</span></div>
+            <div class="fv"><div class="fv-label">Статус</div><span style="font-size:8px;padding:2px 7px;border:1px solid;color:${stColor};border-color:${stColor}55;font-family:monospace;text-transform:uppercase">${(r.status||'—').toUpperCase()}</span></div>
+            ${r.section?`<div class="fv"><div class="fv-label">Подраздел</div><div class="fv-val">${esc(r.section)}</div></div>`:''}
+            <div class="fv"><div class="fv-label">Дата</div><div class="fv-val mono">${fmtDate(r.date||r.createdDate)}</div></div>
+            ${r.linkedStalker?`<div class="fv"><div class="fv-label">Из досье</div><div class="fv-val" style="color:var(--amber)">${esc(r.linkedStalker)}</div></div>`:''}
+            ${r.source?`<div class="fv"><div class="fv-label">Источник</div><div class="fv-val">${esc(r.source)}</div></div>`:''}
+            ${r.author?`<div class="fv"><div class="fv-label" style="font-size:7px;color:var(--text-faint)">Добавил</div><div class="fv-val" style="font-size:10px;color:var(--text-dim)">${esc(r.author)}</div></div>`:''}
           </div>
         </div>
       </div>
     </div>`;
 }
 
-// ── ГИБКАЯ ФОРМА ──
+window.openClsEdit=function(id){openEdit(id,'cls');};
+
+
+// ── ФОРМА СОЗДАНИЯ/РЕДАКТИРОВАНИЯ ──
 function renderClsForm(id,isNew){
   const r=id?closedRecords.find(x=>x.id===id):{};
   const newId=uid();
   if(isNew){editingId=newId;window._newId=newId;}
   window._editMod='cls';
-  window._editRecord=isNew
-    ?{id:editingId,photos:[],persons:[],tags:[],blocks:[]}
-    :JSON.parse(JSON.stringify({...r,persons:r.persons||[],tags:r.tags||[],blocks:r.blocks||[],photos:r.photos||[]}));
-  const clsNum=isNew?('ЗМ-'+String(closedRecords.length+1).padStart(3,'0')):(r.clId||'ЗМ-???');
+  window._editRecord=isNew?{id:editingId,photos:[]}:JSON.parse(JSON.stringify(r||{}));
   document.getElementById('detail-panel').classList.add('open');
-  document.getElementById('dp-title').textContent=isNew?'Новая запись':`Редактировать: ${r.title||''}`;
-  document.getElementById('dp-title').style.color='var(--red)';
+  const tKey=(r.clType||window._pendingClsType||'').toLowerCase();
+  const tColor=clsTypeColor(tKey);
+  const tLabel=tKey?clsTypeLabel(tKey):'Новая запись';
+  document.getElementById('dp-title').textContent=isNew?`Новая запись — ${tLabel||'выбери тип'}`:(`Редактировать: ${r.callsign||r.title||r.groupName||r.kpkUser||''}`);
+  document.getElementById('dp-title').style.color=tKey?tColor:'var(--red)';
   document.getElementById('dp-actions').innerHTML=`
-    <button class="act-btn btn-save"   onclick="doSave()">✓ Сохранить</button>
+    <button class="act-btn btn-save" onclick="doSave()">✓ Сохранить</button>
     <button class="act-btn btn-cancel" onclick="cancelEdit('${editingId||''}','${isNew}','cls')">Отмена</button>`;
-  renderClsFormBody(clsNum,r,isNew);
+  renderClsFormBody(tKey,r,isNew);
 }
 
-function renderClsFormBody(clsNum,r,isNew){
-  const sections=getClosedSections();
-  const customTypes=[...new Set(closedRecords.map(x=>x.clType).filter(Boolean))];
-  const baseTypes=['Наблюдение','Досье','Контакт','Отчёт','Примечание'];
-  const allTypes=[...new Set([...baseTypes,...customTypes])];
+function renderClsFormBody(tKey,r,isNew){
   const er=window._editRecord||{};
-  const photos=(er.photos||[]).map(p=>`<div class="photo-item"><img src="${p.data}" alt="" onclick="openLightbox('${p.data}')"><button class="photo-del" onclick="deletePhoto('${p.id}')">✕</button></div>`).join('');
-  const personsHtml=(er.persons||[]).map((p,i)=>`
-    <div class="person-row-edit">
-      <input type="text" value="${esc(p)}" placeholder="Имя / позывной" oninput="updatePerson(${i},this.value)">
-      <button class="person-rm-btn" onclick="removePerson(${i})">✕</button>
-    </div>`).join('');
-  const tagsHtml=(er.tags||[]).map(t=>`<div class="tag-pill-edit">${esc(t)}<button class="tag-pill-x" onclick="removeTag('${esc(t)}')">✕</button></div>`).join('');
-  const blocksHtml=(er.blocks||[]).map((b,i)=>`
-    <div class="cls-block" id="extra-block-${i}">
-      <div class="cls-block-lbl">${esc(b.label||b.type)}<button class="cls-block-rm" onclick="removeExtraBlock(${i})">✕ убрать</button></div>
-      <div class="cls-block-body"><textarea class="f-inp" rows="3" oninput="updateBlock(${i},this.value)">${esc(b.value||'')}</textarea></div>
-    </div>`).join('');
+  const secs=getClosedSections();
+  const typeSecs=secs[tKey]||[];
+  const statuses=getClosedStatuses();
+  const stalkerOpts=stalkers.map(s=>`<option value="${esc(s.callsign)}"${(r.linkedStalker||'')===(s.callsign||'')?' selected':''}>${esc(s.callsign)}</option>`).join('');
+  const secOpts=typeSecs.map(s=>`<option value="${esc(s.name)}"${(r.section||'')===s.name?' selected':''}>${esc(s.name)}</option>`).join('');
+  const statusOpts=statuses.map(s=>`<option value="${esc(s.name)}"${(r.status||'')===(s.name||'')?' selected':''}>${esc(s.name.charAt(0).toUpperCase()+s.name.slice(1))}</option>`).join('');
+
+  // Тип-специфичные поля
+  let typeFields='';
+  if(tKey==='лицо'){
+    const ph=(er.photos||[]).map(p=>`<div class="photo-item"><img src="${p.data}" alt="" onclick="openLightbox('${p.data}')"><button class="photo-del" onclick="deletePhoto('${p.id}')">✕</button></div>`).join('');
+    typeFields=`
+      <div class="dp-block"><div class="dp-block-label">Фото</div><div class="dp-block-body">
+        <div class="photo-grid" id="dp-photo-grid">${ph}
+          <label class="photo-add-btn"><span class="pic">＋</span><span>Фото</span><input type="file" accept="image/*" multiple style="display:none" onchange="handlePhotoUpload(event)"></label>
+        </div>
+        <div style="font-size:8px;color:var(--text-faint);margin-top:4px;font-family:monospace">Первое фото — основное</div>
+      </div></div>
+      <div class="dp-block"><div class="dp-block-label">Идентификация</div><div class="dp-block-body">
+        <div class="form-field"><label class="form-label">Позывной *</label><input type="text" id="ef-cls-callsign" value="${esc(r.callsign||'')}" placeholder="позывной или имя" style="font-size:14px"></div>
+        <div class="form-grid" style="margin-top:9px">
+          <div class="form-field"><label class="form-label">Альт. позывные</label><input type="text" id="ef-cls-altnames" value="${esc(r.altNames||'')}" placeholder="другие имена..."></div>
+          <div class="form-field"><label class="form-label">Принадлежность</label><input type="text" id="ef-cls-affiliation" value="${esc(r.affiliation||'')}" placeholder="группа, фракция..."></div>
+          <div class="form-field"><label class="form-label">Роль</label><input type="text" id="ef-cls-role" value="${esc(r.role||'')}" placeholder="информатор, цель..."></div>
+          <div class="form-field"><label class="form-label">Уровень угрозы</label>
+            <select id="ef-cls-threat"><option value="">—</option><option value="Низкая"${r.threat==='Низкая'?' selected':''}>Низкая</option><option value="Средняя"${r.threat==='Средняя'?' selected':''}>Средняя</option><option value="Высокая"${r.threat==='Высокая'?' selected':''}>Высокая</option><option value="Критическая"${r.threat==='Критическая'?' selected':''}>Критическая</option></select>
+          </div>
+        </div>
+      </div></div>
+      <div class="dp-block"><div class="dp-block-label">Содержание</div><div class="dp-block-body">
+        <div class="form-field"><label class="form-label">Краткая сводка</label><input type="text" id="ef-cls-summary" value="${esc(r.summary||'')}" placeholder="одна строка"></div>
+        <div class="form-field" style="margin-top:9px"><label class="form-label">Подробности</label><textarea id="ef-cls-details" rows="4" placeholder="всё что известно...">${esc(r.details||'')}</textarea></div>
+      </div></div>
+      <div class="dp-block"><div class="dp-block-label">Связи</div><div class="dp-block-body">
+        <div class="form-grid">
+          <div class="form-field"><label class="form-label">Где замечен</label><input type="text" id="ef-cls-seenAt" value="${esc(r.seenAt||'')}" placeholder="район, точка..."></div>
+          <div class="form-field"><label class="form-label">Связан с</label><input type="text" id="ef-cls-connectedTo" value="${esc(r.connectedTo||'')}" placeholder="люди, группы..."></div>
+          <div class="form-field" style="grid-column:span 2"><label class="form-label">Источник информации</label><input type="text" id="ef-cls-source" value="${esc(r.source||'')}" placeholder="откуда данные..."></div>
+        </div>
+      </div></div>`;
+  } else if(tKey==='группа'){
+    typeFields=`
+      <div class="dp-block"><div class="dp-block-label">Группа</div><div class="dp-block-body">
+        <div class="form-field"><label class="form-label">Название *</label><input type="text" id="ef-cls-groupname" value="${esc(r.groupName||r.title||'')}" placeholder="название группы" style="font-size:14px"></div>
+        <div class="form-grid" style="margin-top:9px">
+          <div class="form-field"><label class="form-label">Лидер</label><input type="text" id="ef-cls-leader" value="${esc(r.leader||'')}" placeholder="позывной..."></div>
+          <div class="form-field"><label class="form-label">Численность</label><input type="text" id="ef-cls-size" value="${esc(r.size||'')}" placeholder="~15 чел."></div>
+          <div class="form-field"><label class="form-label">Базирование</label><input type="text" id="ef-cls-area" value="${esc(r.area||'')}" placeholder="район, точка..."></div>
+          <div class="form-field"><label class="form-label">Уровень угрозы</label>
+            <select id="ef-cls-threat"><option value="">—</option><option value="Низкая"${r.threat==='Низкая'?' selected':''}>Низкая</option><option value="Средняя"${r.threat==='Средняя'?' selected':''}>Средняя</option><option value="Высокая"${r.threat==='Высокая'?' selected':''}>Высокая</option></select>
+          </div>
+        </div>
+        <div class="form-field" style="margin-top:9px"><label class="form-label">Известный состав</label><textarea id="ef-cls-members" rows="3" placeholder="позывные, описания...">${esc(r.members||'')}</textarea></div>
+        <div class="form-field" style="margin-top:9px"><label class="form-label">Краткая оценка</label><textarea id="ef-cls-summary" rows="3" placeholder="деятельность, угроза...">${esc(r.summary||'')}</textarea></div>
+      </div></div>`;
+  } else if(tKey==='кпк'){
+    typeFields=`
+      <div class="dp-block" style="border-color:#2a4218;background:#0a0e09"><div class="dp-block-label" style="background:#070d07;border-color:#1e2016;color:var(--green)">Данные КПК</div><div class="dp-block-body">
+        <div class="form-field"><label class="form-label">Имя пользователя *</label><input type="text" id="ef-cls-kpkuser" value="${esc(r.kpkUser||'')}" placeholder="login или позывной" style="font-size:13px"></div>
+        <div class="form-grid" style="margin-top:9px">
+          <div class="form-field"><label class="form-label">Пароль</label><input type="text" id="ef-cls-kpkpass" value="${esc(r.kpkPass||'')}" placeholder="пароль..." style="font-family:monospace;color:var(--green)"></div>
+          <div class="form-field"><label class="form-label">Пин-код</label><input type="text" id="ef-cls-kpkpin" value="${esc(r.kpkPin||'')}" placeholder="пин..." style="font-family:monospace;color:var(--green);letter-spacing:2px"></div>
+        </div>
+        <div class="form-field" style="margin-top:9px"><label class="form-label">Комментарий</label><textarea id="ef-cls-kpknote" rows="2" placeholder="кому принадлежит, назначение...">${esc(r.kpkNote||'')}</textarea></div>
+      </div></div>`;
+  } else if(tKey==='контакт'){
+    typeFields=`
+      <div class="dp-block"><div class="dp-block-label">Контакт</div><div class="dp-block-body">
+        <div class="form-field"><label class="form-label">Имя / позывной *</label><input type="text" id="ef-cls-callsign" value="${esc(r.callsign||r.title||'')}" placeholder="имя контакта" style="font-size:14px"></div>
+        <div class="form-grid" style="margin-top:9px">
+          <div class="form-field"><label class="form-label">Тип контакта</label><input type="text" id="ef-cls-contacttype" value="${esc(r.contactType||'')}" placeholder="КПК, человек, канал..."></div>
+        </div>
+        <div class="form-field" style="margin-top:9px"><label class="form-label">Назначение</label><input type="text" id="ef-cls-summary" value="${esc(r.summary||'')}" placeholder="для чего..."></div>
+        <div class="form-field" style="margin-top:9px"><label class="form-label">Подробности</label><textarea id="ef-cls-details" rows="3">${esc(r.details||'')}</textarea></div>
+        <div class="form-field" style="margin-top:9px"><label class="form-label">Источник</label><input type="text" id="ef-cls-source" value="${esc(r.source||'')}"></div>
+      </div></div>`;
+  } else if(tKey==='операция'){
+    typeFields=`
+      <div class="dp-block"><div class="dp-block-label">Операция</div><div class="dp-block-body">
+        <div class="form-field"><label class="form-label">Название *</label><input type="text" id="ef-cls-title" value="${esc(r.title||'')}" placeholder="название операции" style="font-size:14px"></div>
+        <div class="form-grid" style="margin-top:9px">
+          <div class="form-field"><label class="form-label">Тип операции</label><input type="text" id="ef-cls-optype" value="${esc(r.opType||'')}" placeholder="внедрение, ликвидация..."></div>
+          <div class="form-field"><label class="form-label">Исполнитель</label><input type="text" id="ef-cls-executor" value="${esc(r.executor||'')}" placeholder="позывной..."></div>
+          <div class="form-field"><label class="form-label">Цель</label><input type="text" id="ef-cls-target" value="${esc(r.target||'')}" placeholder="объект, лицо..."></div>
+          <div class="form-field"><label class="form-label">Приоритет</label>
+            <select id="ef-cls-priority"><option value="">—</option><option value="Низкий"${r.priority==='Низкий'?' selected':''}>Низкий</option><option value="Средний"${r.priority==='Средний'?' selected':''}>Средний</option><option value="Высокий"${r.priority==='Высокий'?' selected':''}>Высокий</option><option value="Критический"${r.priority==='Критический'?' selected':''}>Критический</option></select>
+          </div>
+        </div>
+        <div class="form-field" style="margin-top:9px"><label class="form-label">Задача</label><textarea id="ef-cls-summary" rows="3">${esc(r.summary||'')}</textarea></div>
+        <div class="form-field" style="margin-top:9px"><label class="form-label">Итог / результат</label><textarea id="ef-cls-result" rows="2">${esc(r.result||'')}</textarea></div>
+      </div></div>`;
+  } else {
+    // Обстановка или пустой тип
+    typeFields=`
+      <div class="dp-block"><div class="dp-block-label">${tKey==='обстановка'?'Обстановка':'Основное'}</div><div class="dp-block-body">
+        <div class="form-field"><label class="form-label">Заголовок *</label><input type="text" id="ef-cls-title" value="${esc(r.title||'')}" placeholder="заголовок" style="font-size:14px"></div>
+        <div class="form-grid" style="margin-top:9px">
+          <div class="form-field"><label class="form-label">Тема / направление</label><input type="text" id="ef-cls-topic" value="${esc(r.topic||'')}" placeholder="тема..."></div>
+          <div class="form-field"><label class="form-label">Регион / точка</label><input type="text" id="ef-cls-region" value="${esc(r.region||'')}" placeholder="Агропром, Болота..."></div>
+        </div>
+        <div class="form-field" style="margin-top:9px"><label class="form-label">Краткая сводка</label><textarea id="ef-cls-summary" rows="2">${esc(r.summary||'')}</textarea></div>
+        <div class="form-field" style="margin-top:9px"><label class="form-label">Подробное содержание</label><textarea id="ef-cls-details" rows="5">${esc(r.details||'')}</textarea></div>
+        <div class="form-field" style="margin-top:9px"><label class="form-label">Источник</label><input type="text" id="ef-cls-source" value="${esc(r.source||'')}"></div>
+      </div></div>`;
+  }
 
   document.getElementById('dp-body').innerHTML=`
     <div class="prot-bar" style="margin:-18px -18px 14px"><div class="prot-dot"></div><span class="prot-text">Защищённый раздел · Редактирование</span></div>
     <div class="dp-2col">
       <div>
-        <div class="dp-block"><div class="dp-block-label">Основные поля</div><div class="dp-block-body">
-          <div class="form-field"><label class="form-label">Название *</label>
-            <input type="text" id="ef-cls-title" value="${esc(r.title||'')}" placeholder="Название записи"></div>
-          <div class="form-grid" style="margin-top:9px">
-            <div class="form-field"><label class="form-label">Тип</label>
-              <select id="ef-cls-type">
-                <option value="">—</option>
-                ${allTypes.map(t=>`<option value="${esc(t.toLowerCase())}"${(r.clType||'').toLowerCase()===t.toLowerCase()?' selected':''}>${esc(t)}</option>`).join('')}
-                <option value="__custom__">＋ Свой тип...</option>
-              </select></div>
-            <div class="form-field"><label class="form-label">Подраздел</label>
-              <select id="ef-cls-section">
-                <option value="">— без раздела —</option>
-                ${sections.map(s=>`<option value="${esc(s.name)}"${(r.section||'')===s.name?' selected':''}>${esc(s.name)}</option>`).join('')}
-              </select></div>
-            <div class="form-field"><label class="form-label">Статус</label>
-              <select id="ef-cls-status">
-                <option value="">—</option>
-                ${getClosedStatuses().map(s=>`<option value="${esc(s.name.toLowerCase())}"${(r.status||'').toLowerCase()===s.name.toLowerCase()?' selected':''}>${esc(s.name.charAt(0).toUpperCase()+s.name.slice(1))}</option>`).join('')}
-              </select></div>
-            <div class="form-field"><label class="form-label">Дата</label>
-              <input type="date" id="ef-cls-date" value="${r.date||today()}"></div>
+        ${!tKey?`<div class="dp-block"><div class="dp-block-label">Тип записи</div><div class="dp-block-body">
+          <div class="form-grid" style="grid-template-columns:repeat(3,1fr);gap:6px">
+            ${CLS_TYPES.map(t=>`<button onclick="window._pendingClsType='${t.key}';renderClsFormBody('${t.key}',window._editRecord||{},${isNew})" style="padding:8px;background:none;border:1px solid ${t.color}55;color:${t.color};font-family:monospace;font-size:9px;cursor:pointer;transition:all 0.15s;text-transform:uppercase;letter-spacing:1px" onmouseover="this.style.background='${t.color}11'" onmouseout="this.style.background='none'">${t.label}</button>`).join('')}
           </div>
-          <div id="ef-cls-type-custom-wrap" style="display:none;margin-top:7px">
-            <div class="form-field"><label class="form-label">Свой тип</label>
-              <input type="text" id="ef-cls-type-custom" placeholder="Введи название типа"></div>
-          </div>
-        </div></div>
-
-        <div class="dp-block"><div class="dp-block-label">Краткая сводка</div><div class="dp-block-body">
-          <textarea id="ef-cls-summary" rows="2" placeholder="Краткое описание...">${esc(r.summary||'')}</textarea>
-        </div></div>
-
-        <div class="dp-block"><div class="dp-block-label">Подробное содержание</div><div class="dp-block-body">
-          <textarea id="ef-cls-content" rows="5" placeholder="Полный текст...">${esc(r.content||'')}</textarea>
-        </div></div>
-
-        <div class="dp-block"><div class="dp-block-label">Связанные лица</div><div class="dp-block-body">
-          <div class="persons-list" id="persons-list">${personsHtml}</div>
-          <button class="person-add-btn" onclick="addPerson()">＋ Добавить лицо</button>
-        </div></div>
-
-        <div class="dp-block"><div class="dp-block-label">Теги</div><div class="dp-block-body">
-          <div class="tags-wrap" id="tags-wrap" onclick="document.getElementById('tag-inp').focus()">
-            ${tagsHtml}
-            <input id="tag-inp" class="tag-input-inline" placeholder="＋ добавить тег..." onkeydown="handleTagKey(event)">
-          </div>
-          <div style="font-size:8px;color:var(--text-faint);margin-top:4px;font-family:monospace">Enter — добавить тег</div>
-        </div></div>
-
-        <div id="extra-blocks">${blocksHtml}</div>
-
-        <div class="dp-block"><div class="dp-block-label">Примечание</div><div class="dp-block-body">
-          <textarea id="ef-cls-note" rows="2" placeholder="Важное примечание...">${esc(r.note||'')}</textarea>
-        </div></div>
-
-        <div class="dp-block"><div class="dp-block-label">Вложения</div><div class="dp-block-body">
-          <div class="photo-grid" id="dp-photo-grid">${photos}
-            <label class="photo-add-btn"><span class="pic">＋</span><span>Фото</span>
-              <input type="file" accept="image/*" multiple style="display:none" onchange="handlePhotoUpload(event)">
-            </label>
-          </div>
-        </div></div>
-
-        <button class="cls-add-block-btn" onclick="showBlockPalette()">＋ Добавить произвольный блок</button>
-        <div id="block-palette" style="display:none;margin-top:6px">
-          <div class="block-palette"><div class="bp-lbl">Выбери блок</div><div class="bp-body">
-            <button class="bp-btn" onclick="addExtraBlock('Архивная отметка')">＋ Архивная отметка</button>
-            <button class="bp-btn" onclick="addExtraBlock('Место')">＋ Место / локация</button>
-            <button class="bp-btn" onclick="addExtraBlock('Связанные документы')">＋ Связанные документы</button>
-            <button class="bp-btn" onclick="addExtraBlock('Дополнительная заметка')">＋ Доп. заметка</button>
-            <button class="bp-btn" onclick="addCustomBlock()">＋ Свой блок...</button>
-          </div></div>
-        </div>
+        </div></div>`:typeFields}
       </div>
       <div>
-        <div class="cls-block">
-          <div class="cls-block-lbl">Инфо</div>
-          <div class="cls-block-body" style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--text-dim);line-height:2">
-            ID: <span style="color:var(--red)">${clsNum}</span><br>
-            <span style="color:var(--text-faint);font-size:8px">* — обязательное поле</span>
-            <div style="color:var(--red);font-size:8px;margin-top:8px;border:1px solid #3a1a1a;padding:6px;line-height:1.6;background:#0b0808">⊘ Закрытый раздел<br>Изолирован от общей базы</div>
+        <div class="dp-block" style="border-color:#3a1a1a;background:#100c0c"><div class="dp-block-label" style="background:#0b0808;border-color:#1e0e0e">Параметры</div><div class="dp-block-body">
+          ${tKey?`<div class="form-field"><label class="form-label">Тип записи</label>
+            <select id="ef-cls-type" onchange="window._pendingClsType=this.value;renderClsFormBody(this.value,window._editRecord||{},${isNew})">
+              ${CLS_TYPES.map(t=>`<option value="${t.key}"${tKey===t.key?' selected':''}>${t.label}</option>`).join('')}
+            </select></div>`:''}
+          <div class="form-field"><label class="form-label">Статус</label>
+            <select id="ef-cls-status"><option value="">—</option>${statusOpts}</select></div>
+          <div class="form-field"><label class="form-label">Подраздел</label>
+            <select id="ef-cls-section"><option value="">— без подраздела —</option>${secOpts}</select></div>
+          <div class="form-field"><label class="form-label">Дата</label>
+            <input type="date" id="ef-cls-date" value="${r.date||r.createdDate||today()}"></div>
+          <div class="form-field"><label class="form-label">Из досье (сталкер)</label>
+            <select id="ef-cls-linkedstalker"><option value="">— не привязано —</option>${stalkerOpts}</select></div>
+          <div style="font-size:7px;color:var(--text-faint);margin-top:5px;padding:5px 7px;border:1px solid #3a1a1a;line-height:1.6;background:#0b0808">⊘ Связь видна только внутри закрытого раздела</div>
+        </div></div>
+        <div class="dp-block" style="border-color:#3a1a1a;background:#100c0c"><div class="dp-block-label" style="background:#0b0808;border-color:#1e0e0e">Инфо</div>
+          <div class="dp-block-body" style="font-family:monospace;font-size:9px;color:var(--text-dim);line-height:2">
+            <div style="font-size:8px;color:var(--text-faint)">* — обязательное поле</div>
           </div>
         </div>
       </div>
     </div>`;
-
-  // Обработчик свой тип
-  document.getElementById('ef-cls-type').addEventListener('change',function(){
-    document.getElementById('ef-cls-type-custom-wrap').style.display=this.value==='__custom__'?'':'none';
-  });
 }
 
-// ── Helpers для формы ──
-window.addPerson=function(){
-  if(!window._editRecord)return;
-  window._editRecord.persons.push('');
-  refreshPersonsList();
-}
-window.removePerson=function(i){
-  if(!window._editRecord)return;
-  window._editRecord.persons.splice(i,1);
-  refreshPersonsList();
-}
-window.updatePerson=function(i,v){
-  if(!window._editRecord)return;
-  window._editRecord.persons[i]=v;
-}
-function refreshPersonsList(){
-  const el=document.getElementById('persons-list');
-  if(!el||!window._editRecord)return;
-  el.innerHTML=(window._editRecord.persons||[]).map((p,i)=>`
-    <div class="person-row-edit">
-      <input type="text" value="${esc(p)}" placeholder="Имя / позывной" oninput="updatePerson(${i},this.value)">
-      <button class="person-rm-btn" onclick="removePerson(${i})">✕</button>
-    </div>`).join('');
-}
 
-window.handleTagKey=function(e){
-  if(e.key==='Enter'||e.key===','){
-    e.preventDefault();
-    const val=e.target.value.trim().replace(/,/g,'');
-    if(val&&window._editRecord&&!(window._editRecord.tags||[]).includes(val)){
-      if(!window._editRecord.tags)window._editRecord.tags=[];
-      window._editRecord.tags.push(val);
-      refreshTagsWrap();
-    }
-    e.target.value='';
-  }
-}
-window.removeTag=function(t){
-  if(!window._editRecord)return;
-  window._editRecord.tags=(window._editRecord.tags||[]).filter(x=>x!==t);
-  refreshTagsWrap();
-}
-function refreshTagsWrap(){
-  const wrap=document.getElementById('tags-wrap');
-  if(!wrap||!window._editRecord)return;
-  const tagsHtml=(window._editRecord.tags||[]).map(t=>`<div class="tag-pill-edit">${esc(t)}<button class="tag-pill-x" onclick="removeTag('${esc(t)}')">✕</button></div>`).join('');
-  wrap.innerHTML=tagsHtml+`<input id="tag-inp" class="tag-input-inline" placeholder="＋ добавить тег..." onkeydown="handleTagKey(event)">`;
-}
+// ── СОХРАНЕНИЕ ──
+function doSaveCls(){
+  const er=window._editRecord||{};
+  const tKey=(document.getElementById('ef-cls-type')?document.getElementById('ef-cls-type').value:window._pendingClsType||'').toLowerCase();
+  const callsign=currentUser?(currentUser.displayName||currentUser.email.replace('@stalker.zone','')):'';
+  const ex=closedRecords.find(x=>x.id===editingId);
 
-window.showBlockPalette=function(){
-  const bp=document.getElementById('block-palette');
-  if(bp)bp.style.display=bp.style.display==='none'?'':'none';
-}
-window.addExtraBlock=function(label){
-  if(!window._editRecord)return;
-  if(!window._editRecord.blocks)window._editRecord.blocks=[];
-  window._editRecord.blocks.push({label,value:''});
-  document.getElementById('block-palette').style.display='none';
-  refreshExtraBlocks();
-}
-window.addCustomBlock=function(){
-  const label=prompt('Название блока:');
-  if(label)addExtraBlock(label.trim());
-}
-window.removeExtraBlock=function(i){
-  if(!window._editRecord)return;
-  window._editRecord.blocks.splice(i,1);
-  refreshExtraBlocks();
-}
-window.updateBlock=function(i,v){
-  if(!window._editRecord)return;
-  window._editRecord.blocks[i].value=v;
-}
-function refreshExtraBlocks(){
-  const el=document.getElementById('extra-blocks');
-  if(!el||!window._editRecord)return;
-  el.innerHTML=(window._editRecord.blocks||[]).map((b,i)=>`
-    <div class="cls-block" id="extra-block-${i}">
-      <div class="cls-block-lbl">${esc(b.label||b.type||'Блок')}<button class="cls-block-rm" onclick="removeExtraBlock(${i})">✕ убрать</button></div>
-      <div class="cls-block-body"><textarea class="f-inp" rows="3" oninput="updateBlock(${i},this.value)">${esc(b.value||'')}</textarea></div>
-    </div>`).join('');
-}
-
-// ── sbItemCls — обновлён (совместим с новым setClsSub) ──
-function sbItemCls(raw, label, cnt, dotColor='var(--red)'){
-  let isActive = false;
-  if(!raw){
-    isActive = !currentSub;
+  // Получить главное поле по типу
+  let mainField={};
+  let title='';
+  if(tKey==='лицо'){
+    const v=document.getElementById('ef-cls-callsign');
+    if(!v||!v.value.trim()){showToast('⚠ Введите позывной');return null;}
+    mainField={callsign:v.value.trim(),altNames:(document.getElementById('ef-cls-altnames')||{}).value||'',affiliation:(document.getElementById('ef-cls-affiliation')||{}).value||'',role:(document.getElementById('ef-cls-role')||{}).value||'',threat:(document.getElementById('ef-cls-threat')||{}).value||'',summary:(document.getElementById('ef-cls-summary')||{}).value||'',details:(document.getElementById('ef-cls-details')||{}).value||'',seenAt:(document.getElementById('ef-cls-seenAt')||{}).value||'',connectedTo:(document.getElementById('ef-cls-connectedTo')||{}).value||'',source:(document.getElementById('ef-cls-source')||{}).value||''};
+    title=mainField.callsign;
+  } else if(tKey==='группа'){
+    const v=document.getElementById('ef-cls-groupname');
+    if(!v||!v.value.trim()){showToast('⚠ Введите название группы');return null;}
+    mainField={groupName:v.value.trim(),leader:(document.getElementById('ef-cls-leader')||{}).value||'',size:(document.getElementById('ef-cls-size')||{}).value||'',area:(document.getElementById('ef-cls-area')||{}).value||'',threat:(document.getElementById('ef-cls-threat')||{}).value||'',members:(document.getElementById('ef-cls-members')||{}).value||'',summary:(document.getElementById('ef-cls-summary')||{}).value||''};
+    title=mainField.groupName;
+  } else if(tKey==='кпк'){
+    const v=document.getElementById('ef-cls-kpkuser');
+    if(!v||!v.value.trim()){showToast('⚠ Введите имя пользователя');return null;}
+    mainField={kpkUser:v.value.trim(),kpkPass:(document.getElementById('ef-cls-kpkpass')||{}).value||'',kpkPin:(document.getElementById('ef-cls-kpkpin')||{}).value||'',kpkNote:(document.getElementById('ef-cls-kpknote')||{}).value||''};
+    title=mainField.kpkUser;
+  } else if(tKey==='контакт'){
+    const v=document.getElementById('ef-cls-callsign');
+    if(!v||!v.value.trim()){showToast('⚠ Введите имя контакта');return null;}
+    mainField={callsign:v.value.trim(),contactType:(document.getElementById('ef-cls-contacttype')||{}).value||'',summary:(document.getElementById('ef-cls-summary')||{}).value||'',details:(document.getElementById('ef-cls-details')||{}).value||'',source:(document.getElementById('ef-cls-source')||{}).value||''};
+    title=mainField.callsign;
+  } else if(tKey==='операция'){
+    const v=document.getElementById('ef-cls-title');
+    if(!v||!v.value.trim()){showToast('⚠ Введите название операции');return null;}
+    mainField={title:v.value.trim(),opType:(document.getElementById('ef-cls-optype')||{}).value||'',executor:(document.getElementById('ef-cls-executor')||{}).value||'',target:(document.getElementById('ef-cls-target')||{}).value||'',priority:(document.getElementById('ef-cls-priority')||{}).value||'',summary:(document.getElementById('ef-cls-summary')||{}).value||'',result:(document.getElementById('ef-cls-result')||{}).value||''};
+    title=mainField.title;
   } else {
-    const [grp,...rest] = raw.split(':');
-    const v = rest.join(':');
-    isActive = !!(currentSub && currentSub.group===grp && currentSub.val===v);
+    const v=document.getElementById('ef-cls-title');
+    if(!v||!v.value.trim()){showToast('⚠ Введите заголовок');return null;}
+    mainField={title:v.value.trim(),topic:(document.getElementById('ef-cls-topic')||{}).value||'',region:(document.getElementById('ef-cls-region')||{}).value||'',summary:(document.getElementById('ef-cls-summary')||{}).value||'',details:(document.getElementById('ef-cls-details')||{}).value||'',source:(document.getElementById('ef-cls-source')||{}).value||''};
+    title=mainField.title;
   }
-  return `<button class="sb-item${isActive?' act-r':''}" onclick="setClsSub('${raw||''}')" style="width:100%;display:flex;align-items:center;gap:6px;padding:6px 12px;background:${isActive?'rgba(184,64,64,0.06)':'none'};border:none;border-left:2px solid ${isActive?'var(--red)':'transparent'};font-family:monospace;font-size:9px;letter-spacing:0.5px;text-align:left;cursor:pointer;color:${isActive?'var(--red)':'var(--text-dim)'}">
-    <div style="width:5px;height:5px;border-radius:50%;background:${dotColor};flex-shrink:0"></div>
-    <span style="flex:1">${label}</span>
-    ${cnt!==undefined?`<span class="sb-cnt" style="${isActive?'color:var(--red);background:rgba(184,64,64,0.12)':''}">${cnt}</span>`:''}
-  </button>`;
+
+  const rec={
+    id:editingId,
+    clType:tKey,
+    status:(document.getElementById('ef-cls-status')||{}).value||'',
+    section:(document.getElementById('ef-cls-section')||{}).value||'',
+    date:(document.getElementById('ef-cls-date')||{}).value||today(),
+    linkedStalker:(document.getElementById('ef-cls-linkedstalker')||{}).value||'',
+    author:ex?ex.author:callsign,
+    photos:er.photos||[],
+    ...mainField,
+    createdAt:ex?ex.createdAt:Date.now(),
+    createdDate:ex?ex.createdDate:today(),
+    updatedAt:Date.now()
+  };
+  return rec;
 }
 
-
-// ══ CLS STATUSES MANAGEMENT ══
-const CLS_DEFAULT_STATUSES = [
-  {name:'активно',   color:'var(--red)'},
-  {name:'под наблюдением', color:'var(--amber)'},
-  {name:'архив',     color:'var(--text-dim)'},
-  {name:'проверяется',color:'var(--blue)'},
-  {name:'заморожено',color:'var(--text-dim)'},
-];
-
-function getClosedStatuses(){
-  try{
-    const s=localStorage.getItem('cls_statuses');
-    return s?JSON.parse(s):CLS_DEFAULT_STATUSES;
-  }catch(e){return CLS_DEFAULT_STATUSES;}
-}
-function saveClosedStatuses(arr){
-  localStorage.setItem('cls_statuses',JSON.stringify(arr));
-}
-
-// Открыть менеджер статусов
-window.openClsStatusManager=function(){
+// ── МЕНЕДЖЕРЫ ──
+window.openClsSecManager=function(typeKey,typeLabel){
   document.getElementById('detail-panel').classList.add('open');
-  document.getElementById('dp-title').textContent='Управление статусами';
-  document.getElementById('dp-title').style.color='var(--red)';
+  const tColor=clsTypeColor(typeKey);
+  document.getElementById('dp-title').textContent=`${typeLabel} — подразделы`;
+  document.getElementById('dp-title').style.color=tColor;
   document.getElementById('dp-actions').innerHTML=`<button class="act-btn btn-cancel" onclick="closeDetail()">✕ Закрыть</button>`;
-  renderStatusManager();
-}
+  renderClsSecManagerBody(typeKey);
+};
 
-function renderStatusManager(){
-  const statuses=getClosedStatuses();
-  const bySt={};
-  closedRecords.forEach(r=>{const s=(r.status||'').toLowerCase();bySt[s]=(bySt[s]||0)+1;});
+function renderClsSecManagerBody(typeKey){
+  const meta=CLS_TYPES.find(t=>t.key===typeKey)||{label:typeKey,color:'var(--red)'};
+  const secs=getClosedSections();
+  const typeSecs=secs[typeKey]||[];
+  const bySec={};closedRecords.forEach(r=>{if(r.section)bySec[r.section]=(bySec[r.section]||0)+1;});
+  const COLORS=['var(--red)','var(--amber)','var(--blue)','var(--green)','var(--purple)','var(--text-dim)','#c4c09e'];
+  window._clsSecMgrType=typeKey;
+  window._clsSecNewColor=meta.color;
   document.getElementById('dp-body').innerHTML=`
-    <div class="sec-manage-wrap">
-      <div class="sec-manage-title">Статусы закрытого раздела</div>
-      <div id="statuses-list">${statuses.map((s,i)=>`
-        <div class="cls-section-item" id="st-item-${i}">
-          <div class="cls-section-dot" style="background:${s.color||'var(--red)'}"></div>
-          <span class="cls-section-name">${esc(s.name)}</span>
-          <span class="cls-section-cnt">${bySt[s.name.toLowerCase()]||0} зап.</span>
-          <button class="cls-sm-btn" onclick="startEditStatus(${i})">✎</button>
-          <button class="cls-sm-btn del" onclick="deleteStatus(${i})">✕</button>
-        </div>`).join('')}
+    <div class="dsm-wrap" style="--dsm-accent:${meta.color}">
+      <div class="dsm-header">
+        <div class="dsm-breadcrumb">
+          <span style="color:var(--text-faint)">Закрытые материалы</span>
+          <span class="dsm-breadcrumb-sep">›</span>
+          <span style="color:${meta.color};font-weight:bold">${meta.label}</span>
+          <span class="dsm-breadcrumb-sep">›</span>
+          <span>Подразделы</span>
+        </div>
+        <div class="dsm-title" style="color:${meta.color}">${meta.label}</div>
       </div>
-      <div id="new-status-form" style="display:none;margin-top:8px">
-        <div class="cls-section-item" style="border-style:dashed">
-          <div class="cls-section-dot" style="background:#b84040;border:1px solid #3a1a1a"></div>
-          <input id="new-st-name" class="f-inp" placeholder="Название статуса" style="flex:1;background:none;border:none;border-bottom:1px solid #3a1a1a;outline:none;font-family:monospace;font-size:10px;color:var(--text)">
-          <button class="cls-sm-btn" onclick="addStatus()" style="border-color:#7a2828;color:#b84040">✓</button>
-          <button class="cls-sm-btn" onclick="cancelNewStatus()">✕</button>
+      <div class="dsm-body">
+        ${typeSecs.length===0?`<div class="dsm-empty"><div class="dsm-empty-ico" style="color:${meta.color}">◫</div><div class="dsm-empty-title" style="color:${meta.color}">Подразделы не созданы</div><div class="dsm-empty-sub">Создай первый подраздел</div></div>`:''}
+        <div id="cls-subs-list">
+          ${typeSecs.map((s,i)=>`
+            <div class="dsm-sub-item" id="cls-sub-item-${i}">
+              <div class="dsm-color-stripe" style="background:${s.color||meta.color}"></div>
+              <div class="dsm-sub-inner">
+                <div class="dsm-sub-info">
+                  <div class="dsm-sub-name" id="cls-sub-name-${i}">${esc(s.name)}</div>
+                  <div class="dsm-sub-meta">
+                    <div class="dsm-sub-dot" style="background:${s.color||meta.color}" onclick="toggleClsSubCP(${i})" title="Цвет"></div>
+                    <span class="dsm-sub-cnt">${bySec[s.name]||0}</span>
+                    <span style="color:var(--text-faint)">${(bySec[s.name]||0)===1?'запись':'записей'}</span>
+                  </div>
+                </div>
+                <div class="dsm-sub-actions">
+                  <button class="dsm-btn" onclick="moveClsSec('${typeKey}',${i},-1)">↑</button>
+                  <button class="dsm-btn" onclick="moveClsSec('${typeKey}',${i},1)">↓</button>
+                  <button class="dsm-btn" onclick="startEditClsSec('${typeKey}',${i})">✎</button>
+                  <button class="dsm-btn del" onclick="deleteClsSec('${typeKey}',${i})">✕</button>
+                </div>
+              </div>
+            </div>
+            <div class="dsm-cp-row" id="cls-cp-${i}">
+              <div class="dsm-cp-label">Цвет</div>
+              <div class="dsm-cp-swatches">${COLORS.map(c=>`<div class="dsm-swatch${(s.color||meta.color)===c?' on':''}" style="background:${c}" onclick="setClsSecColor('${typeKey}',${i},'${c}')"></div>`).join('')}</div>
+            </div>`).join('')}
+        </div>
+        <div class="dsm-add-section">
+          <div class="dsm-add-label">＋ Новый подраздел</div>
+          <div class="dsm-add-row">
+            <div style="width:5px;min-height:36px;background:${meta.color};flex-shrink:0;cursor:pointer" id="cls-sec-new-stripe" onclick="toggleClsNewCP()" title="Цвет"></div>
+            <input class="dsm-add-inp" id="cls-sec-new-inp" placeholder="Название подраздела" onkeydown="if(event.key==='Enter')addClsSec('${typeKey}')">
+            <button class="dsm-add-btn" onclick="addClsSec('${typeKey}')">Добавить</button>
+          </div>
+          <div id="cls-sec-new-cp" style="display:none;margin-top:8px">
+            <div class="color-palette">
+              <span style="font-size:7px;color:var(--text-faint);letter-spacing:1px;margin-right:4px">Цвет:</span>
+              ${COLORS.map(c=>`<div class="cp-swatch" style="background:${c}" onclick="setClsNewSecColor('${typeKey}','${c}')"></div>`).join('')}
+            </div>
+          </div>
         </div>
       </div>
-      <button onclick="showNewStatusForm()" style="width:100%;margin-top:8px;padding:7px;background:none;border:1px dashed #3a1a1a;color:var(--text-faint);font-family:monospace;font-size:8px;text-transform:uppercase;letter-spacing:1px;cursor:pointer;transition:all 0.15s" onmouseover="this.style.borderColor='#7a2828';this.style.color='var(--red)'" onmouseout="this.style.borderColor='#3a1a1a';this.style.color='var(--text-faint)'">＋ Добавить статус</button>
+    </div>`;
+  document.getElementById('dp-body').style.padding='0';
+  setTimeout(()=>{if(typeSecs.length===0)document.getElementById('cls-sec-new-inp').focus();},50);
+}
+
+window.toggleClsSubCP=function(i){const e=document.getElementById('cls-cp-'+i);document.querySelectorAll('.dsm-cp-row').forEach(x=>x.style.display='none');if(e)e.style.display=e.style.display==='none'||e.style.display===''?'block':'none';};
+window.toggleClsNewCP=function(){const e=document.getElementById('cls-sec-new-cp');if(e)e.style.display=e.style.display==='none'?'flex':'none';};
+window.setClsNewSecColor=function(tk,color){
+  window._clsSecNewColor=color;
+  const stripe=document.getElementById('cls-sec-new-stripe');if(stripe)stripe.style.background=color;
+  document.getElementById('cls-sec-new-cp').style.display='none';
+};
+window.setClsSecColor=function(tk,i,color){const s=getClosedSections();if(!s[tk])return;s[tk][i].color=color;saveClosedSections(s);renderClsSecManagerBody(tk);renderSidebar();};
+window.moveClsSec=function(tk,i,dir){const s=getClosedSections();const a=s[tk]||[];const ni=i+dir;if(ni<0||ni>=a.length)return;[a[i],a[ni]]=[a[ni],a[i]];s[tk]=a;saveClosedSections(s);renderClsSecManagerBody(tk);renderSidebar();};
+window.addClsSec=function(tk){
+  const name=document.getElementById('cls-sec-new-inp').value.trim();if(!name){document.getElementById('cls-sec-new-inp').focus();return;}
+  const s=getClosedSections();if(!s[tk])s[tk]=[];
+  const color=window._clsSecNewColor||clsTypeColor(tk);
+  s[tk].push({name,color});saveClosedSections(s);
+  renderClsSecManagerBody(tk);renderSidebar();showToast('✓ Подраздел добавлен');
+};
+window.deleteClsSec=function(tk,i){
+  const s=getClosedSections();const name=s[tk][i].name;
+  const cnt=closedRecords.filter(r=>r.section===name).length;
+  showConfirm(cnt?`Удалить «${name}»? ${cnt} записей перейдут в общий раздел.`:`Удалить «${name}»?`,async()=>{
+    await Promise.all(closedRecords.filter(r=>r.section===name).map(r=>setDoc(doc(db,'closed',r.id),{...r,section:''})));
+    s[tk].splice(i,1);saveClosedSections(s);renderClsSecManagerBody(tk);renderSidebar();renderContent();showToast('Подраздел удалён');
+  });
+};
+window.startEditClsSec=function(tk,i){
+  const s=getClosedSections();const el=document.getElementById('cls-sub-name-'+i);if(!el)return;
+  const orig=s[tk][i].name;
+  el.innerHTML=`<input value="${esc(orig)}" style="background:none;border:none;border-bottom:1px solid var(--red-dim);outline:none;font-family:monospace;font-size:10px;color:var(--text);width:100%" id="cls-sub-ei-${i}">`;
+  const inp=document.getElementById('cls-sub-ei-'+i);inp.focus();inp.select();
+  const save=()=>saveEditClsSec(tk,i,orig,inp.value.trim());
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter')save();if(e.key==='Escape')renderClsSecManagerBody(tk);});
+  inp.addEventListener('blur',()=>setTimeout(save,150));
+};
+async function saveEditClsSec(tk,i,orig,nn){
+  if(!nn||nn===orig){renderClsSecManagerBody(tk);return;}
+  const s=getClosedSections();s[tk][i].name=nn;saveClosedSections(s);
+  await Promise.all(closedRecords.filter(r=>r.section===orig).map(r=>setDoc(doc(db,'closed',r.id),{...r,section:nn})));
+  renderClsSecManagerBody(tk);renderSidebar();showToast('✓ Переименовано');
+}
+
+// ── МЕНЕДЖЕР СТАТУСОВ ──
+window.openClsStatusManager=function(){
+  document.getElementById('detail-panel').classList.add('open');
+  document.getElementById('dp-title').textContent='Статусы';
+  document.getElementById('dp-title').style.color='var(--red)';
+  document.getElementById('dp-actions').innerHTML=`<button class="act-btn btn-cancel" onclick="closeDetail()">✕ Закрыть</button>`;
+  renderClsStatusManagerBody();
+};
+
+function renderClsStatusManagerBody(){
+  const statuses=getClosedStatuses();
+  const bySt={};closedRecords.forEach(r=>{const s=(r.status||'').toLowerCase();bySt[s]=(bySt[s]||0)+1;});
+  const COLORS=['var(--red)','var(--amber)','var(--blue)','var(--green)','var(--purple)','var(--text-dim)'];
+  document.getElementById('dp-body').innerHTML=`
+    <div class="sec-manage-wrap">
+      <div class="sec-manage-title" style="color:var(--red)">Статусы закрытого раздела</div>
+      <div id="cls-status-list">
+        ${statuses.map((s,i)=>`
+          <div class="sub-mgr-item" id="cls-st-item-${i}">
+            <div class="sub-mgr-dot" style="background:${s.color||'var(--red)'}" onclick="toggleClsStCP(${i})" title="Цвет"></div>
+            <span class="sub-mgr-name" id="cls-st-name-${i}">${esc(s.name)}</span>
+            <span class="sub-mgr-cnt">${bySt[s.name]||0} зап.</span>
+            <button class="sub-mgr-btn" onclick="moveClsSt(${i},-1)">↑</button>
+            <button class="sub-mgr-btn" onclick="moveClsSt(${i},1)">↓</button>
+            <button class="sub-mgr-btn" onclick="startEditClsSt(${i})">✎</button>
+            <button class="sub-mgr-btn del" onclick="deleteClsSt(${i})">✕</button>
+          </div>
+          <div id="cls-st-cp-${i}" style="display:none">
+            <div class="color-palette">${COLORS.map(c=>`<div class="cp-swatch${(s.color||'var(--red)')===c?' selected':''}" style="background:${c}" onclick="setClsStColor(${i},'${c}')"></div>`).join('')}</div>
+          </div>`).join('')}
+      </div>
+      <div class="sub-new-row">
+        <div class="sub-mgr-dot" style="background:var(--red);border:1px dashed var(--border)"></div>
+        <input id="new-cls-st-inp" placeholder="Название статуса" onkeydown="if(event.key==='Enter')addClsSt()">
+        <button class="sub-add-btn" onclick="addClsSt()">✓ Добавить</button>
+      </div>
     </div>`;
 }
 
-window.showNewStatusForm=function(){document.getElementById('new-status-form').style.display='';document.getElementById('new-st-name').focus();}
-window.cancelNewStatus=function(){document.getElementById('new-status-form').style.display='none';}
-
-window.addStatus=function(){
-  const name=document.getElementById('new-st-name').value.trim();
-  if(!name)return;
-  const statuses=getClosedStatuses();
-  if(statuses.find(s=>s.name.toLowerCase()===name.toLowerCase())){showToast('⚠ Такой статус уже есть');return;}
-  const colors=['var(--red)','var(--amber)','var(--blue)','var(--green)','var(--text-dim)','var(--purple)'];
-  statuses.push({name:name.toLowerCase(),color:colors[statuses.length%colors.length]});
-  saveClosedStatuses(statuses);
-  renderStatusManager();
-  renderSidebar();
-  showToast('✓ Статус добавлен');
-}
-
-window.deleteStatus=function(i){
-  const statuses=getClosedStatuses();
-  const name=statuses[i].name;
-  const affected=closedRecords.filter(r=>(r.status||'').toLowerCase()===name);
-  const msg=affected.length
-    ?`Удалить статус «${name}»? У ${affected.length} записей статус будет сброшен.`
-    :`Удалить статус «${name}»?`;
-  showConfirm(msg, async()=>{
-    // Сбросить статус у записей
-    await Promise.all(affected.map(r=>setDoc(doc(db,'closed',r.id),{...r,status:''})));
-    statuses.splice(i,1);
-    saveClosedStatuses(statuses);
-    renderStatusManager();
-    renderSidebar();
-    renderContent();
-    showToast('Статус удалён');
+window.toggleClsStCP=function(i){const e=document.getElementById('cls-st-cp-'+i);document.querySelectorAll('[id^="cls-st-cp-"]').forEach(x=>x.style.display='none');if(e)e.style.display=e.style.display==='none'||!e.style.display?'flex':'none';};
+window.setClsStColor=function(i,color){const s=getClosedStatuses();s[i].color=color;saveClosedStatuses(s);renderClsStatusManagerBody();renderSidebar();};
+window.moveClsSt=function(i,dir){const s=getClosedStatuses();const ni=i+dir;if(ni<0||ni>=s.length)return;[s[i],s[ni]]=[s[ni],s[i]];saveClosedStatuses(s);renderClsStatusManagerBody();renderSidebar();};
+window.addClsSt=function(){
+  const name=document.getElementById('new-cls-st-inp').value.trim();if(!name)return;
+  const s=getClosedStatuses();if(s.find(x=>x.name===name.toLowerCase()))return;
+  s.push({name:name.toLowerCase(),color:'var(--text-dim)'});saveClosedStatuses(s);renderClsStatusManagerBody();renderSidebar();showToast('✓ Статус добавлен');
+};
+window.deleteClsSt=function(i){
+  const s=getClosedStatuses();const name=s[i].name;
+  const cnt=closedRecords.filter(r=>(r.status||'').toLowerCase()===name).length;
+  showConfirm(cnt?`Удалить «${name}»? ${cnt} записей сбросятся.`:`Удалить «${name}»?`,async()=>{
+    await Promise.all(closedRecords.filter(r=>(r.status||'').toLowerCase()===name).map(r=>setDoc(doc(db,'closed',r.id),{...r,status:''})));
+    s.splice(i,1);saveClosedStatuses(s);renderClsStatusManagerBody();renderSidebar();renderContent();showToast('Статус удалён');
   });
-}
-
-window.startEditStatus=function(i){
-  const statuses=getClosedStatuses();
-  const item=document.getElementById('st-item-'+i);
-  if(!item)return;
-  const nameEl=item.querySelector('.cls-section-name');
-  const origName=statuses[i].name;
-  nameEl.innerHTML=`<input value="${esc(origName)}" style="background:none;border:none;border-bottom:1px solid #7a2828;outline:none;font-family:monospace;font-size:10px;color:var(--text);width:100%" id="edit-st-inp-${i}">`;
-  const inp=document.getElementById('edit-st-inp-'+i);
-  inp.focus();inp.select();
-  inp.addEventListener('keydown',e=>{
-    if(e.key==='Enter'){saveEditStatus(i,origName,inp.value.trim());}
-    if(e.key==='Escape'){renderStatusManager();}
-  });
-  inp.addEventListener('blur',()=>setTimeout(()=>saveEditStatus(i,origName,inp.value.trim()),150));
-}
-
-async function saveEditStatus(i,origName,newName){
-  if(!newName||newName===origName){renderStatusManager();return;}
-  const statuses=getClosedStatuses();
-  statuses[i].name=newName.toLowerCase();
-  saveClosedStatuses(statuses);
-  // Обновить записи
-  const batch=closedRecords.filter(r=>(r.status||'').toLowerCase()===origName);
-  await Promise.all(batch.map(r=>setDoc(doc(db,'closed',r.id),{...r,status:newName.toLowerCase()})));
-  renderStatusManager();
-  renderSidebar();
-  renderContent();
-  showToast('✓ Статус переименован');
-}
-// ══ END CLS STATUSES ══
+};
+window.startEditClsSt=function(i){
+  const s=getClosedStatuses();const el=document.getElementById('cls-st-name-'+i);if(!el)return;
+  const orig=s[i].name;
+  el.innerHTML=`<input value="${esc(orig)}" style="background:none;border:none;border-bottom:1px solid var(--red-dim);outline:none;font-family:monospace;font-size:10px;color:var(--text);width:100%" id="cls-st-ei-${i}">`;
+  const inp=document.getElementById('cls-st-ei-'+i);inp.focus();inp.select();
+  const save=async()=>{
+    const nn=inp.value.trim();if(!nn||nn===orig){renderClsStatusManagerBody();return;}
+    s[i].name=nn.toLowerCase();saveClosedStatuses(s);
+    await Promise.all(closedRecords.filter(r=>(r.status||'').toLowerCase()===orig).map(r=>setDoc(doc(db,'closed',r.id),{...r,status:nn.toLowerCase()})));
+    renderClsStatusManagerBody();renderSidebar();showToast('✓ Переименовано');
+  };
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter')save();if(e.key==='Escape')renderClsStatusManagerBody();});
+  inp.addEventListener('blur',()=>setTimeout(save,150));
+};
 
 // ══ END CLOSED MODULE ══
+
 
 
 
