@@ -1277,30 +1277,36 @@ function renderPhotoForm(id,isNew){
   const newId=uid();
   if(isNew){editingId=newId;window._newId=newId;}
   window._editMod='photo';
-  window._editRecord=isNew?{id:editingId,photos:[]}:JSON.parse(JSON.stringify(p));
-  setEditPanel(isNew?'Новый материал':`Редактировать: ${p.title||''}`, 'photo');
-  const ph=(window._editRecord.photos||[]).map(f=>`<div class="photo-item"><img src="${f.data}" alt="" onclick="openLightbox('${f.data}')"><button class="photo-del" onclick="deletePhoto('${f.id}')">✕</button></div>`).join('');
-  const isVideo=(p.photoType||'')==='видео';
+  window._editRecord=isNew
+    ?{id:editingId,photos:[]}
+    :JSON.parse(JSON.stringify(p||{}));
+  const er=window._editRecord;
+  setEditPanel(isNew?'Новый материал':`Редактировать: ${(p&&p.title)||''}`, 'photo');
+  const ph=(er.photos||[]).map(f=>
+    `<div class="photo-item"><img src="${f.data}" alt="" onclick="openLightbox('${f.data}')"><button class="photo-del" onclick="deletePhoto('${f.id}')">✕</button></div>`
+  ).join('');
+  const pObj=p||{};
+  const isVideo=(pObj.photoType||'')==='видео';
   document.getElementById('dp-body').innerHTML=`
     <div class="dp-2col">
       <div>
         <div class="dp-block"><div class="dp-block-label">Основные поля</div><div class="dp-block-body">
           <div class="form-field" style="margin-bottom:10px">
             <label class="form-label">Название *</label>
-            <input type="text" id="ef-photo-title" value="${esc(p.title||'')}" placeholder="Название материала" style="font-size:14px">
+            <input type="text" id="ef-photo-title" value="${esc(pObj.title||'')}" placeholder="Название материала" style="font-size:14px">
           </div>
           <div class="form-grid">
             <div class="form-field"><label class="form-label">Тип материала</label>
               <select id="ef-photo-type" onchange="switchPhotoType(this.value)">
                 <option value="">— выбери —</option>
-                <option value="фото"${(p.photoType||'')==='фото'?' selected':''}>Фото</option>
-                <option value="видео"${(p.photoType||'')==='видео'?' selected':''}>Видео</option>
-                <option value="фотоловушка"${(p.photoType||'')==='фотоловушка'?' selected':''}>Фотоловушка</option>
+                <option value="фото"${(pObj.photoType||'')==='фото'?' selected':''}>Фото</option>
+                <option value="видео"${(pObj.photoType||'')==='видео'?' selected':''}>Видео</option>
+                <option value="фотоловушка"${(pObj.photoType||'')==='фотоловушка'?' selected':''}>Фотоловушка</option>
               </select></div>
             <div class="form-field"><label class="form-label">Дата</label>
-              <input type="date" id="ef-photo-date" value="${p.date||today()}"></div>
+              <input type="date" id="ef-photo-date" value="${pObj.date||today()}"></div>
             <div class="form-field"><label class="form-label">Связано с</label>
-              <input type="text" id="ef-photo-related" value="${esc(p.related||'')}" placeholder="Образец, операция..."></div>
+              <input type="text" id="ef-photo-related" value="${esc(pObj.related||'')}" placeholder="Образец, операция..."></div>
           </div>
         </div></div>
 
@@ -1308,29 +1314,27 @@ function renderPhotoForm(id,isNew){
           <div class="dp-block" style="border-color:var(--amber-dim)">
             <div class="dp-block-label" style="color:var(--amber)">Видеоматериал</div>
             <div class="dp-block-body">
-              <div class="form-field">
-                <label class="form-label">Ссылка на видео</label>
-                <input type="url" id="ef-photo-videourl" value="${esc(p.videoUrl||'')}" placeholder="https://youtube.com/... или .mp4">
+              <div class="form-field"><label class="form-label">Ссылка на видео</label>
+                <input type="url" id="ef-photo-videourl" value="${esc(pObj.videoUrl||'')}" placeholder="https://youtube.com/... или .mp4">
                 <div style="font-size:7px;color:var(--text-faint);margin-top:3px;font-family:monospace">YouTube, VK Video, прямая ссылка</div>
               </div>
               <div class="form-field" style="margin-top:9px"><label class="form-label">Источник / автор</label>
-                <input type="text" id="ef-photo-author" value="${esc(p.photoAuthor||'')}" placeholder="Позывной, канал..."></div>
+                <input type="text" id="ef-photo-author" value="${esc(pObj.photoAuthor||'')}" placeholder="Позывной, канал..."></div>
               <div class="form-field" style="margin-top:9px"><label class="form-label">Заметка</label>
-                <textarea id="ef-photo-note" rows="3">${esc(p.note||'')}</textarea></div>
+                <textarea id="ef-photo-note" rows="3">${esc(pObj.note||'')}</textarea></div>
             </div>
           </div>
-          <div class="dp-block">${renderAttachBlock('photo-video-attach',er.photos||[],er.attachUrl||p.attachUrl||'')} </div>
+          <div class="dp-block">${renderAttachBlock('photo-video-attach',er.photos||[],er.attachUrl||pObj.attachUrl||'')}</div>
         </div>
 
         <div id="photo-photo-section" style="display:${isVideo?'none':'block'}">
-          <div class="dp-block">${renderAttachBlock('photo-attach',er.photos||[],er.attachUrl||p.attachUrl||'')}</div>
+          <div class="dp-block">${renderAttachBlock('photo-attach',er.photos||[],er.attachUrl||pObj.attachUrl||'')}</div>
           <div class="dp-block"><div class="dp-block-label">Описание</div><div class="dp-block-body">
             <div class="form-field"><label class="form-label">Автор / источник</label>
-              <input type="text" id="ef-photo-author" value="${esc(p.photoAuthor||'')}" placeholder="Позывной, источник..."></div>
+              <input type="text" id="ef-photo-author" value="${esc(pObj.photoAuthor||'')}" placeholder="Позывной, источник..."></div>
             <div class="form-field" style="margin-top:9px"><label class="form-label">Заметка</label>
-              <textarea id="ef-photo-note" rows="3">${esc(p.note||'')}</textarea></div>
+              <textarea id="ef-photo-note" rows="3">${esc(pObj.note||'')}</textarea></div>
           </div></div>
-        </div>
         </div>
       </div>
       <div><div class="dp-block"><div class="dp-block-label">Инфо</div>
@@ -2546,8 +2550,9 @@ window.doSave=async function(){
         date:document.getElementById('ef-photo-date').value,
         photoAuthor:photoAuthorEl?photoAuthorEl.value.trim():(ex?ex.photoAuthor:callsign),
         related:document.getElementById('ef-photo-related').value.trim(),
-        note:photoNoteEl?photoNoteEl.value.trim():'',
-        videoUrl:photoVideoEl?photoVideoEl.value.trim():'',
+        note:photoNoteEl?photoNoteEl.value.trim():(ex?ex.note:''),
+        videoUrl:photoVideoEl?photoVideoEl.value.trim():(ex?ex.videoUrl:''),
+        attachUrl:getAttachUrl('photo-attach')||getAttachUrl('photo-video-attach')||(ex?ex.attachUrl:''),
         attachUrl:getAttachUrl('photo-attach')||getAttachUrl('photo-video-attach'),
         photos:window._editRecord?window._editRecord.photos:[],
         createdAt:ex?ex.createdAt:Date.now(),updatedAt:Date.now()
