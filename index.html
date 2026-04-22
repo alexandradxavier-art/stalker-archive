@@ -1253,7 +1253,11 @@ function renderPhotoDetail(p){
         ${videoBlock}
         ${!videoBlock&&phs?`<div class="dp-block"><div class="dp-block-label">Материал</div><div class="dp-block-body"><div class="photo-grid">${phs}</div></div></div>`:''}
         ${tl==='видео'&&phs&&videoBlock?`<div class="dp-block"><div class="dp-block-label">Превью-кадр</div><div class="dp-block-body"><div class="photo-grid">${phs}</div></div></div>`:''}
-        ${p.note?`<div class="dp-block"><div class="dp-block-label">Заметка</div><div class="dp-block-body"><div class="fv-val">${esc(p.note)}</div></div></div>`:''}
+        ${p.note?`<div class="dp-block"><div class="dp-block-label">Заметка</div><div class="dp-block-body"><div class="fv-val" style="white-space:pre-wrap">${esc(p.note)}</div></div></div>`:''}
+        ${p.attachUrl&&!videoBlock?`<div class="dp-block"><div class="dp-block-label">Ссылка / вложение</div><div class="dp-block-body">
+          ${p.attachUrl.match(/\.(jpg|jpeg|png|gif|webp)(\?.*)?$/i)?`<img src="${esc(p.attachUrl)}" style="max-width:100%;border:1px solid var(--border)" onerror="this.style.display='none'">`:``}
+          <a href="${esc(p.attachUrl)}" target="_blank" class="video-link-btn">⬡ Открыть ссылку<span style="font-size:7px;opacity:0.6;margin-left:6px;overflow:hidden;text-overflow:ellipsis;max-width:200px">${esc(p.attachUrl.slice(0,50))}${p.attachUrl.length>50?'…':''}</span></a>
+        </div></div>`:''}
       </div>
       <div>
         <div class="dp-block"><div class="dp-block-label">Параметры</div><div class="dp-block-body">
@@ -1325,11 +1329,22 @@ function renderPhotoForm(id,isNew){
         </div>
 
         <div id="photo-photo-section" style="display:${isVideo?'none':'block'}">
-          <div class="dp-block"><div class="dp-block-label">Файл / изображение</div><div class="dp-block-body">
-            <div class="photo-grid" id="${isVideo?'ph-grid-hidden':'dp-photo-grid'}">${isVideo?'':ph}
-              <label class="photo-add-btn"><span class="pic">＋</span><span>Загрузить</span>
-                <input type="file" accept="image/*" multiple style="display:none" onchange="handlePhotoUpload(event)">
-              </label>
+          <div class="dp-block"><div class="dp-block-label">Вложение</div><div class="dp-block-body">
+            <div style="display:flex;gap:6px;margin-bottom:10px">
+              <button type="button" id="attach-mode-file" onclick="setAttachMode('file')" style="flex:1;padding:6px;font-family:'Share Tech Mono',monospace;font-size:8px;text-transform:uppercase;letter-spacing:1px;cursor:pointer;border:1px solid var(--green-dark);color:var(--green);background:rgba(122,182,72,0.08)">▤ Файл</button>
+              <button type="button" id="attach-mode-url" onclick="setAttachMode('url')" style="flex:1;padding:6px;font-family:'Share Tech Mono',monospace;font-size:8px;text-transform:uppercase;letter-spacing:1px;cursor:pointer;border:1px solid var(--border);color:var(--text-dim);background:none">⬡ Ссылка</button>
+            </div>
+            <div id="attach-file-block">
+              <div class="photo-grid" id="${isVideo?'ph-grid-hidden':'dp-photo-grid'}">${isVideo?'':ph}
+                <label class="photo-add-btn"><span class="pic">＋</span><span>Файл</span>
+                  <input type="file" accept="image/*" multiple style="display:none" onchange="handlePhotoUpload(event)">
+                </label>
+              </div>
+            </div>
+            <div id="attach-url-block" style="display:none">
+              <input type="url" id="ef-photo-attachurl" value="${esc(p.attachUrl||'')}" placeholder="https://... ссылка на изображение или страницу" style="width:100%;background:var(--paper3);border:1px solid var(--border);color:var(--text);font-family:monospace;font-size:11px;padding:8px 10px;outline:none">
+              <div style="font-size:7px;color:var(--text-faint);margin-top:3px;font-family:monospace">Прямая ссылка на изображение или страницу</div>
+              ${p.attachUrl?`<div style="margin-top:7px;border:1px solid var(--border)"><img src="${esc(p.attachUrl)}" style="max-width:100%;display:block" onerror="this.parentElement.style.display='none'"></div>`:''}
             </div>
           </div></div>
           <div class="dp-block"><div class="dp-block-label">Описание</div><div class="dp-block-body">
@@ -2478,14 +2493,19 @@ window.doSave=async function(){
       const title=document.getElementById('ef-photo-title').value.trim();
       if(!title){showToast('⚠ Введите название');return;}
       const ex=photos.find(x=>x.id===editingId);
+      const photoAuthorEl=document.getElementById('ef-photo-author');
+      const photoNoteEl=document.getElementById('ef-photo-note');
+      const photoVideoEl=document.getElementById('ef-photo-videourl');
+      const photoAttachEl=document.getElementById('ef-photo-attachurl');
       const p={
         id:editingId,title,
         photoType:document.getElementById('ef-photo-type').value,
         date:document.getElementById('ef-photo-date').value,
-        photoAuthor:ex?ex.photoAuthor:callsign,
+        photoAuthor:photoAuthorEl?photoAuthorEl.value.trim():(ex?ex.photoAuthor:callsign),
         related:document.getElementById('ef-photo-related').value.trim(),
-        note:(document.getElementById('ef-photo-note')||{value:''}).value.trim(),
-        videoUrl:(document.getElementById('ef-photo-videourl')||{value:''}).value.trim(),
+        note:photoNoteEl?photoNoteEl.value.trim():'',
+        videoUrl:photoVideoEl?photoVideoEl.value.trim():'',
+        attachUrl:photoAttachEl?photoAttachEl.value.trim():'',
         photos:window._editRecord?window._editRecord.photos:[],
         createdAt:ex?ex.createdAt:Date.now(),updatedAt:Date.now()
       };
@@ -2827,6 +2847,23 @@ window.switchClsType=function(typeKey,isNew){
   document.getElementById('dp-title').textContent=isNew||isNew==='true'?`Новая запись — ${tLabel}`:`Редактировать: ${r.callsign||r.groupName||r.kpkUser||r.title||''}`;
   document.getElementById('dp-title').style.color=tColor;
   renderClsFormBody(typeKey,r,isNew);
+};
+
+window.setAttachMode=function(mode){
+  const fb=document.getElementById('attach-file-block');
+  const ub=document.getElementById('attach-url-block');
+  const btnF=document.getElementById('attach-mode-file');
+  const btnU=document.getElementById('attach-mode-url');
+  if(!fb||!ub)return;
+  if(mode==='file'){
+    fb.style.display='';ub.style.display='none';
+    if(btnF){btnF.style.borderColor='var(--green-dark)';btnF.style.color='var(--green)';btnF.style.background='rgba(122,182,72,0.08)';}
+    if(btnU){btnU.style.borderColor='var(--border)';btnU.style.color='var(--text-dim)';btnU.style.background='none';}
+  }else{
+    fb.style.display='none';ub.style.display='';
+    if(btnU){btnU.style.borderColor='var(--blue-dim)';btnU.style.color='var(--blue)';btnU.style.background='rgba(58,143,212,0.08)';}
+    if(btnF){btnF.style.borderColor='var(--border)';btnF.style.color='var(--text-dim)';btnF.style.background='none';}
+  }
 };
 
 window.switchPhotoType=function(type){
