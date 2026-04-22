@@ -699,7 +699,7 @@ function emptyState(msg, mod){
     document.getElementById('f-clstatus')?.value ||
     currentSub;
   const cfg={
-    arc:{ico:'⊙',title:'Архив пуст',sub:'Объекты исследования не найдены',addLabel:'＋ Добавить образец',addCls:'',color:'var(--green)'},
+    arc:{ico:'⊙',title:'Архив пуст',sub:'Нет записей. Добавьте первый объект.',addLabel:'＋ Добавить образец',addCls:'',color:'var(--green)'},
     stk:{ico:'◉',title:'Картотека пуста',sub:'Личные дела не найдены',addLabel:'＋ Добавить досье',addCls:'am',color:'var(--amber)'},
     doc:{ico:'▤',title:'Документов нет',sub:'Текстовые материалы не найдены',addLabel:'＋ Добавить документ',addCls:'pp',color:'var(--purple)'},
     all:{ico:'◈',title:'Записей нет',sub:'База данных пуста',addLabel:'＋ Добавить',addCls:'',color:'var(--text-dim)'},
@@ -707,8 +707,24 @@ function emptyState(msg, mod){
   };
   const c=cfg[mod]||cfg.all;
   const resetBtn=isFiltered?`<button class="es-btn es-btn-reset" onclick="resetFilters()">Сбросить фильтры</button>`:'';
-  const addBtn=mod!=='all'?`<button class="es-btn es-btn-add ${c.addCls}" onclick="openAdd()">${c.addLabel}</button>`:'';
   const customMsg=msg||c.sub;
+
+  // Для архива образцов — быстрый выбор типа
+  if(mod==='arc'&&!isFiltered){
+    return `<div class="empty-state">
+      <div class="es-ico" style="color:var(--green)">⊙</div>
+      <div class="es-title" style="color:var(--green)">Архив пуст</div>
+      <div class="es-sub">Добавьте первый объект — выберите тип:</div>
+      <div class="es-actions" style="flex-wrap:wrap;gap:6px;margin-top:8px">
+        <button class="es-btn es-btn-add" onclick="openAddWithType('артефакт')" style="border-color:var(--amber-dim);color:var(--amber)">＋ Артефакт</button>
+        <button class="es-btn es-btn-add" onclick="openAddWithType('аномалия')" style="border-color:var(--blue-dim);color:var(--blue)">＋ Аномалия</button>
+        <button class="es-btn es-btn-add" onclick="openAddWithType('мутант')" style="border-color:var(--red-dim);color:var(--red)">＋ Мутант</button>
+        <button class="es-btn es-btn-add" onclick="openAddWithType('прочее')">＋ Прочее</button>
+      </div>
+    </div>`;
+  }
+
+  const addBtn=mod!=='all'?`<button class="es-btn es-btn-add ${c.addCls}" onclick="openAdd()">${c.addLabel}</button>`:'';
   return `<div class="empty-state">
     <div class="es-ico" style="color:${c.color}">${c.ico}</div>
     <div class="es-title" style="color:${c.color}">${c.title}</div>
@@ -716,6 +732,14 @@ function emptyState(msg, mod){
     <div class="es-actions">${addBtn}${resetBtn}</div>
   </div>`;
 }
+
+window.filterByTypeFromTb=function(type){
+  // Синхронизировать с sidebar — кликнуть нужный пункт
+  if(!type){currentSub=null;}
+  else{currentSub={group:'arc-type',val:type};}
+  renderSidebar();
+  renderContent();
+};
 
 window.resetFilters=function(){
   const si=document.getElementById('search-input');if(si)si.value='';
@@ -862,14 +886,14 @@ function renderSidebar(){
       if(byStatus[s]!==undefined)byStatus[s]++;
     });
     navEl.innerHTML=`
-      <div class="sb-sec"><span>Тип объекта</span></div>
+      <div class="sb-sec" style="padding-top:10px"><span>Тип объекта</span></div>
       ${sbItem(null,'all','Все образцы',byType.all,'g')}
       ${sbItem('arc-type','артефакт','Артефакты',byType.артефакт,'g',true,'var(--amber)')}
       ${sbItem('arc-type','аномалия','Аномалии',byType.аномалия,'g',true,'var(--blue)')}
       ${sbItem('arc-type','мутант','Мутанты',byType.мутант,'g',true,'var(--red)')}
       ${sbItem('arc-type','прочее','Прочее',byType.прочее,'g',true,'var(--text-dim)')}
-      <div class="sb-div"></div>
-      <div class="sb-sec"><span>По статусу</span></div>
+      <div class="sb-div" style="margin:6px 0"></div>
+      <div class="sb-sec"><span>Статус</span></div>
       ${sbItem('arc-status','изучен','Изучен',byStatus['изучен'],'g',true,'var(--green)')}
       ${sbItem('arc-status','в работе','В работе',byStatus['в работе'],'g',true,'var(--amber)')}
       ${sbItem('arc-status','опасен','Опасен',byStatus['опасен'],'g',true,'var(--red)')}
@@ -1059,13 +1083,20 @@ function renderToolbarFilters(){
   }
   if(mod==='arc'){
     el.innerHTML=`
-      <select class="tb-select" id="f-danger" onchange="renderContent()">
+      <select class="tb-select" id="f-type-tb" onchange="filterByTypeFromTb(this.value)" title="Тип объекта">
+        <option value="">Все типы</option>
+        <option value="артефакт">Артефакты</option>
+        <option value="аномалия">Аномалии</option>
+        <option value="мутант">Мутанты</option>
+        <option value="прочее">Прочее</option>
+      </select>
+      <select class="tb-select" id="f-danger" onchange="renderContent()" title="Уровень опасности">
         <option value="">Все опасности</option>
         <option value="низкая">Низкая</option>
         <option value="средняя">Средняя</option>
         <option value="высокая">Высокая</option>
       </select>
-      <select class="tb-select" id="f-status" onchange="renderContent()">
+      <select class="tb-select" id="f-status" onchange="renderContent()" title="Статус записи">
         <option value="">Все статусы</option>
         <option value="в работе">В работе</option>
         <option value="изучен">Изучен</option>
@@ -1476,6 +1507,14 @@ window.closeDetail=function(){
 
 // ADD / EDIT
 window.openAdd=function(){openEdit(null,currentModule==='all'?'arc':currentModule==='cls'?'cls':currentModule);}
+window.openAddWithType=function(type){
+  openEdit(null,'arc');
+  // Установить тип после рендера формы
+  setTimeout(()=>{
+    const sel=document.getElementById('ef-type');
+    if(sel) sel.value=type;
+  },50);
+};
 window.openEdit=function(id,mod){
   editingId=id;
   if(mod==='arc')renderArcForm(id,!id);
@@ -1504,28 +1543,91 @@ function renderArcForm(id,isNew){
   document.getElementById('dp-body').innerHTML=`
     <div class="dp-2col">
       <div>
-        <div class="dp-block"><div class="dp-block-label">Основные поля</div><div class="dp-block-body">
-          <div class="form-grid">
-            <div class="form-field"><label class="form-label">Название *</label><input type="text" id="ef-name" value="${esc(r.name||'')}" placeholder="Название объекта"></div>
-            <div class="form-field"><label class="form-label">Тип объекта</label><select id="ef-type"><option value="">—</option><option value="артефакт"${(r.objectType||'')==='артефакт'?' selected':''}>Артефакт</option><option value="аномалия"${(r.objectType||'')==='аномалия'?' selected':''}>Аномалия</option><option value="мутант"${(r.objectType||'')==='мутант'?' selected':''}>Мутант</option><option value="прочее"${(r.objectType||'')==='прочее'?' selected':''}>Прочее</option></select></div>
-            <div class="form-field"><label class="form-label">Статус</label><select id="ef-status"><option value="">—</option><option value="в работе"${(r.status||'')==='в работе'?' selected':''}>В работе</option><option value="изучен"${(r.status||'')==='изучен'?' selected':''}>Изучен</option><option value="на хранении"${(r.status||'')==='на хранении'?' selected':''}>На хранении</option><option value="опасен"${(r.status||'')==='опасен'?' selected':''}>Опасен</option><option value="утерян"${(r.status||'')==='утерян'?' selected':''}>Утерян</option></select></div>
-            <div class="form-field"><label class="form-label">Опасность</label><select id="ef-danger"><option value="">—</option><option value="низкая"${(r.danger||'')==='низкая'?' selected':''}>Низкая</option><option value="средняя"${(r.danger||'')==='средняя'?' selected':''}>Средняя</option><option value="высокая"${(r.danger||'')==='высокая'?' selected':''}>Высокая</option></select></div>
-            <div class="form-field"><label class="form-label">Дата</label><input type="date" id="ef-date" value="${r.date||today()}"></div>
-            <div class="form-field"><label class="form-label">Место обнаружения</label><input type="text" id="ef-location" value="${esc(r.location||'')}" placeholder="Сектор, квадрат..."></div>
-            <div class="form-field" style="grid-column:span 2"><label class="form-label">Хранение</label><input type="text" id="ef-storage" value="${esc(r.storage||'')}" placeholder="Контейнер, условия..."></div>
+        <!-- Секция 1: Основное -->
+        <div class="dp-block"><div class="dp-block-label">Основное</div><div class="dp-block-body">
+          <div class="form-field" style="margin-bottom:10px">
+            <label class="form-label">Название *</label>
+            <input type="text" id="ef-name" value="${esc(r.name||'')}" placeholder="Название объекта" style="font-size:14px">
           </div>
-          <div class="form-field" style="margin-top:9px"><label class="form-label">Краткое описание</label><input type="text" id="ef-short" value="${esc(r.shortDesc||'')}" placeholder="Одна строка"></div>
-          <div class="form-field" style="margin-top:9px"><label class="form-label">Подробное описание</label><textarea id="ef-full" rows="4">${esc(r.fullDesc||'')}</textarea></div>
+          <div class="form-grid">
+            <div class="form-field"><label class="form-label">Тип объекта</label>
+              <select id="ef-type">
+                <option value="">— выбери —</option>
+                <option value="артефакт"${(r.objectType||'')==='артефакт'?' selected':''}>Артефакт</option>
+                <option value="аномалия"${(r.objectType||'')==='аномалия'?' selected':''}>Аномалия</option>
+                <option value="мутант"${(r.objectType||'')==='мутант'?' selected':''}>Мутант</option>
+                <option value="прочее"${(r.objectType||'')==='прочее'?' selected':''}>Прочее</option>
+              </select></div>
+            <div class="form-field"><label class="form-label">Статус</label>
+              <select id="ef-status">
+                <option value="">— выбери —</option>
+                <option value="в работе"${(r.status||'')==='в работе'?' selected':''}>В работе</option>
+                <option value="изучен"${(r.status||'')==='изучен'?' selected':''}>Изучен</option>
+                <option value="на хранении"${(r.status||'')==='на хранении'?' selected':''}>На хранении</option>
+                <option value="опасен"${(r.status||'')==='опасен'?' selected':''}>Опасен</option>
+                <option value="утерян"${(r.status||'')==='утерян'?' selected':''}>Утерян</option>
+              </select></div>
+            <div class="form-field"><label class="form-label">Опасность</label>
+              <select id="ef-danger">
+                <option value="">—</option>
+                <option value="низкая"${(r.danger||'')==='низкая'?' selected':''}>Низкая</option>
+                <option value="средняя"${(r.danger||'')==='средняя'?' selected':''}>Средняя</option>
+                <option value="высокая"${(r.danger||'')==='высокая'?' selected':''}>Высокая</option>
+              </select></div>
+            <div class="form-field"><label class="form-label">Дата</label>
+              <input type="date" id="ef-date" value="${r.date||today()}"></div>
+          </div>
         </div></div>
-        <div class="dp-block"><div class="dp-block-label">Дополнительные поля</div><div class="dp-block-body"><div class="cf-editor" id="cf-editor">${cf}</div><button class="cf-add" onclick="addCF()">＋ Добавить поле</button></div></div>
-        <div class="dp-block"><div class="dp-block-label">Фото</div><div class="dp-block-body"><div class="photo-grid" id="dp-photo-grid">${ph}<label class="photo-add-btn"><span class="pic">＋</span><span>Фото</span><input type="file" accept="image/*" multiple style="display:none" onchange="handlePhotoUpload(event)"></label></div></div></div>
+
+        <!-- Секция 2: Описание -->
+        <div class="dp-block"><div class="dp-block-label">Описание</div><div class="dp-block-body">
+          <div class="form-field">
+            <label class="form-label">Краткое описание</label>
+            <input type="text" id="ef-short" value="${esc(r.shortDesc||'')}" placeholder="Одна строка — для списка">
+          </div>
+          <div class="form-field" style="margin-top:9px">
+            <label class="form-label">Подробное описание / свойства</label>
+            <textarea id="ef-full" rows="5" placeholder="Подробные характеристики, наблюдения, свойства...">${esc(r.fullDesc||'')}</textarea>
+          </div>
+        </div></div>
+
+        <!-- Секция 3: Обнаружение и хранение -->
+        <div class="dp-block"><div class="dp-block-label">Обнаружение и хранение</div><div class="dp-block-body">
+          <div class="form-grid">
+            <div class="form-field"><label class="form-label">Место обнаружения</label>
+              <input type="text" id="ef-location" value="${esc(r.location||'')}" placeholder="Сектор, квадрат..."></div>
+            <div class="form-field"><label class="form-label">Способ хранения</label>
+              <input type="text" id="ef-storage" value="${esc(r.storage||'')}" placeholder="Контейнер, условия..."></div>
+          </div>
+        </div></div>
+
+        <!-- Секция 4: Доп поля -->
+        <div class="dp-block"><div class="dp-block-label">Дополнительные поля</div><div class="dp-block-body">
+          <div class="cf-editor" id="cf-editor">${cf}</div>
+          <button class="cf-add" onclick="addCF()">＋ Добавить поле</button>
+        </div></div>
+
+        <!-- Секция 5: Фото -->
+        <div class="dp-block"><div class="dp-block-label">Фотоматериалы</div><div class="dp-block-body">
+          <div class="photo-grid" id="dp-photo-grid">${ph}
+            <label class="photo-add-btn"><span class="pic">＋</span><span>Фото</span>
+              <input type="file" accept="image/*" multiple style="display:none" onchange="handlePhotoUpload(event)">
+            </label>
+          </div>
+        </div></div>
       </div>
-      <div><div class="dp-block"><div class="dp-block-label">Инфо</div><div class="dp-block-body" style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--text-dim);line-height:2">
-        <div>Номер: <span style="color:var(--green)">${padNum(window._editRecord.num)}</span></div>
-        <div style="margin-top:4px;color:var(--text-faint);font-size:8px">* — обязательное поле</div>
-      </div></div></div>
+
+      <div>
+        <div class="dp-block"><div class="dp-block-label">Запись</div>
+          <div class="dp-block-body" style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--text-dim);line-height:2.2">
+            <div>Номер: <span style="color:var(--green);font-size:13px;font-weight:bold">${padNum(window._editRecord.num)}</span></div>
+            <div style="margin-top:6px;font-size:8px;color:var(--text-faint)">* — обязательное поле</div>
+          </div>
+        </div>
+      </div>
     </div>`;
 }
+
 
 function renderStkForm(id,isNew){
   const s=id?stalkers.find(x=>x.id===id):{};
@@ -1922,6 +2024,12 @@ function activateClsModule() {
     const el = document.getElementById('tn-' + m);
     if (el) el.className = 'tn-mod';
   });
+  // Placeholder поиска под модуль
+  const searchInput=document.getElementById('search-input');
+  if(searchInput){
+    const placeholders={arc:'поиск по названию...',stk:'позывной, ФИО...',doc:'поиск по документам...',all:'поиск по всей базе...',cls:'поиск по записям...'};
+    searchInput.placeholder=placeholders[mod]||'поиск...';
+  }
   const clsEl = document.getElementById('tn-cls');
   if (clsEl) clsEl.className = 'tn-mod tn-cls act-cls';
 
