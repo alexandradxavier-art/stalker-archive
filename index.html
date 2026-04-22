@@ -1393,6 +1393,37 @@ window.setModule=function(mod){
 }
 
 // SIDEBAR
+// ── CHIP / LABEL HELPERS ──
+function statusChipArc(s){
+  const map={'в работе':'var(--amber)','изучен':'var(--green)','на хранении':'var(--blue)','опасен':'var(--red)','утерян':'var(--text-dim)'};
+  const c=map[(s||'').toLowerCase()]||'var(--text-dim)';
+  return `<span style="font-family:'Share Tech Mono',monospace;font-size:7px;padding:1px 6px;border:1px solid;color:${c};border-color:${c}55;text-transform:uppercase">${esc(s||'—')}</span>`;
+}
+function statusChipStk(s){
+  const map={'жив':'var(--green)','мёртв':'var(--red)','пропал':'var(--amber)','неизвестно':'var(--text-dim)'};
+  const c=map[(s||'').toLowerCase()]||'var(--text-dim)';
+  return `<span style="font-family:'Share Tech Mono',monospace;font-size:7px;padding:1px 6px;border:1px solid;color:${c};border-color:${c}55;text-transform:uppercase">${esc(s||'—')}</span>`;
+}
+function docTypeChip(t){
+  const tl=(t||'').toLowerCase();
+  let cls='dc-rep';
+  if(tl==='сводка')cls='dc-svd';
+  else if(tl==='карта')cls='dc-map';
+  else if(tl==='справка')cls='dc-ref';
+  return `<span class="dc-chip ${cls}">${esc(t||'—')}</span>`;
+}
+function typeLabel(t){
+  const map={артефакт:'var(--amber)',аномалия:'var(--blue)',мутант:'var(--red)',прочее:'var(--text-dim)'};
+  const tl=(t||'').toLowerCase();
+  const c=map[tl]||'var(--text-dim)';
+  return `<span style="font-family:'Share Tech Mono',monospace;font-size:8px;padding:1px 6px;border:1px solid;color:${c};border-color:${c}55;text-transform:uppercase">${esc(t||'—')}</span>`;
+}
+function dangerChip(d){
+  const map={низкая:'var(--green)',средняя:'var(--amber)',высокая:'var(--red)'};
+  const c=map[(d||'').toLowerCase()]||'var(--text-dim)';
+  return d?`<span style="font-family:'Share Tech Mono',monospace;font-size:7px;padding:1px 6px;border:1px solid;color:${c};border-color:${c}55">${esc(d)}</span>`:'<span style="color:var(--text-faint)">—</span>';
+}
+
 function renderSidebar(){
   const mod=currentModule;
   const navEl=document.getElementById('sb-nav');
@@ -1987,6 +2018,7 @@ function renderDocDetail(d){
           <div class="fv"><div class="fv-label">Тип</div>${docTypeChip(d.docType)}</div>
           <div class="fv"><div class="fv-label">Дата</div><div class="fv-val mono">${fmtDate(d.date)}</div></div>
           <div class="fv"><div class="fv-label" style="font-size:7px;color:var(--text-faint)">Добавил</div><div class="fv-val" style="font-size:10px;color:var(--text-dim)">${d.author?esc(d.author):'—'}</div></div>
+          ${d.docSubsection?`<div class="fv"><div class="fv-label">Подраздел</div><div class="fv-val">${esc(d.docSubsection)}</div></div>`:''}
           <div class="fv"><div class="fv-label">Связано</div><div class="fv-val${!d.related?' empty':''}">${d.related?esc(d.related):'—'}</div></div>
         </div></div>
       </div>
