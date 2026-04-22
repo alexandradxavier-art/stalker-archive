@@ -1083,20 +1083,14 @@ function renderToolbarFilters(){
   }
   if(mod==='arc'){
     el.innerHTML=`
-      <select class="tb-select" id="f-type-tb" onchange="filterByTypeFromTb(this.value)" title="Тип объекта">
+      <select class="tb-select" id="f-type-tb" onchange="filterByTypeFromTb(this.value)">
         <option value="">Все типы</option>
         <option value="артефакт">Артефакты</option>
         <option value="аномалия">Аномалии</option>
         <option value="мутант">Мутанты</option>
         <option value="прочее">Прочее</option>
       </select>
-      <select class="tb-select" id="f-danger" onchange="renderContent()" title="Уровень опасности">
-        <option value="">Все опасности</option>
-        <option value="низкая">Низкая</option>
-        <option value="средняя">Средняя</option>
-        <option value="высокая">Высокая</option>
-      </select>
-      <select class="tb-select" id="f-status" onchange="renderContent()" title="Статус записи">
+      <select class="tb-select" id="f-status" onchange="renderContent()">
         <option value="">Все статусы</option>
         <option value="в работе">В работе</option>
         <option value="изучен">Изучен</option>
