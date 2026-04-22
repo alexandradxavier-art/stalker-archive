@@ -644,6 +644,35 @@ details.dp-block > .dp-block-body{animation:fadeIn 0.15s ease}
 .video-link-btn{display:flex;align-items:center;gap:6px;padding:8px 12px;background:rgba(200,168,75,0.06);border:1px solid var(--amber-dim);color:var(--amber);font-family:'Share Tech Mono',monospace;font-size:9px;cursor:pointer;text-decoration:none;transition:all 0.15s;margin-top:6px}
 .video-link-btn:hover{background:rgba(200,168,75,0.12)}
 
+
+/* ══ МЕДИАБЛОК ══ */
+.attach-block{border:1px solid var(--border2);background:#0e100c;overflow:hidden;margin-bottom:10px}
+.attach-hdr{display:flex;align-items:center;gap:6px;padding:5px 10px;border-bottom:1px solid var(--border2);background:#0b0808}
+.attach-hdr-mark{width:3px;height:12px;flex-shrink:0}
+.attach-hdr-lbl{font-family:'Share Tech Mono',monospace;font-size:7px;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);flex:1}
+.attach-hdr-cnt{font-size:7px;color:var(--text-faint);padding:1px 5px;border:1px solid var(--border);font-family:monospace}
+.attach-main-img{display:block;width:100%;max-height:280px;object-fit:contain;background:#080a08;cursor:zoom-in;transition:opacity 0.15s;border-bottom:1px solid var(--border2)}
+.attach-main-img:hover{opacity:0.88}
+.attach-caption{display:flex;align-items:center;justify-content:space-between;padding:4px 10px;font-size:7px;color:var(--text-faint);background:#080a08;font-family:'Share Tech Mono',monospace}
+.attach-hint{color:var(--border2)}
+.attach-strip{display:flex;gap:3px;padding:5px;background:#0b0d09;border-top:1px solid var(--border2)}
+.attach-strip-thumb{width:60px;height:60px;object-fit:cover;cursor:zoom-in;border:1px solid var(--border);opacity:0.65;transition:all 0.15s;flex-shrink:0}
+.attach-strip-thumb:hover{opacity:1;border-color:var(--green-dark)}
+.attach-strip-more{width:60px;height:60px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--text-dim);background:#0e100c;cursor:pointer;flex-shrink:0;font-family:monospace}
+.attach-video-wrap{position:relative;width:100%;padding-bottom:56.25%;background:#000}
+.attach-video-wrap iframe,.attach-video-wrap video{position:absolute;inset:0;width:100%;height:100%;border:none}
+.attach-video-row{display:flex;align-items:center;gap:9px;padding:10px 12px;cursor:pointer;background:#0b0808;transition:background 0.15s;text-decoration:none;border-top:1px solid var(--border2)}
+.attach-video-row:hover{background:rgba(200,168,75,0.04)}
+.attach-play-btn{width:32px;height:32px;border-radius:50%;border:1px solid rgba(200,168,75,0.4);background:rgba(200,168,75,0.06);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--amber);padding-left:2px;flex-shrink:0}
+.attach-video-info{flex:1;min-width:0}
+.attach-video-nm{font-size:9px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:'Share Tech Mono',monospace}
+.attach-video-ur{font-size:7px;color:var(--text-dim);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:monospace}
+.attach-yt-badge{font-size:7px;color:var(--amber);border:1px solid rgba(200,168,75,0.3);padding:1px 5px;flex-shrink:0;font-family:monospace}
+.attach-empty-row{padding:12px 10px;display:flex;align-items:center;gap:7px}
+.attach-empty-ico{font-size:13px;color:var(--border2)}
+.attach-empty-txt{font-size:7px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-faint);font-family:'Share Tech Mono',monospace}
+.dp-note-block{margin-top:8px;padding:6px 9px;border-left:2px solid var(--border2);background:#0b0d09;font-size:8.5px;color:#7e7c6e;line-height:1.7;font-family:'Share Tech Mono',monospace}
+
 @media(max-width:700px){
   .sidebar{display:none}
   .dp-2col{grid-template-columns:1fr}
@@ -1222,43 +1251,17 @@ function renderPhotoDetail(p){
   document.getElementById('dp-title').style.color='var(--purple)';
   const tl=(p.photoType||'').toLowerCase();
   const bc=tl==='видео'?'pa-badge-video':tl==='фотоловушка'?'pa-badge-trap':'pa-badge-photo';
-  const phs=(p.photos||[]).map(ph=>`<div class="photo-item"><img src="${ph.data}" alt="" onclick="openLightbox('${ph.data}')"></div>`).join('');
-
-  // Видео-плеер
-  let videoBlock='';
-  if(tl==='видео'&&p.videoUrl){
-    const url=p.videoUrl.trim();
-    // YouTube
-    const ytMatch=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
-    const vkMatch=url.match(/vk\.com\/video(-?\d+_\d+)/);
-    if(ytMatch){
-      videoBlock=`<div class="dp-block" style="border-color:var(--amber-dim)"><div class="dp-block-label" style="color:var(--amber)">Видео</div><div class="dp-block-body">
-        <div class="video-embed-wrap"><iframe src="https://www.youtube.com/embed/${ytMatch[1]}" allowfullscreen></iframe></div>
-      </div></div>`;
-    }else if(url.match(/\.(mp4|webm|ogg)(\?.*)?$/i)){
-      videoBlock=`<div class="dp-block" style="border-color:var(--amber-dim)"><div class="dp-block-label" style="color:var(--amber)">Видео</div><div class="dp-block-body">
-        <div class="video-embed-wrap"><video src="${esc(url)}" controls preload="metadata"></video></div>
-      </div></div>`;
-    }else{
-      videoBlock=`<div class="dp-block" style="border-color:var(--amber-dim)"><div class="dp-block-label" style="color:var(--amber)">Видео</div><div class="dp-block-body">
-        ${phs?`<div class="photo-grid" style="margin-bottom:8px">${phs}</div>`:''}
-        <a href="${esc(url)}" target="_blank" class="video-link-btn">▶ Открыть видео<span style="font-size:7px;opacity:0.6;margin-left:4px;overflow:hidden;text-overflow:ellipsis;max-width:200px">${esc(url)}</span></a>
-      </div></div>`;
-    }
-  }
-
+  const mediaHtml=buildMediaBlock(
+    p.photos||[],
+    tl==='видео'?(p.videoUrl||''):'',
+    p.attachUrl||'',
+    {label:'Материал',markColor:tl==='видео'?'var(--amber-dim)':'var(--purple-dim)',photoLabel:'Фотоматериал'}
+  );
   document.getElementById('dp-body').innerHTML=`
     <div class="dp-2col">
       <div>
-        ${videoBlock}
-        ${!videoBlock&&phs?`<div class="dp-block"><div class="dp-block-label">Материал</div><div class="dp-block-body"><div class="photo-grid">${phs}</div></div></div>`:''}
-        ${tl==='видео'&&phs&&videoBlock?`<div class="dp-block"><div class="dp-block-label">Превью-кадр</div><div class="dp-block-body"><div class="photo-grid">${phs}</div></div></div>`:''}
-        ${p.note?`<div class="dp-block"><div class="dp-block-label">Заметка</div><div class="dp-block-body"><div class="fv-val" style="white-space:pre-wrap">${esc(p.note)}</div></div></div>`:''}
-        ${renderAttachInDetail(p.attachUrl)}
-        ${p.attachUrl&&!videoBlock?`<div class="dp-block"><div class="dp-block-label">Ссылка / вложение</div><div class="dp-block-body">
-          ${p.attachUrl.match(/\.(jpg|jpeg|png|gif|webp)(\?.*)?$/i)?`<img src="${esc(p.attachUrl)}" style="max-width:100%;border:1px solid var(--border)" onerror="this.style.display='none'">`:``}
-          <a href="${esc(p.attachUrl)}" target="_blank" class="video-link-btn">⬡ Открыть ссылку<span style="font-size:7px;opacity:0.6;margin-left:6px;overflow:hidden;text-overflow:ellipsis;max-width:200px">${esc(p.attachUrl.slice(0,50))}${p.attachUrl.length>50?'…':''}</span></a>
-        </div></div>`:''}
+        ${mediaHtml}
+        ${p.note?`<div class="dp-block"><div class="dp-block-label">Заметка</div><div class="dp-block-body"><div class="dp-note-block">${esc(p.note)}</div></div></div>`:''}
       </div>
       <div>
         <div class="dp-block"><div class="dp-block-label">Параметры</div><div class="dp-block-body">
@@ -1266,11 +1269,12 @@ function renderPhotoDetail(p){
           <div class="fv"><div class="fv-label">Дата</div><div class="fv-val mono">${fmtDate(p.date)}</div></div>
           <div class="fv"><div class="fv-label" style="font-size:7px;color:var(--text-faint)">Добавил</div><div class="fv-val" style="font-size:10px;color:var(--text-dim)">${p.photoAuthor?esc(p.photoAuthor):'—'}</div></div>
           <div class="fv"><div class="fv-label">Связано с</div><div class="fv-val${!p.related?' empty':''}">${p.related?esc(p.related):'—'}</div></div>
-          ${p.videoUrl?`<div class="fv"><div class="fv-label">Ссылка</div><div class="fv-val"><a href="${esc(p.videoUrl)}" target="_blank" style="color:var(--amber);font-family:monospace;font-size:9px;word-break:break-all">${esc(p.videoUrl.slice(0,50))}${p.videoUrl.length>50?'…':''}</a></div></div>`:''}
+          ${p.videoUrl?`<div class="fv"><div class="fv-label">Ссылка</div><div class="fv-val"><a href="${esc(p.videoUrl)}" target="_blank" style="color:var(--amber);font-family:monospace;font-size:8px;word-break:break-all">${esc(p.videoUrl.slice(0,50))}${p.videoUrl.length>50?'…':''}</a></div></div>`:''}
         </div></div>
       </div>
     </div>`;
 }
+
 
 function renderPhotoForm(id,isNew){
   const p=id?photos.find(x=>x.id===id):{};
@@ -1472,6 +1476,94 @@ window.previewAttachUrl=function(blockId){
   prev.innerHTML=url&&isImageUrl(url)?'<img src="'+url+'" style="max-width:100%;border:1px solid var(--border)">':'';
 };
 // ══ END ВЛОЖЕНИЯ ══
+
+
+// ══ buildMediaBlock ══
+function buildMediaBlock(photos,videoUrl,attachUrl,opts){
+  opts=opts||{};
+  var lbl=opts.label||'Вложения';
+  var mark=opts.markColor||'var(--green-dark)';
+  var photoLbl=opts.photoLabel||'Фотоматериал';
+
+  var hasPh=photos&&photos.length>0;
+  var hasVid=!!(videoUrl&&videoUrl.trim());
+  var hasAtt=!!(attachUrl&&attachUrl.trim());
+
+  if(!hasPh&&!hasVid&&!hasAtt){
+    return '<div class="attach-block">'
+      +'<div class="attach-hdr"><div class="attach-hdr-mark" style="background:var(--border2)"></div>'
+      +'<span class="attach-hdr-lbl">'+lbl+'</span></div>'
+      +'<div class="attach-empty-row"><div class="attach-empty-ico">◫</div>'
+      +'<div class="attach-empty-txt">Материалы не приложены</div></div></div>';
+  }
+
+  var out='';
+
+  if(hasPh){
+    var cnt=photos.length;
+    var main=photos[0];
+    var extras=photos.slice(1);
+    var strip='';
+    extras.slice(0,4).forEach(function(p){
+      strip+='<img class="attach-strip-thumb" src="'+p.data+'" onclick="openLightbox(this.src)">';
+    });
+    var more=extras.length-4;
+    if(more>0)strip+='<div class="attach-strip-more">+'+more+'</div>';
+    out+='<div class="attach-block">'
+      +'<div class="attach-hdr">'
+      +'<div class="attach-hdr-mark" style="background:'+mark+'"></div>'
+      +'<span class="attach-hdr-lbl">'+photoLbl+'</span>'
+      +'<span class="attach-hdr-cnt">'+cnt+(cnt===1?' файл':cnt<5?' файла':' файлов')+'</span>'
+      +'</div>'
+      +'<img class="attach-main-img" src="'+main.data+'" onclick="openLightbox(this.src)">'
+      +(extras.length>0?'<div class="attach-strip">'+strip+'</div>':'')
+      +'<div class="attach-caption"><span>фотоматериал</span><span class="attach-hint">↗ увеличить</span></div>'
+      +'</div>';
+  }
+
+  if(hasVid){
+    var url=videoUrl.trim();
+    var yt=url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+    var mp4=url.match(/\.(mp4|webm|ogg)(\?.*)?$/i);
+    var vidContent='';
+    if(yt){
+      vidContent='<div class="attach-video-wrap"><iframe src="https://www.youtube.com/embed/'+yt[1]+'" allowfullscreen></iframe></div>'
+        +'<div class="attach-caption"><span style="color:var(--text-dim)">'+esc(url.slice(0,60))+(url.length>60?'…':'')+'</span></div>';
+    } else if(mp4){
+      vidContent='<div class="attach-video-wrap"><video src="'+esc(url)+'" controls preload="metadata"></video></div>'
+        +'<div class="attach-caption"><span style="color:var(--text-dim)">'+esc(url.slice(0,60))+'</span></div>';
+    } else {
+      var short=url.replace(/^https?:\/\/(www\.)?/,'').slice(0,50);
+      vidContent='<a class="attach-video-row" href="'+esc(url)+'" target="_blank">'
+        +'<div class="attach-play-btn">▶</div>'
+        +'<div class="attach-video-info"><div class="attach-video-nm">Видеоматериал</div>'
+        +'<div class="attach-video-ur">'+esc(short)+'</div></div>'
+        +'<span class="attach-yt-badge">→</span></a>';
+    }
+    out+='<div class="attach-block">'
+      +'<div class="attach-hdr"><div class="attach-hdr-mark" style="background:var(--amber-dim)"></div>'
+      +'<span class="attach-hdr-lbl">Видеоматериал</span>'
+      +'<span class="attach-hdr-cnt">'+(yt?'YouTube':mp4?'MP4':'ссылка')+'</span>'
+      +'</div>'+vidContent+'</div>';
+  }
+
+  if(hasAtt&&!hasVid){
+    var isImg=isImageUrl(attachUrl);
+    var safeUrl=esc(attachUrl);
+    var short2=attachUrl.replace(/^https?:\/\/(www\.)?/,'').slice(0,50);
+    out+='<div class="attach-block">'
+      +'<div class="attach-hdr"><div class="attach-hdr-mark" style="background:var(--blue-dim)"></div>'
+      +'<span class="attach-hdr-lbl">Вложение</span></div>'
+      +(isImg?'<img class="attach-main-img" src="'+safeUrl+'" onclick="openLightbox(this.src)">':'')
+      +'<a class="attach-video-row" href="'+safeUrl+'" target="_blank">'
+      +'<div class="attach-play-btn" style="border-color:var(--blue-dim);color:var(--blue)">⬡</div>'
+      +'<div class="attach-video-info"><div class="attach-video-nm">'+esc(short2)+'</div></div>'
+      +'</a></div>';
+  }
+
+  return out;
+}
+// ══ END buildMediaBlock ══
 
 // ── CHIP / LABEL HELPERS ──
 function statusChipArc(s){
@@ -2007,25 +2099,24 @@ window.openDetail=function(id,mod){
 
 function renderArcDetail(r){
   const cf=(r.customFields||[]).map(f=>`<div class="fv"><div class="fv-label">${esc(f.key)}</div><div class="fv-val">${esc(f.val)}</div></div>`).join('');
-  const ph=(r.photos||[]).map(p=>`<div class="photo-item"><img src="${p.data}" alt="" onclick="openLightbox('${p.data}')"></div>`).join('');
+  const mediaHtml=buildMediaBlock(r.photos||[],null,r.attachUrl||'',{label:'Фотоматериалы',markColor:'var(--green-dark)',photoLabel:'Фотоматериалы'});
   document.getElementById('dp-body').innerHTML=`
     <div class="dp-2col">
       <div>
+        ${mediaHtml}
         <div class="dp-block"><div class="dp-block-label">Описание</div><div class="dp-block-body">
           <div class="fv"><div class="fv-label">Краткое описание</div><div class="fv-val${!r.shortDesc?' empty':''}">${r.shortDesc?esc(r.shortDesc):'не внесено'}</div></div>
           <div class="fv" style="margin-top:9px"><div class="fv-label">Подробное описание</div><div class="fv-val${!r.fullDesc?' empty':''}">${r.fullDesc?esc(r.fullDesc):'не внесено'}</div></div>
         </div></div>
         ${cf?`<div class="dp-block"><div class="dp-block-label">Дополнительные поля</div><div class="dp-block-body">${cf}</div></div>`:''}
-        ${ph?`<div class="dp-block"><div class="dp-block-label">Фотоматериалы</div><div class="dp-block-body"><div class="photo-grid">${ph}</div></div></div>`:''}
-        ${renderAttachInDetail(r.attachUrl)}
       </div>
       <div>
         <div class="dp-block"><div class="dp-block-label">Параметры</div><div class="dp-block-body">
           <div class="fv"><div class="fv-label">Номер</div><div class="fv-val mono">${padNum(r.num)}</div></div>
-          <div class="fv"><div class="fv-label">Тип объекта</div>${typeLabel(r.objectType)}</div>
+          <div class="fv"><div class="fv-label">Тип</div>${typeLabel(r.objectType)}</div>
           <div class="fv"><div class="fv-label">Статус</div>${statusChipArc(r.status)}</div>
           <div class="fv"><div class="fv-label">Опасность</div>${dangerChip(r.danger)}</div>
-          <div class="fv"><div class="fv-label">Место обнаружения</div><div class="fv-val${!r.location?' empty':''}">${r.location?esc(r.location):'—'}</div></div>
+          <div class="fv"><div class="fv-label">Место</div><div class="fv-val${!r.location?' empty':''}">${r.location?esc(r.location):'—'}</div></div>
           <div class="fv"><div class="fv-label">Хранение</div><div class="fv-val${!r.storage?' empty':''}">${r.storage?esc(r.storage):'—'}</div></div>
           <div class="fv"><div class="fv-label">Дата</div><div class="fv-val mono">${fmtDate(r.date)}</div></div>
           ${r.author?`<div class="fv"><div class="fv-label" style="font-size:7px;color:var(--text-faint)">Добавил</div><div class="fv-val" style="font-size:10px;color:var(--text-dim)">${esc(r.author)}</div></div>`:''}
@@ -2033,6 +2124,7 @@ function renderArcDetail(r){
       </div>
     </div>`;
 }
+
 
 function renderStkDetail(s){
   const ph=s.photos&&s.photos.length?`<img src="${s.photos[0].data}" alt="" onclick="openLightbox('${s.photos[0].data}')" style="width:100%;height:100%;object-fit:cover;cursor:pointer">`:`<span style="font-family:monospace;font-size:7px;color:var(--text-faint);text-align:center;letter-spacing:1px">ФОТО<br>ДОСЬЕ</span>`;
@@ -2079,27 +2171,28 @@ function renderStkDetail(s){
 
 function renderDocDetail(d){
   const ph=(d.photos||[]).map(p=>`<div class="photo-item"><img src="${p.data}" alt="" onclick="openLightbox('${p.data}')"></div>`).join('');
+  const mediaHtml=buildMediaBlock(d.photos||[],null,d.attachUrl||'',{label:'Вложения',markColor:'var(--blue-dim)',photoLabel:'Вложения'});
   document.getElementById('dp-body').innerHTML=`
     <div class="dp-2col">
       <div>
+        ${mediaHtml}
         <div class="dp-block"><div class="dp-block-label">Содержание</div><div class="dp-block-body">
           ${d.summary?`<div class="fv"><div class="fv-label">Краткое описание</div><div class="fv-val">${esc(d.summary)}</div></div>`:''}
-          <div class="fv" style="${d.summary?'margin-top:9px':''}"><div class="fv-label">Полный текст</div><div class="fv-val${!d.text?' empty':''}">${d.text?esc(d.text):'не внесено'}</div></div>
+          <div class="fv" style="${d.summary?'margin-top:9px':''}"><div class="fv-label">Полный текст</div><div class="fv-val${!d.text?' empty':''}" style="white-space:pre-wrap">${d.text?esc(d.text):'не внесено'}</div></div>
         </div></div>
-        ${ph?`<div class="dp-block"><div class="dp-block-label">Вложения</div><div class="dp-block-body"><div class="photo-grid">${ph}</div></div></div>`:''}
-        ${renderAttachInDetail(d.attachUrl)}
       </div>
       <div>
         <div class="dp-block"><div class="dp-block-label">Реквизиты</div><div class="dp-block-body">
           <div class="fv"><div class="fv-label">Тип</div>${docTypeChip(d.docType)}</div>
+          ${d.docSubsection?`<div class="fv"><div class="fv-label">Подраздел</div><div class="fv-val">${esc(d.docSubsection)}</div></div>`:''}
           <div class="fv"><div class="fv-label">Дата</div><div class="fv-val mono">${fmtDate(d.date)}</div></div>
           <div class="fv"><div class="fv-label" style="font-size:7px;color:var(--text-faint)">Добавил</div><div class="fv-val" style="font-size:10px;color:var(--text-dim)">${d.author?esc(d.author):'—'}</div></div>
-          ${d.docSubsection?`<div class="fv"><div class="fv-label">Подраздел</div><div class="fv-val">${esc(d.docSubsection)}</div></div>`:''}
           <div class="fv"><div class="fv-label">Связано</div><div class="fv-val${!d.related?' empty':''}">${d.related?esc(d.related):'—'}</div></div>
         </div></div>
       </div>
     </div>`;
 }
+
 
 window.closeDetail=function(){
   document.getElementById('detail-panel').classList.remove('open');
