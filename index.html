@@ -567,6 +567,10 @@ details.dp-block > .dp-block-body{animation:fadeIn 0.15s ease}
 .sub-add-btn{padding:4px 10px;background:none;border:1px solid var(--blue-dim);color:var(--blue);font-family:'Share Tech Mono',monospace;font-size:8px;cursor:pointer;transition:all 0.15s}
 .sub-add-btn:hover{border-color:var(--blue);background:rgba(58,143,212,0.06)}
 
+
+.add-btn-blue{border-color:var(--blue-dim)!important;color:var(--blue)!important;background:rgba(58,143,212,0.08)!important}
+.add-btn-blue:hover{border-color:var(--blue)!important;background:rgba(58,143,212,0.15)!important;box-shadow:0 0 8px rgba(58,143,212,0.15)!important}
+
 @media(max-width:700px){
   .sidebar{display:none}
   .dp-2col{grid-template-columns:1fr}
@@ -770,13 +774,36 @@ function emptyState(msg, mod){
   const cfg={
     arc:{ico:'⊙',title:'Архив пуст',sub:'Нет записей. Добавьте первый объект.',addLabel:'＋ Добавить образец',addCls:'',color:'var(--green)'},
     stk:{ico:'◉',title:'Досье не найдены',sub:'Картотека пуста. Добавьте первое личное дело.',addLabel:'＋ Создать досье',addCls:'am',color:'var(--amber)'},
-    doc:{ico:'▤',title:'Документов нет',sub:'Текстовые материалы не найдены',addLabel:'＋ Добавить документ',addCls:'pp',color:'var(--purple)'},
+    doc:{ico:'▤',title:'Архив пуст',sub:'Создайте первый документ:',addLabel:'＋ Создать документ',addCls:'pp',color:'var(--blue)'},
     all:{ico:'◈',title:'Записей нет',sub:'База данных пуста',addLabel:'＋ Добавить',addCls:'',color:'var(--text-dim)'},
     cls:{ico:'⊘',title:'Записей нет',sub:'Закрытый раздел пуст',addLabel:'＋ Добавить запись',addCls:'',color:'var(--red)'},
   };
   const c=cfg[mod]||cfg.all;
   const resetBtn=isFiltered?`<button class="es-btn es-btn-reset" onclick="resetFilters()">Сбросить фильтры</button>`:'';
   const customMsg=msg||c.sub;
+
+  // Пустое состояние doc — быстрые кнопки типов + каркас таблицы
+  if(mod==='doc'&&!isFiltered){
+    return `<div class="empty-state" style="height:auto;padding:20px 0 14px">
+      <div class="es-ico" style="color:var(--blue)">▤</div>
+      <div class="es-title" style="color:var(--blue)">Архив документов пуст</div>
+      <div class="es-sub">Создайте первый документ — выберите тип:</div>
+      <div class="es-actions" style="flex-wrap:wrap;gap:6px;margin-top:8px">
+        <button class="es-btn es-btn-add" onclick="openAddWithDocType('отчёт')" style="border-color:var(--green-dark);color:var(--green)">＋ Отчёт</button>
+        <button class="es-btn es-btn-add" onclick="openAddWithDocType('сводка')" style="border-color:var(--blue-dim);color:var(--blue)">＋ Сводка</button>
+        <button class="es-btn es-btn-add" onclick="openAddWithDocType('карта')" style="border-color:var(--amber-dim);color:var(--amber)">＋ Карта</button>
+        <button class="es-btn es-btn-add" onclick="openAddWithDocType('справка')" style="border-color:var(--purple-dim);color:var(--purple)">＋ Справка</button>
+      </div>
+    </div>
+    <table class="list-table" style="opacity:0.25;pointer-events:none">
+      <thead><tr>
+        <th>Тип</th><th>Название</th><th>Подраздел</th><th>Дата</th><th>Автор</th>
+      </tr></thead>
+      <tbody>
+        <tr><td colspan="5" style="text-align:center;padding:14px;font-size:10px;color:var(--text-faint);font-family:monospace;letter-spacing:1px">— здесь будут ваши документы —</td></tr>
+      </tbody>
+    </table>`;
+  }
 
   // Для архива образцов — быстрый выбор типа
   if(mod==='arc'&&!isFiltered){
@@ -1137,7 +1164,7 @@ window.setModule=function(mod){
   const addBtn=document.getElementById('add-btn');
   if(mod==='arc'){addBtn.className='add-btn g';addBtn.textContent='＋ Образец';}
   else if(mod==='stk'){addBtn.className='add-btn a';addBtn.textContent='＋ Досье';}
-  else if(mod==='doc'){addBtn.className='add-btn p';addBtn.textContent='＋ Документ';}
+  else if(mod==='doc'){addBtn.className='add-btn';addBtn.removeAttribute('style');addBtn.style.cssText='border-color:var(--blue-dim);color:var(--blue);background:rgba(58,143,212,0.09);font-family:monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all 0.2s;white-space:nowrap;margin-left:auto;height:30px;padding:0 14px;border:1px solid var(--blue-dim)';addBtn.textContent='＋ Документ';}
   else if(mod==='cls'){addBtn.className='add-btn';addBtn.style.borderColor='var(--red-dim)';addBtn.style.color='var(--red)';addBtn.textContent='＋ Запись';}
   else{addBtn.className='add-btn g';addBtn.textContent='＋ Добавить';}
   // detail title color
@@ -1418,8 +1445,6 @@ function renderToolbarFilters(){
   }else if(mod==='stk'){
     el.innerHTML='';
   }else if(mod==='doc'){
-    const authors=[...new Set(documents.map(d=>d.author).filter(Boolean))];
-    const authOpts=authors.map(a=>`<option value="${esc(a)}">${esc(a)}</option>`).join('');
     el.innerHTML=`
       <select class="tb-select" id="f-doctype" onchange="renderContent()">
         <option value="">Все типы</option>
@@ -1427,9 +1452,6 @@ function renderToolbarFilters(){
         <option value="сводка">Сводки</option>
         <option value="карта">Карты</option>
         <option value="справка">Справка</option>
-      </select>
-      <select class="tb-select" id="f-author" onchange="renderContent()">
-        <option value="">Все авторы</option>${authOpts}
       </select>`;
   }else if(mod==='photo'){
     const phAuthors=[...new Set(photos.map(p=>p.photoAuthor).filter(Boolean))];
@@ -1626,8 +1648,8 @@ function renderList(){
     return;
   }
   if(mod==='doc'){
-    ca.innerHTML=`<div class="content-header"><span class="content-count">Найдено: <strong>${rows.length}</strong></span></div>`
-    +rows.map(d=>{
+    const headerHtml=`<div class="content-header"><span class="content-count">Найдено: <strong>${rows.length}</strong></span></div>`;
+    ca.innerHTML=headerHtml+rows.map(d=>{
       const tl=(d.docType||'').toLowerCase();
       let chipCls='dc-rep';
       if(tl==='сводка')chipCls='dc-svd';
@@ -1883,7 +1905,7 @@ function renderDocDetail(d){
         <div class="dp-block"><div class="dp-block-label">Реквизиты</div><div class="dp-block-body">
           <div class="fv"><div class="fv-label">Тип</div>${docTypeChip(d.docType)}</div>
           <div class="fv"><div class="fv-label">Дата</div><div class="fv-val mono">${fmtDate(d.date)}</div></div>
-          <div class="fv"><div class="fv-label">Автор</div><div class="fv-val${!d.author?' empty':''}">${d.author?esc(d.author):'—'}</div></div>
+          <div class="fv"><div class="fv-label" style="font-size:7px;color:var(--text-faint)">Добавил</div><div class="fv-val" style="font-size:10px;color:var(--text-dim)">${d.author?esc(d.author):'—'}</div></div>
           <div class="fv"><div class="fv-label">Связано</div><div class="fv-val${!d.related?' empty':''}">${d.related?esc(d.related):'—'}</div></div>
         </div></div>
       </div>
@@ -1897,6 +1919,13 @@ window.closeDetail=function(){
 
 // ADD / EDIT
 window.openAdd=function(){const m=currentModule==='all'?'arc':currentModule==='cls'?'cls':currentModule;openEdit(null,m);}
+window.openAddWithDocType=function(type){
+  openEdit(null,'doc');
+  setTimeout(()=>{
+    const sel=document.getElementById('ef-doctype');
+    if(sel){sel.value=type;updateDocSubOptions(type);}
+  },50);
+};
 window.openAddWithType=function(type){
   openEdit(null,'arc');
   // Установить тип после рендера формы
