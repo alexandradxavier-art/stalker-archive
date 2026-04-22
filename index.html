@@ -571,6 +571,57 @@ details.dp-block > .dp-block-body{animation:fadeIn 0.15s ease}
 .add-btn-blue{border-color:var(--blue-dim)!important;color:var(--blue)!important;background:rgba(58,143,212,0.08)!important}
 .add-btn-blue:hover{border-color:var(--blue)!important;background:rgba(58,143,212,0.15)!important;box-shadow:0 0 8px rgba(58,143,212,0.15)!important}
 
+
+/* ── DOC SUB MANAGER REDESIGN ── */
+.dsm-wrap{padding:0}
+/* Шапка — заметная, цветная полоса сверху */
+.dsm-header{padding:16px 18px 14px;border-bottom:2px solid var(--border);background:var(--paper2);position:relative}
+.dsm-header::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--dsm-accent,var(--blue))}
+.dsm-breadcrumb{font-family:'Share Tech Mono',monospace;font-size:7.5px;color:var(--text-dim);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.dsm-breadcrumb-sep{color:var(--text-faint)}
+.dsm-title{font-family:'Oswald',sans-serif;font-size:19px;font-weight:600;letter-spacing:1.5px;margin-bottom:3px;text-transform:uppercase}
+.dsm-hint{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--text-dim);letter-spacing:0.5px;padding:5px 8px;background:rgba(58,143,212,0.04);border-left:2px solid var(--blue-dim);margin-top:8px;line-height:1.7}
+.dsm-body{padding:16px 18px}
+/* Пустое состояние */
+.dsm-empty{display:flex;flex-direction:column;align-items:center;padding:24px 20px 16px;gap:9px;text-align:center;border:1px dashed var(--border);background:var(--paper3);margin-bottom:14px}
+.dsm-empty-ico{font-size:22px;line-height:1}
+.dsm-empty-title{font-family:'Oswald',sans-serif;font-size:13px;letter-spacing:1px;text-transform:uppercase}
+.dsm-empty-sub{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--text-faint);letter-spacing:0.5px;line-height:1.9;max-width:240px}
+/* Элемент подраздела — заметный */
+.dsm-sub-item{display:flex;align-items:center;gap:0;border:1px solid var(--border2);background:var(--paper);margin-bottom:3px;transition:border-color 0.15s;overflow:hidden}
+.dsm-sub-item:hover{border-color:var(--blue-dim);background:rgba(58,143,212,0.02)}
+.dsm-color-stripe{width:5px;min-height:44px;flex-shrink:0;align-self:stretch}
+.dsm-sub-inner{flex:1;display:flex;align-items:center;gap:10px;padding:10px 12px;min-width:0}
+.dsm-sub-info{flex:1;min-width:0}
+.dsm-sub-name{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text);margin-bottom:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:bold}
+.dsm-sub-meta{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--text-faint);display:flex;align-items:center;gap:8px}
+.dsm-sub-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;cursor:pointer;border:1px solid rgba(255,255,255,0.2);transition:transform 0.1s;box-shadow:0 0 3px rgba(0,0,0,0.3)}
+.dsm-sub-dot:hover{transform:scale(1.35)}
+.dsm-sub-cnt{font-size:9px;padding:1px 6px;border:1px solid var(--border2);font-family:'Share Tech Mono',monospace;color:var(--text-dim)}
+.dsm-sub-actions{display:flex;gap:3px;flex-shrink:0;padding-right:8px}
+.dsm-btn{padding:4px 8px;background:none;border:1px solid var(--border);color:var(--text-dim);font-family:'Share Tech Mono',monospace;font-size:9px;cursor:pointer;transition:all 0.15s;flex-shrink:0}
+.dsm-btn:hover{border-color:var(--blue-dim);color:var(--blue);background:rgba(58,143,212,0.06)}
+.dsm-btn.del:hover{border-color:var(--red-dim);color:var(--red);background:rgba(184,64,64,0.06)}
+/* Палитра цветов */
+.dsm-cp-row{padding:8px 12px 10px 17px;border:1px solid var(--border2);border-top:none;background:var(--paper3);margin-bottom:3px;display:none}
+.dsm-cp-label{font-family:'Share Tech Mono',monospace;font-size:7px;color:var(--text-dim);letter-spacing:2px;text-transform:uppercase;margin-bottom:7px}
+.dsm-cp-swatches{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.dsm-swatch{width:17px;height:17px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:transform 0.1s}
+.dsm-swatch:hover{transform:scale(1.25)}
+.dsm-swatch.on{border-color:rgba(255,255,255,0.9);box-shadow:0 0 4px rgba(255,255,255,0.3)}
+/* Секция добавления — явная и заметная */
+.dsm-add-section{margin-top:14px;border:1px solid var(--blue-dim);background:rgba(58,143,212,0.05);padding:13px 14px;position:relative}
+.dsm-add-section::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--blue),var(--blue-dim),transparent)}
+.dsm-add-label{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--blue);letter-spacing:2px;text-transform:uppercase;margin-bottom:9px;display:flex;align-items:center;gap:6px}
+.dsm-add-row{display:flex;gap:7px;align-items:center}
+.dsm-add-inp{flex:1;background:var(--paper3);border:1px solid var(--blue-dim);color:var(--text);font-family:'Share Tech Mono',monospace;font-size:12px;padding:9px 11px;outline:none;transition:border-color 0.2s}
+.dsm-add-inp:focus{border-color:var(--blue);background:var(--paper2)}
+.dsm-add-inp::placeholder{color:var(--text-faint)}
+.dsm-add-btn{padding:9px 16px;background:rgba(58,143,212,0.1);border:1px solid var(--blue);color:var(--blue);font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all 0.2s;flex-shrink:0}
+.dsm-add-btn:hover{background:rgba(58,143,212,0.2);box-shadow:0 0 8px rgba(58,143,212,0.15)}
+.dsm-color-pick-new{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.dsm-color-pick-new-lbl{font-family:'Share Tech Mono',monospace;font-size:7px;color:var(--text-faint);letter-spacing:1px;text-transform:uppercase;margin-right:2px}
+
 @media(max-width:700px){
   .sidebar{display:none}
   .dp-2col{grid-template-columns:1fr}
@@ -959,10 +1010,17 @@ window.updateDocSubOptions=function(type){
 };
 
 window.openDocSubManager=function(typeKey,typeLabel){
-  document.getElementById('detail-panel').classList.add('open');
-  document.getElementById('dp-title').textContent=`Подразделы — ${typeLabel}`;
-  document.getElementById('dp-title').style.color='var(--blue)';
-  document.getElementById('dp-actions').innerHTML=`<button class="act-btn btn-cancel" onclick="closeDetail()">✕ Закрыть</button>`;
+  const panel=document.getElementById('detail-panel');
+  panel.classList.add('open');
+  const meta=DOC_TYPES_META[typeKey]||{color:'var(--blue)'};
+  document.getElementById('dp-title').textContent=`${typeLabel} — подразделы`;
+  document.getElementById('dp-title').style.color=meta.color;
+  document.getElementById('dp-actions').innerHTML=`
+    <button class="act-btn" onclick="openAddWithDocType('${typeKey}')" style="border-color:var(--blue-dim);color:var(--blue)">＋ Новый документ</button>
+    <button class="act-btn btn-cancel" onclick="closeDetail()">✕ Закрыть</button>`;
+  window._dsmType=typeKey;
+  window._dsmLabel=typeLabel;
+  window._dsmNewColor=meta.color;
   renderDocSubManager(typeKey);
 };
 
@@ -970,47 +1028,126 @@ function renderDocSubManager(typeKey){
   const meta=DOC_TYPES_META[typeKey]||{label:typeKey,color:'var(--blue)'};
   const secs=getDocSections();
   const typeSecs=secs[typeKey]||[];
-  const bySub={};documents.forEach(d=>{if(d.docSubsection)bySub[d.docSubsection]=(bySub[d.docSubsection]||0)+1;});
-  const COLORS=['var(--green)','var(--amber)','var(--blue)','var(--red)','var(--purple)','var(--text-dim)','#c4c09e'];
-  document.getElementById('dp-body').innerHTML=`
-    <div class="sec-manage-wrap">
-      <div class="sec-manage-title" style="color:var(--blue)">Подразделы: ${meta.label}</div>
-      <div id="doc-subs-list">
-        ${typeSecs.map((s,i)=>`
-          <div class="sub-mgr-item" id="dsub-item-${i}">
-            <div class="sub-mgr-drag">⠿</div>
-            <div class="sub-mgr-dot" style="background:${s.color||meta.color}" onclick="toggleDocSubCP(${i},'${typeKey}')" title="Цвет"></div>
-            <span class="sub-mgr-name" id="dsub-name-${i}">${esc(s.name)}</span>
-            <span class="sub-mgr-cnt">${bySub[s.name]||0} зап.</span>
-            <button class="sub-mgr-btn" onclick="moveDocSub('${typeKey}',${i},-1)">↑</button>
-            <button class="sub-mgr-btn" onclick="moveDocSub('${typeKey}',${i},1)">↓</button>
-            <button class="sub-mgr-btn" onclick="startEditDocSub('${typeKey}',${i})">✎</button>
-            <button class="sub-mgr-btn del" onclick="deleteDocSub('${typeKey}',${i})">✕</button>
-          </div>
-          <div id="dsub-cp-${i}" style="display:none">
-            <div class="color-palette">
-              <span style="font-size:7px;color:var(--text-faint);letter-spacing:1px;margin-right:4px">Цвет:</span>
-              ${COLORS.map(c=>`<div class="cp-swatch${(s.color||meta.color)===c?' selected':''}" style="background:${c}" onclick="setDocSubColor('${typeKey}',${i},'${c}')"></div>`).join('')}
+  const bySub={};
+  documents.forEach(d=>{if(d.docSubsection)bySub[d.docSubsection]=(bySub[d.docSubsection]||0)+1;});
+  const COLORS=['var(--green)','var(--amber)','var(--blue)','var(--red)','var(--purple)','#9a6ab8','var(--text-dim)','#c4c09e'];
+
+  const emptyHtml=typeSecs.length===0?`
+    <div class="dsm-empty">
+      <div class="dsm-empty-ico" style="color:${meta.color}">◫</div>
+      <div class="dsm-empty-title" style="color:${meta.color}">Подразделы не созданы</div>
+      <div class="dsm-empty-sub">Создай первый подраздел ниже.<br>Потом добавляй документы внутрь него.</div>
+    </div>`:'';
+
+  const itemsHtml=typeSecs.map((s,i)=>{
+    const cnt=bySub[s.name]||0;
+    const color=s.color||meta.color;
+    return `
+      <div class="dsm-sub-item" id="dsub-item-${i}">
+        <div class="dsm-color-stripe" style="background:${color}"></div>
+        <div class="dsm-sub-inner">
+          <div class="dsm-sub-info">
+            <div class="dsm-sub-name" id="dsub-name-${i}">${esc(s.name)}</div>
+            <div class="dsm-sub-meta">
+              <div class="dsm-sub-dot" style="background:${color}" onclick="toggleDocSubCP(${i},'${typeKey}')" title="Изменить цвет →"></div>
+              <span class="dsm-sub-cnt">${cnt}</span>
+              <span style="color:var(--text-faint)">${cnt===1?'запись':cnt>1&&cnt<5?'записи':'записей'}</span>
             </div>
-          </div>`).join('')}
+          </div>
+          <div class="dsm-sub-actions">
+            <button class="dsm-btn" onclick="moveDocSub('${typeKey}',${i},-1)" title="Вверх">↑</button>
+            <button class="dsm-btn" onclick="moveDocSub('${typeKey}',${i},1)" title="Вниз">↓</button>
+            <button class="dsm-btn" onclick="startEditDocSub('${typeKey}',${i})" title="Переименовать">✎</button>
+            <button class="dsm-btn del" onclick="deleteDocSub('${typeKey}',${i})" title="Удалить">✕</button>
+          </div>
+        </div>
       </div>
-      <div class="sub-new-row">
-        <div class="sub-mgr-dot" style="background:${meta.color};border:1px dashed var(--border)"></div>
-        <input id="new-doc-sub-inp" placeholder="Название подраздела" onkeydown="if(event.key==='Enter')addDocSub('${typeKey}')">
-        <button class="sub-add-btn" onclick="addDocSub('${typeKey}')">✓ Добавить</button>
+      <div class="dsm-cp-row" id="dsub-cp-${i}">
+        <div class="dsm-cp-label">Выбери цвет подраздела</div>
+        <div class="dsm-cp-swatches">
+          ${COLORS.map(c=>`<div class="dsm-swatch${(s.color||meta.color)===c?' on':''}" style="background:${c}" onclick="setDocSubColor('${typeKey}',${i},'${c}')" title="${c}"></div>`).join('')}
+        </div>
+      </div>`;
+  }).join('');
+
+  const newColor=window._dsmNewColor||meta.color;
+  const addHtml=`
+    <div class="dsm-add-section">
+      <div class="dsm-add-label">＋ Новый подраздел</div>
+      <div class="dsm-add-row">
+        <div class="dsm-color-stripe" style="background:${newColor};cursor:pointer" id="dsm-new-color-stripe" onclick="toggleNewColorPicker()" title="Выбрать цвет"></div>
+        <input class="dsm-add-inp" id="new-doc-sub-inp" placeholder="Название подраздела" onkeydown="if(event.key==='Enter')addDocSub('${typeKey}')">
+        <button class="dsm-add-btn" onclick="addDocSub('${typeKey}')">Добавить</button>
       </div>
-      <button onclick="showNewDocSubForm('${typeKey}')" style="width:100%;margin-top:8px;padding:7px;background:none;border:1px dashed var(--border);color:var(--text-faint);font-family:monospace;font-size:8px;text-transform:uppercase;letter-spacing:1px;cursor:pointer;transition:all 0.15s" onmouseover="this.style.borderColor='var(--blue-dim)';this.style.color='var(--blue)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-faint)'">＋ Добавить подраздел</button>
+      <div id="dsm-new-cp" style="display:none;margin-top:8px">
+        <div class="dsm-color-pick-new">
+          <span class="dsm-color-pick-new-lbl">Цвет:</span>
+          ${COLORS.map(c=>`<div class="dsm-swatch${newColor===c?' on':''}" style="background:${c}" onclick="setNewSubColor('${c}','${typeKey}')"></div>`).join('')}
+        </div>
+      </div>
     </div>`;
+
+  document.getElementById('dp-body').style.padding='0';
+  document.getElementById('dp-body').innerHTML=`
+    <div class="dsm-wrap" style="--dsm-accent:${meta.color}">
+      <div class="dsm-header">
+        <div class="dsm-breadcrumb">
+          <span style="color:var(--text-faint)">Документы</span>
+          <span class="dsm-breadcrumb-sep">›</span>
+          <span style="color:${meta.color};font-weight:bold">${meta.label}</span>
+          <span class="dsm-breadcrumb-sep">›</span>
+          <span>Подразделы</span>
+        </div>
+        <div class="dsm-title" style="color:${meta.color}">${meta.label}</div>
+        <div class="dsm-hint">1. Создай подраздел&nbsp;&nbsp;·&nbsp;&nbsp;2. Привяжи документ к подразделу при создании&nbsp;&nbsp;·&nbsp;&nbsp;3. Фильтруй в сайдбаре</div>
+      </div>
+      <div class="dsm-body">
+        ${emptyHtml}
+        <div id="doc-subs-list">${itemsHtml}</div>
+        ${addHtml}
+      </div>
+    </div>`;
+
+  // Focus на поле ввода
+  setTimeout(()=>{
+    const inp=document.getElementById('new-doc-sub-inp');
+    if(inp&&typeSecs.length===0)inp.focus();
+  },50);
 }
+
+window.toggleNewColorPicker=function(){
+  const el=document.getElementById('dsm-new-cp');
+  if(el)el.style.display=el.style.display==='none'?'flex':'none';
+};
+window.setNewSubColor=function(color,typeKey){
+  window._dsmNewColor=color;
+  const stripe=document.getElementById('dsm-new-color-stripe');
+  if(stripe)stripe.style.background=color;
+  const swatches=document.querySelectorAll('#dsm-new-cp .dsm-swatch');
+  swatches.forEach(s=>{s.classList.toggle('on',s.style.background===color);});
+  const el=document.getElementById('dsm-new-cp');
+  if(el)el.style.display='none';
+};
 window.showNewDocSubForm=function(tk){document.getElementById('new-doc-sub-inp').focus();};
-window.toggleDocSubCP=function(i,tk){const e=document.getElementById('dsub-cp-'+i);if(e)e.style.display=e.style.display==='none'?'':'none';};
+window.toggleDocSubCP=function(i,tk){
+  const e=document.getElementById('dsub-cp-'+i);
+  if(!e)return;
+  const show=e.style.display==='none'||e.style.display==='';
+  // Закрыть все другие
+  document.querySelectorAll('.dsm-cp-row').forEach(el=>el.style.display='none');
+  e.style.display=show?'block':'none';
+};
 window.setDocSubColor=function(tk,i,color){const s=getDocSections();if(!s[tk])return;s[tk][i].color=color;saveDocSections(s);renderDocSubManager(tk);renderSidebar();};
 window.moveDocSub=function(tk,i,dir){const s=getDocSections();const a=s[tk]||[];const ni=i+dir;if(ni<0||ni>=a.length)return;[a[i],a[ni]]=[a[ni],a[i]];s[tk]=a;saveDocSections(s);renderDocSubManager(tk);renderSidebar();};
 window.addDocSub=function(tk){
-  const name=document.getElementById('new-doc-sub-inp').value.trim();if(!name)return;
+  const name=document.getElementById('new-doc-sub-inp').value.trim();if(!name){
+    document.getElementById('new-doc-sub-inp').focus();return;
+  }
   const s=getDocSections();if(!s[tk])s[tk]=[];
   const meta=DOC_TYPES_META[tk]||{color:'var(--blue)'};
-  s[tk].push({name,color:meta.color});saveDocSections(s);
+  const color=window._dsmNewColor||meta.color;
+  s[tk].push({name,color});saveDocSections(s);
+  window._dsmNewColor=meta.color; // сбросить цвет к дефолту
   renderDocSubManager(tk);renderSidebar();showToast('✓ Подраздел добавлен');
 };
 window.deleteDocSub=function(tk,i){
@@ -1261,7 +1398,7 @@ function renderSidebar(){
         <div class="sb-dot" style="background:${t.color}"></div>
         <span style="flex:1;text-align:left">${t.label}</span>
         <span class="sb-cnt">${byDocType[t.key]||0}</span>
-        <button class="sb-type-gear" onclick="event.stopPropagation();openDocSubManager('${t.key}','${t.label}')">⚙</button>
+        <button class="sb-type-gear" onclick="event.stopPropagation();openDocSubManager('${t.key}','${t.label}')" title="Управление подразделами" style="font-size:10px;padding:0 3px">⚙</button>
       </button>${subRows}`;
     }).join('');
     navEl.innerHTML=`
