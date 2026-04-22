@@ -1080,8 +1080,7 @@ function renderPhotoForm(id,isNew){
               </select></div>
             <div class="form-field"><label class="form-label">Дата</label>
               <input type="date" id="ef-photo-date" value="${p.date||today()}"></div>
-            <div class="form-field"><label class="form-label">Автор / источник</label>
-              <input type="text" id="ef-photo-author" value="${esc(p.photoAuthor||'')}" placeholder="Позывной, источник..."></div>
+
             <div class="form-field"><label class="form-label">Связано с</label>
               <input type="text" id="ef-photo-related" value="${esc(p.related||'')}" placeholder="Образец, операция..."></div>
           </div>
@@ -2212,8 +2211,7 @@ function renderDocForm(id,isNew){
               </select></div>
             <div class="form-field"><label class="form-label">Дата</label>
               <input type="date" id="ef-date" value="${d.date||today()}"></div>
-            <div class="form-field"><label class="form-label">Автор</label>
-              <input type="text" id="ef-author" value="${esc(d.author||'')}" placeholder="Позывной автора"></div>
+
             <div class="form-field" style="grid-column:span 2"><label class="form-label">Связано с</label>
               <input type="text" id="ef-related" value="${esc(d.related||'')}" placeholder="Образец, сталкер..."></div>
           </div>
@@ -2236,6 +2234,132 @@ function renderDocForm(id,isNew){
         </div>
       </div></div>
     </div>`;
+}
+
+window.doSave=async function(){
+  const mod=window._editMod;
+  const callsign=currentUser?(currentUser.displayName||currentUser.email.replace('@stalker.zone','')):'';
+  try{
+    if(mod==='arc'){
+      const name=document.getElementById('ef-name').value.trim();
+      if(!name){showToast('⚠ Введите название');return;}
+      const ex=records.find(x=>x.id===editingId);
+      const rec={
+        id:editingId,
+        num:ex?ex.num:window._editRecord.num,
+        name,
+        objectType:document.getElementById('ef-type').value,
+        status:document.getElementById('ef-status').value,
+        danger:document.getElementById('ef-danger').value,
+        date:document.getElementById('ef-date').value,
+        location:document.getElementById('ef-location').value.trim(),
+        storage:document.getElementById('ef-storage').value.trim(),
+        shortDesc:document.getElementById('ef-short').value.trim(),
+        fullDesc:document.getElementById('ef-full').value.trim(),
+        author:callsign,
+        photos:window._editRecord?window._editRecord.photos:[],
+        customFields:collectCF(),
+        createdAt:ex?ex.createdAt:Date.now(),
+        updatedAt:Date.now()
+      };
+      await setDoc(doc(db,'records',rec.id),rec);
+      closeDetail();showToast(!ex?'✓ Образец добавлен':'✓ Сохранено');
+    }
+    else if(mod==='stk'){
+      const call=document.getElementById('ef-callsign').value.trim();
+      if(!call){showToast('⚠ Введите позывной');return;}
+      const ex=stalkers.find(x=>x.id===editingId);
+      const s={
+        id:editingId,callsign:call,
+        fio:document.getElementById('ef-fio').value.trim(),
+        age:document.getElementById('ef-age').value.trim(),
+        gender:document.getElementById('ef-gender').value,
+        status:document.getElementById('ef-status').value,
+        lastActive:document.getElementById('ef-last-active').value,
+        build:document.getElementById('ef-build').value.trim(),
+        height:document.getElementById('ef-height').value.trim(),
+        appearance:document.getElementById('ef-appearance').value.trim(),
+        dossier:document.getElementById('ef-dossier').value.trim(),
+        note:document.getElementById('ef-note').value.trim(),
+        relatedDocs:document.getElementById('ef-reldocs').value.trim(),
+        relatedRecords:document.getElementById('ef-relrec').value.trim(),
+        author:callsign,
+        photos:window._editRecord?window._editRecord.photos:[],
+        customFields:collectCF(),
+        createdDate:ex?ex.createdDate:today(),
+        createdAt:ex?ex.createdAt:Date.now(),updatedAt:Date.now()
+      };
+      await setDoc(doc(db,'stalkers',s.id),s);
+      closeDetail();showToast(!ex?'✓ Досье добавлено':'✓ Сохранено');
+    }
+    else if(mod==='doc'){
+      const title=document.getElementById('ef-title').value.trim();
+      if(!title){showToast('⚠ Введите название');return;}
+      const ex=documents.find(x=>x.id===editingId);
+      const d={
+        id:editingId,title,
+        docType:document.getElementById('ef-doctype')?document.getElementById('ef-doctype').value:'',
+        docSubsection:document.getElementById('ef-docsubsection')?document.getElementById('ef-docsubsection').value:'',
+        date:document.getElementById('ef-date').value,
+        author:ex?ex.author:callsign,
+        related:document.getElementById('ef-related').value.trim(),
+        summary:document.getElementById('ef-summary').value.trim(),
+        text:document.getElementById('ef-text').value.trim(),
+        photos:window._editRecord?window._editRecord.photos:[],
+        createdAt:ex?ex.createdAt:Date.now(),updatedAt:Date.now()
+      };
+      await setDoc(doc(db,'documents',d.id),d);
+      closeDetail();showToast(!ex?'✓ Документ добавлен':'✓ Сохранено');
+    }
+    else if(mod==='photo'){
+      const title=document.getElementById('ef-photo-title').value.trim();
+      if(!title){showToast('⚠ Введите название');return;}
+      const ex=photos.find(x=>x.id===editingId);
+      const p={
+        id:editingId,title,
+        photoType:document.getElementById('ef-photo-type').value,
+        date:document.getElementById('ef-photo-date').value,
+        photoAuthor:ex?ex.photoAuthor:callsign,
+        related:document.getElementById('ef-photo-related').value.trim(),
+        note:document.getElementById('ef-photo-note').value.trim(),
+        photos:window._editRecord?window._editRecord.photos:[],
+        createdAt:ex?ex.createdAt:Date.now(),updatedAt:Date.now()
+      };
+      await setDoc(doc(db,'photos',p.id),p);
+      closeDetail();showToast(!ex?'✓ Материал добавлен':'✓ Сохранено');
+    }
+    else if(mod==='cls'){
+      const title=document.getElementById('ef-cls-title').value.trim();
+      if(!title){showToast('⚠ Введите название');return;}
+      const ex=closedRecords.find(x=>x.id===editingId);
+      const clsNum=ex?ex.clId:('ЗМ-'+String(closedRecords.length+1).padStart(3,'0'));
+      let clsType=document.getElementById('ef-cls-type')?document.getElementById('ef-cls-type').value:'';
+      if(clsType==='__custom__'){
+        const ci=document.getElementById('ef-cls-type-custom');
+        clsType=ci?ci.value.trim():'';
+      }
+      const personInputs=document.querySelectorAll('.person-row-edit input');
+      const persons=[...personInputs].map(i=>i.value.trim()).filter(Boolean);
+      const tags=window._editRecord?(window._editRecord.tags||[]):[];
+      const blocks=window._editRecord?(window._editRecord.blocks||[]):[];
+      const r={
+        id:editingId,title,clId:clsNum,
+        clType,
+        section:document.getElementById('ef-cls-section')?document.getElementById('ef-cls-section').value:'',
+        status:document.getElementById('ef-cls-status').value,
+        date:document.getElementById('ef-cls-date').value,
+        summary:document.getElementById('ef-cls-summary').value.trim(),
+        content:document.getElementById('ef-cls-content').value.trim(),
+        note:document.getElementById('ef-cls-note').value.trim(),
+        author:ex?ex.author:callsign,
+        persons,tags,blocks,
+        photos:window._editRecord?window._editRecord.photos:[],
+        createdAt:ex?ex.createdAt:Date.now(),updatedAt:Date.now()
+      };
+      await setDoc(doc(db,'closed',r.id),r);
+      closeDetail();showToast(!ex?'✓ Запись добавлена':'✓ Сохранено');
+    }
+  }catch(e){showToast('⚠ Ошибка: '+e.message);}
 }
 
 window.cancelEdit=function(id,isNew,mod){
