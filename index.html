@@ -935,7 +935,7 @@ function renderSidebar(){
     const sections=getClosedSections();
     const sectionItems=sections.map(s=>{
       const cnt=bySection[s.name]||0;
-      const isAct=currentSub&&currentSub.group==='sec'&&currentSub.val===s.name;
+      const isAct=!!(currentSub&&currentSub.group==='sec'&&currentSub.val===s.name);
       return `<div class="sb-item${isAct?' act-r':''}" style="cursor:pointer;display:flex;align-items:center;gap:6px;padding:7px 12px;border-left:2px solid ${isAct?'var(--red)':'transparent'};background:${isAct?'rgba(184,64,64,0.06)':'none'}" onclick="setClsSub('sec:${esc(s.name)}')">
         <div style="width:5px;height:5px;border-radius:50%;background:${s.color||'var(--red)'};flex-shrink:0"></div>
         <span style="flex:1;font-family:monospace;font-size:9px;color:${isAct?'var(--red)':'var(--text-dim)'}">${esc(s.name)}</span>
@@ -944,7 +944,7 @@ function renderSidebar(){
       </div>`;
     }).join('');
     const tagItems=[...allTags].map(t=>{
-      const isAct=currentSub&&currentSub.group==='tag'&&currentSub.val===t;
+      const isAct=!!(currentSub&&currentSub.group==='tag'&&currentSub.val===t);
       return `<div class="sb-item${isAct?' act-r':''}" style="cursor:pointer;padding:4px 12px;border-left:2px solid ${isAct?'var(--red)':'transparent'}" onclick="setClsSub('tag:${esc(t)}')">
         <span style="font-size:8px;padding:1px 6px;border:1px solid #3a1a1a;color:${isAct?'var(--red)':'var(--text-faint)'};">${esc(t)}</span>
       </div>`;
@@ -989,7 +989,11 @@ function renderSidebar(){
 }
 
 function sbItem(group,val,label,cnt,cls,dot=false,dotColor='var(--green)'){
-  const isActive = currentSub===val||(val==='all'&&!currentSub)||(val==='all-stk'&&!currentSub)||(val==='all-doc'&&!currentSub);
+  // Активен если: нет sub и это "все" пункт, или sub совпадает
+  const isAllItem = val==='all'||val==='all-stk'||val==='all-doc';
+  const isActive = isAllItem
+    ? !currentSub
+    : currentSub && currentSub.group===group && currentSub.val===val;
   const actClass=cls==='g'?'act-g':cls==='a'?'act-a':'act-p';
   return `<button class="sb-item${isActive?' '+actClass:''}" onclick="setSub('${group||''}','${val}')" style="width:100%">
     ${dot?`<div class="sb-dot" style="background:${dotColor}"></div>`:'<div class="sb-dot" style="background:transparent"></div>'}
@@ -1021,9 +1025,12 @@ function startPresenceInSidebar(){
 }
 
 window.setSub=function(group,val){
-  if(val==='all'||val==='all-stk'||val==='all-doc'){currentSub=null;}
-  else{currentSub={group,val};}
-  renderSidebar();renderContent();
+  const isAll=val==='all'||val==='all-stk'||val==='all-doc'||!val;
+  currentSub=isAll?null:{group,val};
+  document.getElementById('detail-panel').classList.remove('open');
+  editingId=null;window._editRecord=null;
+  renderSidebar();
+  renderContent();
 }
 
 // TOOLBAR FILTERS
@@ -2048,12 +2055,16 @@ window.editClsSection=function(name){openClsSectionManager();}
 
 // ── setSub обновлён ──
 window.setClsSub=function(raw){
-  if(!raw){currentSub=null;}
-  else{
+  if(!raw){
+    currentSub=null;
+  } else {
     const [group,...rest]=raw.split(':');
     currentSub={group,val:rest.join(':')};
   }
-  renderSidebar();renderContent();
+  document.getElementById('detail-panel').classList.remove('open');
+  editingId=null; window._editRecord=null;
+  renderSidebar();
+  renderContent();
 }
 
 // ── ГИБКОЕ ДЕТАЛЬНОЕ ОТОБРАЖЕНИЕ ──
@@ -2352,11 +2363,18 @@ function refreshExtraBlocks(){
 
 // ── sbItemCls — обновлён (совместим с новым setClsSub) ──
 function sbItemCls(raw, label, cnt, dotColor='var(--red)'){
-  const isActive = (!raw && !currentSub) || (currentSub && !currentSub.group && !raw);
-  return `<button class="sb-item${isActive?' act-r':''}" onclick="setClsSub('${raw||''}')" style="width:100%;display:flex;align-items:center;gap:6px;padding:7px 12px;background:${isActive?'rgba(184,64,64,0.06)':'none'};border:none;border-left:2px solid ${isActive?'var(--red)':'transparent'};font-family:monospace;font-size:9px;letter-spacing:0.5px;text-align:left;cursor:pointer;color:${isActive?'var(--red)':'var(--text-dim)'}">
+  let isActive = false;
+  if(!raw){
+    isActive = !currentSub;
+  } else {
+    const [grp,...rest] = raw.split(':');
+    const v = rest.join(':');
+    isActive = !!(currentSub && currentSub.group===grp && currentSub.val===v);
+  }
+  return `<button class="sb-item${isActive?' act-r':''}" onclick="setClsSub('${raw||''}')" style="width:100%;display:flex;align-items:center;gap:6px;padding:6px 12px;background:${isActive?'rgba(184,64,64,0.06)':'none'};border:none;border-left:2px solid ${isActive?'var(--red)':'transparent'};font-family:monospace;font-size:9px;letter-spacing:0.5px;text-align:left;cursor:pointer;color:${isActive?'var(--red)':'var(--text-dim)'}">
     <div style="width:5px;height:5px;border-radius:50%;background:${dotColor};flex-shrink:0"></div>
     <span style="flex:1">${label}</span>
-    ${cnt!==undefined?`<span style="font-size:8px;color:var(--text-faint)">${cnt}</span>`:''}
+    ${cnt!==undefined?`<span class="sb-cnt" style="${isActive?'color:var(--red);background:rgba(184,64,64,0.12)':''}">${cnt}</span>`:''}
   </button>`;
 }
 
