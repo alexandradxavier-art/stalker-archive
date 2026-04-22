@@ -1321,7 +1321,7 @@ function renderPhotoForm(id,isNew){
               <div class="form-field" style="margin-top:9px"><label class="form-label">Источник / автор</label>
                 <input type="text" id="ef-photo-author" value="${esc(pObj.photoAuthor||'')}" placeholder="Позывной, канал..."></div>
               <div class="form-field" style="margin-top:9px"><label class="form-label">Заметка</label>
-                <textarea id="ef-photo-note" rows="3">${esc(pObj.note||'')}</textarea></div>
+                <textarea id="ef-photo-note-video" rows="3">${esc(pObj.note||'')}</textarea></div>
             </div>
           </div>
           <div class="dp-block">${renderAttachBlock('photo-video-attach',er.photos||[],er.attachUrl||pObj.attachUrl||'')}</div>
@@ -2542,7 +2542,6 @@ window.doSave=async function(){
       if(!title){showToast('⚠ Введите название');return;}
       const ex=photos.find(x=>x.id===editingId);
       const photoAuthorEl=document.getElementById('ef-photo-author');
-      const photoNoteEl=document.getElementById('ef-photo-note');
       const photoVideoEl=document.getElementById('ef-photo-videourl');
       const p={
         id:editingId,title,
@@ -2550,7 +2549,7 @@ window.doSave=async function(){
         date:document.getElementById('ef-photo-date').value,
         photoAuthor:photoAuthorEl?photoAuthorEl.value.trim():(ex?ex.photoAuthor:callsign),
         related:document.getElementById('ef-photo-related').value.trim(),
-        note:photoNoteEl?photoNoteEl.value.trim():(ex?ex.note:''),
+        note:(document.getElementById('ef-photo-note')||document.getElementById('ef-photo-note-video')||{value:''}).value.trim()||(ex?ex.note:''),
         videoUrl:photoVideoEl?photoVideoEl.value.trim():(ex?ex.videoUrl:''),
         attachUrl:getAttachUrl('photo-attach')||getAttachUrl('photo-video-attach')||(ex?ex.attachUrl:''),
         photos:window._editRecord?window._editRecord.photos:[],
