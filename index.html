@@ -627,6 +627,12 @@ details.dp-block > .dp-block-body{animation:fadeIn 0.15s ease}
 .record-author{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--text-faint);letter-spacing:0.5px;margin-top:6px;display:flex;align-items:center;gap:4px}
 .record-author::before{content:'';width:3px;height:3px;border-radius:50%;background:var(--text-faint);flex-shrink:0}
 
+
+/* Cls type selector buttons */
+.cls-type-btn{display:block;width:100%;padding:10px 6px;background:none;border:1px solid;font-family:'Share Tech Mono',monospace;font-size:9px;cursor:pointer;transition:all 0.15s;text-transform:uppercase;letter-spacing:1px;line-height:1.3;pointer-events:auto;text-align:center}
+.cls-type-btn:hover{opacity:1;transform:none}
+.cls-type-btn.active{font-weight:bold}
+
 @media(max-width:700px){
   .sidebar{display:none}
   .dp-2col{grid-template-columns:1fr}
@@ -2501,8 +2507,8 @@ const CLS_TYPES = [
   {key:'группа',   label:'Группа',         color:'var(--blue)'},
   {key:'кпк',      label:'КПК',            color:'var(--green)'},
   {key:'контакт',  label:'Контакт',        color:'var(--purple)'},
-  {key:'операция', label:'Операция',       color:'var(--red)'},
-  {key:'обстановка',label:'Обстановка',    color:'var(--text-dim)'},
+  {key:'дела',     label:'Дела',           color:'var(--red)'},
+  {key:'сведения', label:'Сведения',       color:'var(--text-dim)'},
 ];
 
 function clsTypeColor(key){
@@ -2847,7 +2853,7 @@ function renderClsDetailView(r){
       ${r.summary?`<div class="fv"><div class="fv-label">Назначение</div><div class="fv-val">${esc(r.summary)}</div></div>`:''}
       ${r.details?`<div class="fv"><div class="fv-label">Подробности</div><div class="fv-val" style="white-space:pre-wrap">${esc(r.details)}</div></div>`:''}
     </div></div>`;
-  } else if(tKey==='операция'){
+  } else if(tKey==='дела'){
     mainBlock=`<div class="dp-block" style="border-color:#3a1a1a;background:#100c0c"><div class="dp-block-label" style="background:#0b0808;border-color:#1e0e0e">Операция</div><div class="dp-block-body">
       <div class="fv"><div class="fv-label">Название</div><div class="fv-val" style="color:var(--red);font-family:'Oswald',sans-serif;font-size:15px">${esc(r.title||'—')}</div></div>
       ${r.opType?`<div class="fv"><div class="fv-label">Тип</div><div class="fv-val">${esc(r.opType)}</div></div>`:''}
@@ -2899,6 +2905,8 @@ function renderClsForm(id,isNew){
   window._editMod='cls';
   window._editRecord=isNew?{id:editingId,photos:[]}:JSON.parse(JSON.stringify(r||{}));
   document.getElementById('detail-panel').classList.add('open');
+  // При новой записи — по умолчанию выбираем первый тип
+  if(isNew && !window._pendingClsType) window._pendingClsType='лицо';
   const tKey=(r.clType||window._pendingClsType||'').toLowerCase();
   const tColor=clsTypeColor(tKey);
   const tLabel=tKey?clsTypeLabel(tKey):'Новая запись';
@@ -2988,7 +2996,7 @@ function renderClsFormBody(tKey,r,isNew){
         <div class="form-field" style="margin-top:9px"><label class="form-label">Подробности</label><textarea id="ef-cls-details" rows="3">${esc(r.details||'')}</textarea></div>
         <div class="form-field" style="margin-top:9px"><label class="form-label">Источник</label><input type="text" id="ef-cls-source" value="${esc(r.source||'')}"></div>
       </div></div>`;
-  } else if(tKey==='операция'){
+  } else if(tKey==='дела'){
     typeFields=`
       <div class="dp-block"><div class="dp-block-label">Операция</div><div class="dp-block-body">
         <div class="form-field"><label class="form-label">Название *</label><input type="text" id="ef-cls-title" value="${esc(r.title||'')}" placeholder="название операции" style="font-size:14px"></div>
@@ -3004,9 +3012,9 @@ function renderClsFormBody(tKey,r,isNew){
         <div class="form-field" style="margin-top:9px"><label class="form-label">Итог / результат</label><textarea id="ef-cls-result" rows="2">${esc(r.result||'')}</textarea></div>
       </div></div>`;
   } else {
-    // Обстановка или пустой тип
+    // Сведения или пустой тип
     typeFields=`
-      <div class="dp-block"><div class="dp-block-label">${tKey==='обстановка'?'Обстановка':'Основное'}</div><div class="dp-block-body">
+      <div class="dp-block"><div class="dp-block-label">${tKey==='сведения'?'Обстановка':'Основное'}</div><div class="dp-block-body">
         <div class="form-field"><label class="form-label">Заголовок *</label><input type="text" id="ef-cls-title" value="${esc(r.title||'')}" placeholder="заголовок" style="font-size:14px"></div>
         <div class="form-grid" style="margin-top:9px">
           <div class="form-field"><label class="form-label">Тема / направление</label><input type="text" id="ef-cls-topic" value="${esc(r.topic||'')}" placeholder="тема..."></div>
@@ -3023,8 +3031,11 @@ function renderClsFormBody(tKey,r,isNew){
     <div class="dp-2col">
       <div>
         ${!tKey?`<div class="dp-block"><div class="dp-block-label">Тип записи</div><div class="dp-block-body">
-          <div class="form-grid" style="grid-template-columns:repeat(3,1fr);gap:6px">
-            ${CLS_TYPES.map(t=>`<button onclick="window._pendingClsType='${t.key}';renderClsFormBody('${t.key}',window._editRecord||{},${isNew})" style="padding:8px;background:none;border:1px solid ${t.color}55;color:${t.color};font-family:monospace;font-size:9px;cursor:pointer;transition:all 0.15s;text-transform:uppercase;letter-spacing:1px" onmouseover="this.style.background='${t.color}11'" onmouseout="this.style.background='none'">${t.label}</button>`).join('')}
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px">
+            ${CLS_TYPES.map(t=>{
+              const isAct=t.key===tKey||(!tKey&&t.key==='лицо');
+              return `<button type="button" onclick="window._pendingClsType='${esc(t.key)}';renderClsFormBody('${esc(t.key)}',window._editRecord||{},${isNew})" style="display:block;width:100%;padding:10px 6px;background:${isAct?t.color+'22':'none'};border:1px solid ${isAct?t.color:t.color+'66'};color:${t.color};font-family:'Share Tech Mono',monospace;font-size:9px;cursor:pointer;transition:all 0.15s;text-transform:uppercase;letter-spacing:1px;line-height:1.3;pointer-events:auto;${isAct?'box-shadow:0 0 6px '+t.color+'44':''}">${t.label}</button>`;
+            }).join('')}
           </div>
         </div></div>`:typeFields}
       </div>
@@ -3084,7 +3095,7 @@ function doSaveCls(){
     if(!v||!v.value.trim()){showToast('⚠ Введите имя контакта');return null;}
     mainField={callsign:v.value.trim(),contactType:(document.getElementById('ef-cls-contacttype')||{}).value||'',summary:(document.getElementById('ef-cls-summary')||{}).value||'',details:(document.getElementById('ef-cls-details')||{}).value||'',source:(document.getElementById('ef-cls-source')||{}).value||''};
     title=mainField.callsign;
-  } else if(tKey==='операция'){
+  } else if(tKey==='дела'){
     const v=document.getElementById('ef-cls-title');
     if(!v||!v.value.trim()){showToast('⚠ Введите название операции');return null;}
     mainField={title:v.value.trim(),opType:(document.getElementById('ef-cls-optype')||{}).value||'',executor:(document.getElementById('ef-cls-executor')||{}).value||'',target:(document.getElementById('ef-cls-target')||{}).value||'',priority:(document.getElementById('ef-cls-priority')||{}).value||'',summary:(document.getElementById('ef-cls-summary')||{}).value||'',result:(document.getElementById('ef-cls-result')||{}).value||''};
