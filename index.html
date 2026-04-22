@@ -1368,6 +1368,7 @@ function startListeners(){
 // MODULE SWITCHING
 window.setModule=function(mod){
   currentModule=mod;currentSub=null;
+  if(mod!=='photo'){window._photoTypeFilter='';window._photoAuthFilter='';}
   document.getElementById('detail-panel').classList.remove('open');
   editingId=null;window._editRecord=null;
   // update top nav
@@ -1384,10 +1385,18 @@ window.setModule=function(mod){
   else if(mod==='stk'){addBtn.className='add-btn a';addBtn.textContent='＋ Досье';}
   else if(mod==='doc'){addBtn.className='add-btn';addBtn.removeAttribute('style');addBtn.style.cssText='border-color:var(--blue-dim);color:var(--blue);background:rgba(58,143,212,0.09);font-family:monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all 0.2s;white-space:nowrap;margin-left:auto;height:30px;padding:0 14px;border:1px solid var(--blue-dim)';addBtn.textContent='＋ Документ';}
   else if(mod==='cls'){addBtn.className='add-btn';addBtn.style.borderColor='var(--red-dim)';addBtn.style.color='var(--red)';addBtn.textContent='＋ Запись';}
+  else if(mod==='photo'){
+    addBtn.className='add-btn p';addBtn.style.cssText='';addBtn.textContent='＋ Материал';
+    if(currentView==='list') currentView='cards';
+  }
   else{addBtn.className='add-btn g';addBtn.textContent='＋ Добавить';}
   // detail title color
   document.getElementById('dp-title').className='dp-title '+(mod==='arc'?'cg':mod==='stk'?'ca':mod==='doc'||mod==='photo'?'cp':'cg');
   renderToolbarFilters();
+  // Sync view buttons
+  document.querySelectorAll('.view-btn').forEach(b=>b.classList.remove('active'));
+  const activeVBtn=document.getElementById('vbtn-'+currentView);
+  if(activeVBtn)activeVBtn.classList.add('active');
   renderSidebar();
   renderContent();
 }
@@ -1617,20 +1626,14 @@ function renderToolbarFilters(){
     const phAuthors=[...new Set(photos.map(p=>p.photoAuthor).filter(Boolean))];
     const phOpts=phAuthors.map(a=>`<option value="${esc(a)}">${esc(a)}</option>`).join('');
     el.innerHTML=`
-      <select class="tb-select" id="f-phototype" onchange="renderContent()">
-        <option value="">Все типы</option>
-        <option value="фото">Фото</option>
-        <option value="видео">Видео</option>
-        <option value="фотоловушка">Фотоловушки</option>
+      <select class="tb-select" id="f-phototype" onchange="window._photoTypeFilter=this.value;renderContent()">
+        <option value="" ${!window._photoTypeFilter?'selected':''}>Все типы</option>
+        <option value="фото" ${window._photoTypeFilter==='фото'?'selected':''}>Фото</option>
+        <option value="видео" ${window._photoTypeFilter==='видео'?'selected':''}>Видео</option>
+        <option value="фотоловушка" ${window._photoTypeFilter==='фотоловушка'?'selected':''}>Фотоловушки</option>
       </select>
-      ${phAuthors.length?`<select class="tb-select" id="f-photoauthor" onchange="renderContent()"><option value="">Все авторы</option>${phOpts}</select>`:''}`;
-    // По умолчанию photo в карточках
-    if(currentView==='list'){
-      currentView='cards';
-      document.querySelectorAll('.view-btn').forEach(b=>b.classList.remove('active'));
-      const cb=document.getElementById('vbtn-cards');
-      if(cb)cb.classList.add('active');
-    }
+      ${phAuthors.length?`<select class="tb-select" id="f-photoauthor" onchange="window._photoAuthFilter=this.value;renderContent()"><option value="">Все авторы</option>${phOpts.replace(/<option value="([^"]*)">/g,(m,v)=>`<option value="${v}"${window._photoAuthFilter===v?' selected':''}>`)}
+      </select>`:''}`;
   }else{
     el.innerHTML='';
   }
@@ -1680,8 +1683,8 @@ function getFiltered(){
     }).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
   }
   if(mod==='photo'){
-    const fPhType=getVal('f-phototype');
-    const fPhAuth=getVal('f-photoauthor');
+    const fPhType=getVal('f-phototype')||window._photoTypeFilter||'';
+    const fPhAuth=getVal('f-photoauthor')||window._photoAuthFilter||'';
     return photos.filter(p=>{
       if(sub&&sub.group==='photo-type'&&(p.photoType||'').toLowerCase()!==sub.val)return false;
       if(fPhType&&(p.photoType||'').toLowerCase()!==fPhType)return false;
