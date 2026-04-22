@@ -1831,12 +1831,15 @@ function renderSidebar(){
     documents.forEach(d=>{if(d.docSubsection)bySub[d.docSubsection]=(bySub[d.docSubsection]||0)+1;});
     // Отслеживаем раскрытые типы
     if(!window._docSbOpen) window._docSbOpen={};
-    // Если активен тип — авто-раскрыть
-    if(currentSub&&currentSub.group==='doc-type') window._docSbOpen[currentSub.val]=true;
+    // Авто-раскрыть только при первом входе (если ещё не было явного закрытия)
+    if(currentSub&&currentSub.group==='doc-type'){
+      if(window._docSbOpen[currentSub.val]===undefined) window._docSbOpen[currentSub.val]=true;
+    }
     if(currentSub&&currentSub.group==='doc-sub'){
       DOC_TYPES_LIST.forEach(t=>{
         const subs=docSecs[t.key]||[];
-        if(subs.find(s=>s.name===currentSub.val)) window._docSbOpen[t.key]=true;
+        if(subs.find(s=>s.name===currentSub.val)&&window._docSbOpen[t.key]===undefined)
+          window._docSbOpen[t.key]=true;
       });
     }
     const typeRows=DOC_TYPES_LIST.map(t=>{
@@ -3101,10 +3104,13 @@ function renderClsSidebar(titleEl,subEl,navEl,statsEl){
 
   // Основные типы
   if(!window._clsSbOpen) window._clsSbOpen={};
-  if(currentSub&&currentSub.group==='cls-type') window._clsSbOpen[currentSub.val]=true;
+  if(currentSub&&currentSub.group==='cls-type'){
+    if(window._clsSbOpen[currentSub.val]===undefined) window._clsSbOpen[currentSub.val]=true;
+  }
   if(currentSub&&currentSub.group==='cls-sec'){
     CLS_TYPES.forEach(t=>{
-      if((secs[t.key]||[]).find(s=>s.name===currentSub.val)) window._clsSbOpen[t.key]=true;
+      if((secs[t.key]||[]).find(s=>s.name===currentSub.val)&&window._clsSbOpen[t.key]===undefined)
+        window._clsSbOpen[t.key]=true;
     });
   }
   const typeItems=CLS_TYPES.map(t=>{
@@ -3220,16 +3226,33 @@ window.switchPhotoType=function(type){
 
 window.toggleClsType=function(key){
   if(!window._clsSbOpen) window._clsSbOpen={};
-  window._clsSbOpen[key]=!window._clsSbOpen[key];
-  if(window._clsSbOpen[key]) setClsSub('cls-type:'+key);
-  else renderSidebar();
+  const wasOpen = !!window._clsSbOpen[key];
+  window._clsSbOpen[key] = !wasOpen;
+  if(!wasOpen){
+    // Раскрываем — устанавливаем активный тип (вызовет renderSidebar)
+    setClsSub('cls-type:'+key);
+  } else {
+    // Сворачиваем — только DOM, без смены currentSub
+    const wrap = document.getElementById('cls-subs-'+key);
+    const btn = wrap ? wrap.previousElementSibling : null;
+    if(wrap) wrap.classList.remove('open');
+    if(btn) btn.classList.remove('open');
+  }
 };
 window.toggleDocType=function(key){
   if(!window._docSbOpen) window._docSbOpen={};
-  window._docSbOpen[key]=!window._docSbOpen[key];
-  // Также установить активный тип
-  if(window._docSbOpen[key]) setSub('doc-type',key);
-  else renderSidebar();
+  const wasOpen = !!window._docSbOpen[key];
+  window._docSbOpen[key] = !wasOpen;
+  if(!wasOpen){
+    // Раскрываем — устанавливаем активный тип (вызовет renderSidebar)
+    setSub('doc-type', key);
+  } else {
+    // Сворачиваем — только DOM, без смены currentSub
+    const wrap = document.getElementById('sb-subs-'+key);
+    const btn = wrap ? wrap.previousElementSibling : null;
+    if(wrap) wrap.classList.remove('open');
+    if(btn) btn.classList.remove('open');
+  }
 };
 window.setClsSub=function(raw){
   if(!raw){currentSub=null;}
