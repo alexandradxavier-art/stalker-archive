@@ -418,6 +418,87 @@ textarea{min-height:70px;line-height:1.6}
 .sec-manage-wrap{padding:14px}
 .sec-manage-title{font-family:'Oswald',sans-serif;font-size:13px;color:var(--red);letter-spacing:1px;text-transform:uppercase;margin-bottom:12px}
 
+
+/* ══ UI IMPROVEMENTS ══ */
+
+/* Sidebar — компактнее */
+.sb-sec{font-family:'Share Tech Mono',monospace;font-size:7px;letter-spacing:2px;color:var(--text-dim);text-transform:uppercase;padding:8px 12px 3px;display:flex;align-items:center;justify-content:space-between}
+.sb-sec span{letter-spacing:2px}
+.sb-item{display:flex;align-items:center;gap:6px;width:100%;padding:6px 12px;background:none;border:none;border-left:2px solid transparent;color:var(--text-dim);font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:0.5px;text-align:left;cursor:pointer;transition:all 0.12s}
+.sb-item:hover{color:var(--text);background:rgba(255,255,255,0.025);border-left-color:var(--border)}
+.sb-cnt{margin-left:auto;font-size:8px;color:var(--text-faint);font-family:'Share Tech Mono',monospace;background:var(--paper3);padding:1px 5px;border-radius:2px;min-width:18px;text-align:center}
+.sb-item.act-g .sb-cnt,.sb-item.act-a .sb-cnt,.sb-item.act-p .sb-cnt{color:inherit;background:rgba(255,255,255,0.08)}
+.sb-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.sb-mod-head{padding:10px 12px;border-bottom:1px solid var(--border);flex-shrink:0}
+.sb-mod-title{font-family:'Oswald',sans-serif;font-weight:600;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;line-height:1.2;margin-bottom:1px}
+.sb-mod-sub{font-family:'Share Tech Mono',monospace;font-size:7px;color:var(--text-faint);letter-spacing:1px}
+.st-box{background:var(--paper2);padding:6px 10px}
+.st-n{font-family:'Share Tech Mono',monospace;font-size:17px;line-height:1;font-weight:bold}
+.st-l{font-family:'Share Tech Mono',monospace;font-size:7px;color:var(--text-faint);letter-spacing:1px;text-transform:uppercase;margin-top:1px}
+
+/* Toolbar — цельнее */
+.toolbar{padding:6px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px;flex-shrink:0;background:var(--paper3);flex-wrap:nowrap;overflow-x:auto}
+.toolbar::-webkit-scrollbar{height:0}
+.search-box{display:flex;align-items:center;min-width:140px;max-width:220px;border:1px solid var(--border2);background:var(--paper2);overflow:hidden;transition:border-color 0.2s}
+.search-box:focus-within{border-color:var(--green-dark)}
+.search-box input{flex:1;background:none;border:none;color:var(--text);font-family:'Share Tech Mono',monospace;font-size:10px;padding:6px 8px;outline:none;min-width:0}
+.search-box input::placeholder{color:var(--text-faint)}
+.search-ico{padding:6px 7px;color:var(--text-dim);font-size:11px}
+.tb-select{background:var(--paper2);border:1px solid var(--border2);color:var(--text-dim);font-family:'Share Tech Mono',monospace;font-size:9px;padding:5px 7px;outline:none;cursor:pointer;transition:border-color 0.15s;height:30px}
+.tb-select:hover,.tb-select:focus{border-color:var(--green-dark);color:var(--text)}
+.tb-select option{background:var(--paper2)}
+.tb-sep{width:1px;height:20px;background:var(--border);flex-shrink:0;margin:0 2px}
+.view-btn{background:none;border:1px solid var(--border2);color:var(--text-dim);padding:5px 8px;cursor:pointer;font-family:'Share Tech Mono',monospace;font-size:10px;transition:all 0.15s;height:30px}
+.view-btn.active{border-color:var(--green-dark);color:var(--green);background:rgba(122,182,72,0.06)}
+.view-btn:hover{border-color:var(--green-dark);color:var(--green)}
+
+/* Кнопка добавить — заметнее */
+.add-btn{padding:6px 14px;background:rgba(122,182,72,0.08);border:1px solid var(--green-dim);font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all 0.2s;white-space:nowrap;margin-left:auto;height:30px;font-weight:bold}
+.add-btn.g{border-color:var(--green-dim);color:var(--green);background:rgba(122,182,72,0.08)}
+.add-btn.g:hover{border-color:var(--green);color:var(--green);background:rgba(122,182,72,0.15);box-shadow:0 0 8px rgba(122,182,72,0.15)}
+.add-btn.a{border-color:var(--amber-dim);color:var(--amber);background:rgba(200,168,75,0.08)}
+.add-btn.a:hover{border-color:var(--amber);background:rgba(200,168,75,0.14)}
+.add-btn.p{border-color:var(--purple-dim);color:var(--purple);background:rgba(154,106,184,0.08)}
+.add-btn.p:hover{border-color:var(--purple);background:rgba(154,106,184,0.14)}
+
+/* Правый блок topnav — разделённый */
+.tn-right{margin-left:auto;display:flex;align-items:center;gap:0;padding:0;border-left:1px solid var(--border)}
+.user-badge{display:flex;align-items:center;gap:6px;padding:0 11px;border-right:1px solid var(--border);height:38px}
+.ub-dot{width:5px;height:5px;border-radius:50%;background:var(--green);box-shadow:0 0 4px var(--green);animation:pulse 2s infinite;flex-shrink:0}
+.ub-call{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--green);letter-spacing:1px}
+.ub-logout{background:none;border:none;color:var(--text-faint);cursor:pointer;font-family:'Share Tech Mono',monospace;font-size:8px;padding:0 12px;transition:all 0.15s;letter-spacing:1px;text-transform:uppercase;height:38px;border-right:1px solid var(--border)}
+.ub-logout:hover{color:var(--red);background:rgba(184,64,64,0.07)}
+.red-tag{background:var(--red);padding:0 10px;font-family:'Share Tech Mono',monospace;font-size:7px;letter-spacing:2px;color:#ffd0d0;white-space:nowrap;height:38px;display:flex;align-items:center}
+
+/* Таблица — лучше читаемость */
+.list-table th{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);text-align:left;padding:7px 10px;border-bottom:2px solid var(--border);background:var(--paper2);cursor:pointer;user-select:none;white-space:nowrap}
+.list-table th:hover{color:var(--green)}
+.list-table td{padding:8px 10px;border-bottom:1px solid var(--border2);color:var(--text);vertical-align:middle;font-size:12px}
+.list-table tr.dr:hover td{background:rgba(122,182,72,0.04);cursor:pointer}
+.td-mono{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--green)}
+
+/* Пустые состояния — уникальные для каждого модуля */
+.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;height:280px;gap:12px;padding:20px}
+.es-ico{font-size:28px;opacity:0.4;line-height:1}
+.es-title{font-family:'Oswald',sans-serif;font-size:14px;letter-spacing:1px;text-transform:uppercase;color:var(--text-dim)}
+.es-sub{font-size:11px;color:var(--text-faint);text-align:center;max-width:280px;line-height:1.6;font-family:'Share Tech Mono',monospace}
+.es-actions{display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;justify-content:center}
+.es-btn{padding:6px 14px;background:none;border:1px solid;font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all 0.2s}
+.es-btn-add{border-color:var(--green-dim);color:var(--green-dim)}
+.es-btn-add:hover{border-color:var(--green);color:var(--green);background:rgba(122,182,72,0.07)}
+.es-btn-add.am{border-color:var(--amber-dim);color:var(--amber-dim)}
+.es-btn-add.am:hover{border-color:var(--amber);color:var(--amber);background:rgba(200,168,75,0.07)}
+.es-btn-add.pp{border-color:var(--purple-dim);color:var(--purple-dim)}
+.es-btn-add.pp:hover{border-color:var(--purple);color:var(--purple);background:rgba(154,106,184,0.07)}
+.es-btn-reset{border-color:var(--border);color:var(--text-faint)}
+.es-btn-reset:hover{border-color:var(--text-dim);color:var(--text-dim)}
+
+/* Счётчик записей в контент-области */
+.content-header{display:flex;align-items:center;gap:8px;padding:8px 16px 6px;border-bottom:1px solid var(--border2);background:var(--paper2);flex-shrink:0}
+.content-count{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--text-faint);letter-spacing:1px}
+.content-count strong{color:var(--text-dim);font-size:9px}
+/* ══ END UI IMPROVEMENTS ══ */
+
 @media(max-width:700px){
   .sidebar{display:none}
   .dp-2col{grid-template-columns:1fr}
@@ -608,7 +689,45 @@ function showToast(msg){
   const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
   clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.remove('show'),2500);
 }
-function emptyState(msg){return`<div class="empty-state"><div class="es-ico">◈</div><p style="font-size:12px;color:var(--text-faint);text-align:center">${msg||'Записи не найдены.'}</p></div>`;}
+function emptyState(msg, mod){
+  mod=mod||currentModule;
+  const isFiltered = document.getElementById('search-input')?.value ||
+    document.getElementById('f-danger')?.value ||
+    document.getElementById('f-status')?.value ||
+    document.getElementById('f-spec')?.value ||
+    document.getElementById('f-doctype')?.value ||
+    document.getElementById('f-cltype')?.value ||
+    document.getElementById('f-clstatus')?.value ||
+    currentSub;
+  const cfg={
+    arc:{ico:'⊙',title:'Архив пуст',sub:'Объекты исследования не найдены',addLabel:'＋ Добавить образец',addCls:'',color:'var(--green)'},
+    stk:{ico:'◉',title:'Картотека пуста',sub:'Личные дела не найдены',addLabel:'＋ Добавить досье',addCls:'am',color:'var(--amber)'},
+    doc:{ico:'▤',title:'Документов нет',sub:'Текстовые материалы не найдены',addLabel:'＋ Добавить документ',addCls:'pp',color:'var(--purple)'},
+    all:{ico:'◈',title:'Записей нет',sub:'База данных пуста',addLabel:'＋ Добавить',addCls:'',color:'var(--text-dim)'},
+    cls:{ico:'⊘',title:'Записей нет',sub:'Закрытый раздел пуст',addLabel:'＋ Добавить запись',addCls:'',color:'var(--red)'},
+  };
+  const c=cfg[mod]||cfg.all;
+  const resetBtn=isFiltered?`<button class="es-btn es-btn-reset" onclick="resetFilters()">Сбросить фильтры</button>`:'';
+  const addBtn=mod!=='all'?`<button class="es-btn es-btn-add ${c.addCls}" onclick="openAdd()">${c.addLabel}</button>`:'';
+  const customMsg=msg||c.sub;
+  return `<div class="empty-state">
+    <div class="es-ico" style="color:${c.color}">${c.ico}</div>
+    <div class="es-title" style="color:${c.color}">${c.title}</div>
+    <div class="es-sub">${customMsg}${isFiltered?'<br><span style="color:var(--text-faint)">Попробуй изменить фильтры или поиск</span>':''}</div>
+    <div class="es-actions">${addBtn}${resetBtn}</div>
+  </div>`;
+}
+
+window.resetFilters=function(){
+  const si=document.getElementById('search-input');if(si)si.value='';
+  ['f-danger','f-status','f-spec','f-doctype','f-cltype','f-clstatus','f-cltag','f-author'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.value='';
+  });
+  currentSub=null;
+  renderSidebar();
+  renderContent();
+  showToast('Фильтры сброшены');
+};
 
 // AUTH
 window.switchTab=function(t){
@@ -744,14 +863,14 @@ function renderSidebar(){
       if(byStatus[s]!==undefined)byStatus[s]++;
     });
     navEl.innerHTML=`
-      <div class="sb-sec">Тип объекта</div>
+      <div class="sb-sec"><span>Тип объекта</span></div>
       ${sbItem(null,'all','Все образцы',byType.all,'g')}
       ${sbItem('arc-type','артефакт','Артефакты',byType.артефакт,'g',true,'var(--amber)')}
       ${sbItem('arc-type','аномалия','Аномалии',byType.аномалия,'g',true,'var(--blue)')}
       ${sbItem('arc-type','мутант','Мутанты',byType.мутант,'g',true,'var(--red)')}
       ${sbItem('arc-type','прочее','Прочее',byType.прочее,'g',true,'var(--text-dim)')}
       <div class="sb-div"></div>
-      <div class="sb-sec">По статусу</div>
+      <div class="sb-sec"><span>По статусу</span></div>
       ${sbItem('arc-status','изучен','Изучен',byStatus['изучен'],'g',true,'var(--green)')}
       ${sbItem('arc-status','в работе','В работе',byStatus['в работе'],'g',true,'var(--amber)')}
       ${sbItem('arc-status','опасен','Опасен',byStatus['опасен'],'g',true,'var(--red)')}
@@ -775,7 +894,7 @@ function renderSidebar(){
       ${sbItem('stk-status','пропал','Пропал',byStatus['пропал'],'a',true,'var(--amber)')}
       ${sbItem('stk-status','неизвестно','Неизвестно',byStatus['неизвестно'],'a',true,'var(--text-dim)')}
       <div class="sb-div"></div>
-      <div class="sb-sec">Онлайн</div>
+      <div class="sb-sec"><span>Онлайн</span></div>
       <div id="sb-online-list"></div>`;
     statsEl.innerHTML=`
       <div class="st-box"><div class="st-n" style="color:var(--amber)">${stalkers.length}</div><div class="st-l">Всего</div></div>
@@ -789,7 +908,7 @@ function renderSidebar(){
     documents.forEach(d=>{const t=(d.docType||'').toLowerCase();if(byType[t]!==undefined)byType[t]++;});
     const urgent=byType['срочно'];
     navEl.innerHTML=`
-      <div class="sb-sec">Тип документа</div>
+      <div class="sb-sec"><span>Тип документа</span></div>
       ${sbItem(null,'all-doc','Все документы',documents.length,'p')}
       ${sbItem('doc-type','отчёт','Отчёты',byType['отчёт'],'p',true,'var(--green)')}
       ${sbItem('doc-type','заметка','Заметки',byType['заметка'],'p',true,'var(--amber)')}
@@ -860,7 +979,7 @@ function renderSidebar(){
     subEl.textContent='Общий обзор';
     const total=records.length+stalkers.length+documents.length;
     navEl.innerHTML=`
-      <div class="sb-sec">Разделы</div>
+      <div class="sb-sec"><span>Разделы</span></div>
       <div class="sb-item" onclick="setModule('arc')" style="cursor:pointer"><div class="sb-dot" style="background:var(--green)"></div>Архив образцов<span class="sb-cnt">${records.length}</span></div>
       <div class="sb-item" onclick="setModule('stk')" style="cursor:pointer"><div class="sb-dot" style="background:var(--amber)"></div>База сталкеров<span class="sb-cnt">${stalkers.length}</span></div>
       <div class="sb-item" onclick="setModule('doc')" style="cursor:pointer"><div class="sb-dot" style="background:var(--purple)"></div>Документы<span class="sb-cnt">${documents.length}</span></div>`;
@@ -933,12 +1052,21 @@ function renderToolbarFilters(){
     return;
   }
   if(mod==='arc'){
-    el.innerHTML=`<select class="tb-select" id="f-danger" onchange="renderContent()">
-      <option value="">Все опасности</option>
-      <option value="низкая">Низкая</option>
-      <option value="средняя">Средняя</option>
-      <option value="высокая">Высокая</option>
-    </select>`;
+    el.innerHTML=`
+      <select class="tb-select" id="f-danger" onchange="renderContent()">
+        <option value="">Все опасности</option>
+        <option value="низкая">Низкая</option>
+        <option value="средняя">Средняя</option>
+        <option value="высокая">Высокая</option>
+      </select>
+      <select class="tb-select" id="f-status" onchange="renderContent()">
+        <option value="">Все статусы</option>
+        <option value="в работе">В работе</option>
+        <option value="изучен">Изучен</option>
+        <option value="на хранении">На хранении</option>
+        <option value="опасен">Опасен</option>
+        <option value="утерян">Утерян</option>
+      </select>`;
   }else if(mod==='stk'){
     el.innerHTML='';
   }else if(mod==='doc'){
@@ -1076,11 +1204,11 @@ function renderContent(){
 function renderList(){
   const rows=getFiltered();
   const ca=document.getElementById('content-area');
-  if(!rows.length){ca.innerHTML=emptyState();return;}
+  if(!rows.length){ca.innerHTML=emptyState('',mod);return;}
   const mod=currentModule;
 
   if(mod==='arc'){
-    ca.innerHTML=`<table class="list-table"><thead><tr>
+    ca.innerHTML=`<div class="content-header"><span class="content-count">Найдено: <strong>${rows.length}</strong></span></div><table class="list-table"><thead><tr>
       <th onclick="doSort('num')">#</th>
       <th onclick="doSort('name')">Название</th>
       <th onclick="doSort('objectType')">Тип</th>
@@ -1098,7 +1226,7 @@ function renderList(){
     return;
   }
   if(mod==='stk'){
-    ca.innerHTML=`<table class="list-table"><thead><tr>
+    ca.innerHTML=`<div class="content-header"><span class="content-count">Найдено: <strong>${rows.length}</strong></span></div><table class="list-table"><thead><tr>
       <th>Фото</th>
       <th onclick="doSort('callsign')">Позывной</th>
       <th onclick="doSort('fio')">ФИО</th>
@@ -1132,7 +1260,7 @@ function renderList(){
   }
   if(mod==='cls'){
     const protBar='<div class="prot-bar" style="margin:-14px -16px 12px"><div class="prot-dot"></div><span class="prot-text">Защищённый раздел · Сеанс активен</span></div>';
-    if(!rows.length){ca.innerHTML=protBar+emptyState('Записей нет. Нажмите ＋ Запись чтобы добавить.');return;}
+    if(!rows.length){ca.innerHTML=protBar+emptyState('',"cls");return;}
     ca.innerHTML=protBar+rows.map(r=>{
       const statusList=getClosedStatuses();
   const statusObj=statusList.find(s=>s.name.toLowerCase()===(r.status||'').toLowerCase());
@@ -1179,7 +1307,7 @@ function renderList(){
 function renderCards(){
   const rows=getFiltered();
   const ca=document.getElementById('content-area');
-  if(!rows.length){ca.innerHTML=emptyState();return;}
+  if(!rows.length){ca.innerHTML=emptyState('',mod);return;}
   const mod=currentModule;
 
   if(mod==='stk'){
