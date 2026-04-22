@@ -673,6 +673,83 @@ details.dp-block > .dp-block-body{animation:fadeIn 0.15s ease}
 .attach-empty-txt{font-size:7px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-faint);font-family:'Share Tech Mono',monospace}
 .dp-note-block{margin-top:8px;padding:6px 9px;border-left:2px solid var(--border2);background:#0b0d09;font-size:8.5px;color:#7e7c6e;line-height:1.7;font-family:'Share Tech Mono',monospace}
 
+
+/* ══ МЕНЕДЖЕР ПОДРАЗДЕЛОВ v2 ══ */
+.sm-head{padding:15px 18px 13px;border-bottom:1px solid var(--border2);background:#121410;position:relative}
+.sm-head::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--sm-accent,var(--blue)),transparent);opacity:0.7}
+.sm-crumb{font-size:7.5px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-dim);margin-bottom:7px;display:flex;align-items:center;gap:6px}
+.sm-crumb-sep{color:var(--text-faint)}
+.sm-title{font-family:'Oswald',sans-serif;font-size:19px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:3px}
+.sm-subtitle{font-size:8px;color:var(--text-dim);letter-spacing:0.5px}
+.sm-body{padding:15px 18px}
+
+.sm-list-head{display:flex;align-items:center;gap:8px;padding:4px 0 8px;border-bottom:1px solid var(--border2);margin-bottom:8px}
+.sm-list-lbl{font-size:7px;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);flex:1;font-family:'Share Tech Mono',monospace}
+.sm-list-cnt{font-size:7.5px;color:var(--text-faint);padding:1px 7px;border:1px solid var(--border);font-family:monospace}
+
+.sm-item{border:1px solid var(--border2);background:#0e100c;margin-bottom:4px;overflow:hidden;transition:border-color 0.15s}
+.sm-item:hover{border-color:var(--border)}
+.sm-item.sm-expanded{border-color:var(--border)}
+.sm-item-row{display:flex;align-items:stretch;cursor:pointer;transition:background 0.12s;user-select:none}
+.sm-item-row:hover{background:rgba(255,255,255,0.015)}
+.sm-item-stripe{width:4px;flex-shrink:0;align-self:stretch}
+.sm-chevron{width:36px;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--text-faint);flex-shrink:0;transition:transform 0.18s,color 0.15s}
+.sm-item.sm-expanded .sm-chevron{transform:rotate(90deg);color:var(--text-dim)}
+.sm-item-main{flex:1;padding:10px 10px 10px 0;min-width:0}
+.sm-item-name-row{font-family:'Share Tech Mono',monospace;font-size:11px;font-weight:bold;color:var(--text);margin-bottom:3px;display:flex;align-items:center;gap:7px}
+.sm-item-dot2{width:7px;height:7px;border-radius:50%;flex-shrink:0;border:1px solid rgba(255,255,255,0.15)}
+.sm-item-meta2{font-size:8px;color:var(--text-dim);display:flex;align-items:center;gap:8px}
+.sm-item-cnt2{font-family:monospace;font-size:8.5px;padding:1px 7px;border:1px solid var(--border);color:var(--text-dim)}
+.sm-item-cnt2.has-rec{border-color:var(--border2);color:var(--text)}
+.sm-item-actions2{display:flex;align-items:center;gap:3px;padding:0 10px;flex-shrink:0}
+.sm-btn2{padding:4px 7px;background:none;border:1px solid var(--border);color:var(--text-dim);font-family:monospace;font-size:9px;cursor:pointer;transition:all 0.12s}
+.sm-btn2:hover{border-color:var(--border2);color:var(--text)}
+.sm-btn2.del2:hover{border-color:var(--red-dim);color:var(--red)}
+.sm-btn2.go2{border-color:var(--border2);color:var(--sm-accent,var(--blue));font-size:10px;padding:4px 10px}
+.sm-btn2.go2:hover{background:rgba(58,143,212,0.07)}
+
+.sm-expand{border-top:1px solid var(--border2);background:#0b0d09;padding:9px 12px 9px 50px;display:none}
+.sm-item.sm-expanded .sm-expand{display:block}
+.sm-expand-rec{display:flex;align-items:center;gap:8px;padding:4px 0;border-bottom:1px solid #1a1c12;font-size:8.5px;color:var(--text-dim)}
+.sm-expand-rec:last-child{border-bottom:none}
+.sm-expand-rec-dot{width:4px;height:4px;border-radius:50%;background:var(--border2);flex-shrink:0}
+.sm-expand-rec-name{flex:1;color:#8e8c7e}
+.sm-expand-rec-date{font-size:7.5px;color:var(--text-faint)}
+.sm-expand-empty2{font-size:8px;color:var(--text-faint);letter-spacing:1px;text-transform:uppercase;padding:4px 0;font-family:'Share Tech Mono',monospace}
+.sm-expand-btns{display:flex;gap:6px;margin-top:8px;padding-top:8px;border-top:1px solid #1a1c12}
+.sm-expand-btn{padding:5px 12px;background:none;font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border:1px solid var(--border2);color:var(--text-dim);transition:all 0.15s}
+.sm-expand-btn:hover{border-color:var(--sm-accent,var(--blue));color:var(--sm-accent,var(--blue))}
+
+.sm-color-row{padding:7px 12px 9px 50px;border-top:1px solid var(--border2);background:#0b0808;display:none;flex-wrap:wrap;align-items:center;gap:8px}
+.sm-item.sm-color-open .sm-color-row{display:flex}
+.sm-color-lbl{font-size:7px;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);font-family:'Share Tech Mono',monospace}
+
+.sm-empty2{border:1px dashed var(--border2);background:#0b0d09;padding:24px 18px;text-align:center;margin-bottom:14px}
+.sm-empty2-ico{font-size:20px;color:var(--border2);margin-bottom:8px}
+.sm-empty2-title{font-family:'Oswald',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);margin-bottom:4px}
+.sm-empty2-sub{font-size:8px;color:var(--text-faint);letter-spacing:0.5px;line-height:1.9}
+
+.sm-new-block{border:1px solid var(--border2);background:#0b0d09;position:relative;margin-top:6px}
+.sm-new-block::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:var(--sm-accent,var(--blue));opacity:0.3}
+.sm-new-hdr{padding:7px 12px;border-bottom:1px solid var(--border2);display:flex;align-items:center;gap:8px}
+.sm-new-hdr-lbl{font-size:8px;letter-spacing:1.5px;text-transform:uppercase;flex:1;font-family:'Share Tech Mono',monospace;color:var(--sm-accent,var(--blue))}
+.sm-new-hdr-for{font-size:7.5px;color:var(--text-dim);padding:2px 7px;border:1px solid var(--border);font-family:monospace}
+.sm-new-bdy{padding:11px 12px}
+.sm-new-row2{display:flex;gap:7px;align-items:center}
+.sm-new-colbtn{width:28px;height:28px;border-radius:50%;cursor:pointer;border:2px solid rgba(255,255,255,0.18);flex-shrink:0;transition:transform 0.1s}
+.sm-new-colbtn:hover{transform:scale(1.1)}
+.sm-new-inp2{flex:1;background:#121410;border:1px solid var(--border2);color:var(--text);font-family:'Share Tech Mono',monospace;font-size:12px;padding:8px 10px;outline:none;transition:border-color 0.15s}
+.sm-new-inp2:focus{border-color:var(--sm-accent,var(--blue))}
+.sm-new-inp2::placeholder{color:var(--text-faint)}
+.sm-new-addbtn{padding:8px 16px;background:rgba(58,143,212,0.08);border:1px solid var(--sm-accent,var(--blue));color:var(--sm-accent,var(--blue));font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all 0.15s;flex-shrink:0}
+.sm-new-addbtn:hover{background:rgba(58,143,212,0.15)}
+.sm-new-cprow{display:none;padding:9px 12px;border-top:1px solid var(--border2);background:#0b0808;flex-wrap:wrap;align-items:center;gap:8px}
+.sm-new-cprow.open{display:flex}
+.sm-new-cp-lbl{font-size:7px;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);font-family:'Share Tech Mono',monospace}
+.sm-swatch2{width:16px;height:16px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:transform 0.1s}
+.sm-swatch2:hover{transform:scale(1.2)}
+.sm-swatch2.on{border-color:rgba(255,255,255,0.85)}
+
 @media(max-width:700px){
   .sidebar{display:none}
   .dp-2col{grid-template-columns:1fr}
@@ -1079,92 +1156,119 @@ function renderDocSubManager(typeKey){
   const meta=DOC_TYPES_META[typeKey]||{label:typeKey,color:'var(--blue)'};
   const secs=getDocSections();
   const typeSecs=secs[typeKey]||[];
-  const bySub={};
-  documents.forEach(d=>{if(d.docSubsection)bySub[d.docSubsection]=(bySub[d.docSubsection]||0)+1;});
-  const COLORS=['var(--green)','var(--amber)','var(--blue)','var(--red)','var(--purple)','#9a6ab8','var(--text-dim)','#c4c09e'];
+  const bySec={};documents.forEach(d=>{if(d.docSubsection)bySec[d.docSubsection]=(bySec[d.docSubsection]||0)+1;});
+  const COLORS=['var(--green)','var(--amber)','var(--blue)','var(--red)','var(--purple)','var(--text-dim)','#c4c09e'];
+  window._dsmType=typeKey;
+  window._dsmNewColor=meta.color;
 
-  const emptyHtml=typeSecs.length===0?`
-    <div class="dsm-empty">
-      <div class="dsm-empty-ico" style="color:${meta.color}">◫</div>
-      <div class="dsm-empty-title" style="color:${meta.color}">Подразделы не созданы</div>
-      <div class="dsm-empty-sub">Создай первый подраздел ниже.<br>Потом добавляй документы внутрь него.</div>
-    </div>`:'';
-
-  const itemsHtml=typeSecs.map((s,i)=>{
-    const cnt=bySub[s.name]||0;
-    const color=s.color||meta.color;
-    return `
-      <div class="dsm-sub-item" id="dsub-item-${i}">
-        <div class="dsm-color-stripe" style="background:${color}"></div>
-        <div class="dsm-sub-inner">
-          <div class="dsm-sub-info">
-            <div class="dsm-sub-name" id="dsub-name-${i}">${esc(s.name)}</div>
-            <div class="dsm-sub-meta">
-              <div class="dsm-sub-dot" style="background:${color}" onclick="toggleDocSubCP(${i},'${typeKey}')" title="Изменить цвет →"></div>
-              <span class="dsm-sub-cnt">${cnt}</span>
-              <span style="color:var(--text-faint)">${cnt===1?'запись':cnt>1&&cnt<5?'записи':'записей'}</span>
-            </div>
+  const listHtml=typeSecs.map((s,i)=>{
+    const cnt=bySec[s.name]||0;
+    const col=s.color||meta.color;
+    const swatches=COLORS.map(c=>`<div class="sm-swatch2${col===c?' on':''}" style="background:${c}" onclick="setDocSubColor('${typeKey}',${i},'${c}')"></div>`).join('');
+    return `<div class="sm-item" id="dsm-item-${i}">
+      <div class="sm-item-row" onclick="dsmToggle(${i})">
+        <div class="sm-item-stripe" style="background:${col}"></div>
+        <div class="sm-chevron">›</div>
+        <div class="sm-item-main">
+          <div class="sm-item-name-row" id="dsub-name-${i}">
+            <div class="sm-item-dot2" style="background:${col}"></div>
+            ${esc(s.name)}
           </div>
-          <div class="dsm-sub-actions">
-            <button class="dsm-btn" onclick="moveDocSub('${typeKey}',${i},-1)" title="Вверх">↑</button>
-            <button class="dsm-btn" onclick="moveDocSub('${typeKey}',${i},1)" title="Вниз">↓</button>
-            <button class="dsm-btn" onclick="startEditDocSub('${typeKey}',${i})" title="Переименовать">✎</button>
-            <button class="dsm-btn del" onclick="deleteDocSub('${typeKey}',${i})" title="Удалить">✕</button>
+          <div class="sm-item-meta2">
+            <span class="sm-item-cnt2${cnt>0?' has-rec':''}">${cnt} ${cnt===1?'запись':cnt>1&&cnt<5?'записи':'записей'}</span>
           </div>
         </div>
-      </div>
-      <div class="dsm-cp-row" id="dsub-cp-${i}">
-        <div class="dsm-cp-label">Выбери цвет подраздела</div>
-        <div class="dsm-cp-swatches">
-          ${COLORS.map(c=>`<div class="dsm-swatch${(s.color||meta.color)===c?' on':''}" style="background:${c}" onclick="setDocSubColor('${typeKey}',${i},'${c}')" title="${c}"></div>`).join('')}
+        <div class="sm-item-actions2">
+          <button class="sm-btn2 go2" onclick="event.stopPropagation();closeDetail();setSub('doc-sub','${esc(s.name)}')">→ открыть</button>
+          <button class="sm-btn2" onclick="event.stopPropagation();dsmToggleColor(${i})" title="Цвет">◉</button>
+          <button class="sm-btn2" onclick="event.stopPropagation();moveDocSub('${typeKey}',${i},-1)">↑</button>
+          <button class="sm-btn2" onclick="event.stopPropagation();moveDocSub('${typeKey}',${i},1)">↓</button>
+          <button class="sm-btn2" onclick="event.stopPropagation();startEditDocSub('${typeKey}',${i})">✎</button>
+          <button class="sm-btn2 del2" onclick="event.stopPropagation();deleteDocSub('${typeKey}',${i})">✕</button>
         </div>
-      </div>`;
-  }).join('');
-
-  const newColor=window._dsmNewColor||meta.color;
-  const addHtml=`
-    <div class="dsm-add-section">
-      <div class="dsm-add-label">＋ Новый подраздел</div>
-      <div class="dsm-add-row">
-        <div class="dsm-color-stripe" style="background:${newColor};cursor:pointer" id="dsm-new-color-stripe" onclick="toggleNewColorPicker()" title="Выбрать цвет"></div>
-        <input class="dsm-add-inp" id="new-doc-sub-inp" placeholder="Название подраздела" onkeydown="if(event.key==='Enter')addDocSub('${typeKey}')">
-        <button class="dsm-add-btn" onclick="addDocSub('${typeKey}')">Добавить</button>
       </div>
-      <div id="dsm-new-cp" style="display:none;margin-top:8px">
-        <div class="dsm-color-pick-new">
-          <span class="dsm-color-pick-new-lbl">Цвет:</span>
-          ${COLORS.map(c=>`<div class="dsm-swatch${newColor===c?' on':''}" style="background:${c}" onclick="setNewSubColor('${c}','${typeKey}')"></div>`).join('')}
+      <div class="sm-color-row" id="dsm-cp-${i}">
+        <span class="sm-color-lbl">Цвет</span>${swatches}
+      </div>
+      <div class="sm-expand" id="dsm-exp-${i}">
+        <div class="sm-expand-empty2">Разворачивай чтобы увидеть записи</div>
+        <div class="sm-expand-btns">
+          <button class="sm-expand-btn" onclick="closeDetail();setSub('doc-sub','${esc(s.name)}')">→ Открыть подраздел</button>
         </div>
       </div>
     </div>`;
+  }).join('');
+
+  const emptyHtml=typeSecs.length===0?`
+    <div class="sm-empty2">
+      <div class="sm-empty2-ico">◫</div>
+      <div class="sm-empty2-title">Подразделов нет</div>
+      <div class="sm-empty2-sub">Создай первый подраздел для раздела «${meta.label}».<br>Используй форму ниже.</div>
+    </div>`:'';
+
+  const newColor=window._dsmNewColor||meta.color;
+  const newSwatches=COLORS.map(c=>`<div class="sm-swatch2${newColor===c?' on':''}" style="background:${c}" onclick="setDsmNewColor('${typeKey}','${c}')"></div>`).join('');
 
   document.getElementById('dp-body').style.padding='0';
   document.getElementById('dp-body').innerHTML=`
-    <div class="dsm-wrap" style="--dsm-accent:${meta.color}">
-      <div class="dsm-header">
-        <div class="dsm-breadcrumb">
-          <span style="color:var(--text-faint)">Документы</span>
-          <span class="dsm-breadcrumb-sep">›</span>
-          <span style="color:${meta.color};font-weight:bold">${meta.label}</span>
-          <span class="dsm-breadcrumb-sep">›</span>
+    <div style="--sm-accent:${meta.color}">
+      <div class="sm-head">
+        <div class="sm-crumb">
+          <span>Документы</span>
+          <span class="sm-crumb-sep">›</span>
+          <span style="color:${meta.color}">${meta.label}</span>
+          <span class="sm-crumb-sep">›</span>
           <span>Подразделы</span>
         </div>
-        <div class="dsm-title" style="color:${meta.color}">${meta.label}</div>
-
+        <div class="sm-title" style="color:${meta.color}">${meta.label}</div>
+        <div class="sm-subtitle">Управление подразделами этого типа документов</div>
       </div>
-      <div class="dsm-body">
+      <div class="sm-body">
+        ${typeSecs.length>0?`
+        <div class="sm-list-head">
+          <span class="sm-list-lbl">Подразделы раздела «${meta.label}»</span>
+          <span class="sm-list-cnt">${typeSecs.length} ${typeSecs.length===1?'подраздел':typeSecs.length<5?'подраздела':'подразделов'}</span>
+        </div>`:''}
         ${emptyHtml}
-        <div id="doc-subs-list">${itemsHtml}</div>
-        ${addHtml}
+        ${listHtml}
+        <div class="sm-new-block">
+          <div class="sm-new-hdr">
+            <span class="sm-new-hdr-lbl">＋ Новый подраздел</span>
+            <span class="sm-new-hdr-for">для раздела: ${meta.label}</span>
+          </div>
+          <div class="sm-new-bdy">
+            <div class="sm-new-row2">
+              <div class="sm-new-colbtn" id="dsm-new-colbtn" style="background:${newColor}" onclick="document.getElementById('dsm-new-cprow').classList.toggle('open')" title="Выбрать цвет"></div>
+              <input class="sm-new-inp2" id="new-doc-sub-inp" placeholder="Название подраздела..." onkeydown="if(event.key==='Enter')addDocSub('${typeKey}')">
+              <button class="sm-new-addbtn" onclick="addDocSub('${typeKey}')">Создать</button>
+            </div>
+          </div>
+          <div class="sm-new-cprow" id="dsm-new-cprow">
+            <span class="sm-new-cp-lbl">Цвет</span>${newSwatches}
+          </div>
+        </div>
       </div>
     </div>`;
 
-  // Focus на поле ввода
-  setTimeout(()=>{
-    const inp=document.getElementById('new-doc-sub-inp');
-    if(inp&&typeSecs.length===0)inp.focus();
-  },50);
+  if(typeSecs.length===0)setTimeout(()=>{const el=document.getElementById('new-doc-sub-inp');if(el)el.focus();},50);
 }
+
+window.dsmToggle=function(i){
+  const el=document.getElementById('dsm-item-'+i);
+  if(el)el.classList.toggle('sm-expanded');
+};
+window.dsmToggleColor=function(i){
+  document.querySelectorAll('[id^="dsm-cp-"]').forEach(el=>el.parentElement.classList.remove('sm-color-open'));
+  const item=document.getElementById('dsm-item-'+i);
+  if(item)item.classList.toggle('sm-color-open');
+};
+window.setDsmNewColor=function(tk,color){
+  window._dsmNewColor=color;
+  const btn=document.getElementById('dsm-new-colbtn');if(btn)btn.style.background=color;
+  document.querySelectorAll('#dsm-new-cprow .sm-swatch2').forEach(s=>s.classList.toggle('on',s.style.background===color));
+  document.getElementById('dsm-new-cprow').classList.remove('open');
+};
+
 
 window.toggleNewColorPicker=function(){
   const el=document.getElementById('dsm-new-cp');
@@ -3455,68 +3559,118 @@ function renderClsSecManagerBody(typeKey){
   const secs=getClosedSections();
   const typeSecs=secs[typeKey]||[];
   const bySec={};closedRecords.forEach(r=>{if(r.section)bySec[r.section]=(bySec[r.section]||0)+1;});
-  const COLORS=['var(--red)','var(--amber)','var(--blue)','var(--green)','var(--purple)','var(--text-dim)','#c4c09e'];
+  const COLORS=['var(--red)','var(--amber)','var(--blue)','var(--green)','var(--purple)','var(--text-dim)'];
   window._clsSecMgrType=typeKey;
-  window._clsSecNewColor=meta.color;
+  window._clsSecNewColor=window._clsSecNewColor||meta.color;
+
+  const listHtml=typeSecs.map((s,i)=>{
+    const cnt=bySec[s.name]||0;
+    const col=s.color||meta.color;
+    const swatches=COLORS.map(c=>`<div class="sm-swatch2${col===c?' on':''}" style="background:${c}" onclick="setClsSecColor('${typeKey}',${i},'${c}')"></div>`).join('');
+    return `<div class="sm-item" id="cls-sm-item-${i}">
+      <div class="sm-item-row" onclick="clsSmToggle(${i})">
+        <div class="sm-item-stripe" style="background:${col}"></div>
+        <div class="sm-chevron">›</div>
+        <div class="sm-item-main">
+          <div class="sm-item-name-row" id="cls-sub-name-${i}">
+            <div class="sm-item-dot2" style="background:${col}"></div>
+            ${esc(s.name)}
+          </div>
+          <div class="sm-item-meta2">
+            <span class="sm-item-cnt2${cnt>0?' has-rec':''}">${cnt} ${cnt===1?'запись':cnt>1&&cnt<5?'записи':'записей'}</span>
+          </div>
+        </div>
+        <div class="sm-item-actions2">
+          <button class="sm-btn2 go2" style="color:${meta.color}" onclick="event.stopPropagation();closeDetail();setClsSub('cls-sec:${esc(s.name)}')">→ открыть</button>
+          <button class="sm-btn2" onclick="event.stopPropagation();clsSmToggleColor(${i})">◉</button>
+          <button class="sm-btn2" onclick="event.stopPropagation();moveClsSec('${typeKey}',${i},-1)">↑</button>
+          <button class="sm-btn2" onclick="event.stopPropagation();moveClsSec('${typeKey}',${i},1)">↓</button>
+          <button class="sm-btn2" onclick="event.stopPropagation();startEditClsSec('${typeKey}',${i})">✎</button>
+          <button class="sm-btn2 del2" onclick="event.stopPropagation();deleteClsSec('${typeKey}',${i})">✕</button>
+        </div>
+      </div>
+      <div class="sm-color-row" id="cls-sm-cp-${i}">
+        <span class="sm-color-lbl">Цвет</span>${swatches}
+      </div>
+      <div class="sm-expand" id="cls-sm-exp-${i}">
+        <div class="sm-expand-empty2">Разворачивай чтобы перейти в подраздел</div>
+        <div class="sm-expand-btns">
+          <button class="sm-expand-btn" style="border-color:${meta.color}33;color:${meta.color}" onclick="closeDetail();setClsSub('cls-sec:${esc(s.name)}')">→ Открыть подраздел</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  const emptyHtml=typeSecs.length===0?`
+    <div class="sm-empty2">
+      <div class="sm-empty2-ico">◫</div>
+      <div class="sm-empty2-title">Подразделов нет</div>
+      <div class="sm-empty2-sub">Создай первый подраздел для раздела «${meta.label}».</div>
+    </div>`:'';
+
+  const nc=window._clsSecNewColor||meta.color;
+  const newSwatches=COLORS.map(c=>`<div class="sm-swatch2${nc===c?' on':''}" style="background:${c}" onclick="setClsNewSecColor('${typeKey}','${c}')"></div>`).join('');
+
+  document.getElementById('dp-body').style.padding='0';
   document.getElementById('dp-body').innerHTML=`
-    <div class="dsm-wrap" style="--dsm-accent:${meta.color}">
-      <div class="dsm-header">
-        <div class="dsm-breadcrumb">
-          <span style="color:var(--text-faint)">Закрытые материалы</span>
-          <span class="dsm-breadcrumb-sep">›</span>
-          <span style="color:${meta.color};font-weight:bold">${meta.label}</span>
-          <span class="dsm-breadcrumb-sep">›</span>
+    <div style="--sm-accent:${meta.color}">
+      <div class="sm-head">
+        <div class="sm-crumb">
+          <span>Закрытые материалы</span>
+          <span class="sm-crumb-sep">›</span>
+          <span style="color:${meta.color}">${meta.label}</span>
+          <span class="sm-crumb-sep">›</span>
           <span>Подразделы</span>
         </div>
-        <div class="dsm-title" style="color:${meta.color}">${meta.label}</div>
+        <div class="sm-title" style="color:${meta.color}">${meta.label}</div>
+        <div class="sm-subtitle">Управление подразделами этого типа записей</div>
       </div>
-      <div class="dsm-body">
-        ${typeSecs.length===0?`<div class="dsm-empty"><div class="dsm-empty-ico" style="color:${meta.color}">◫</div><div class="dsm-empty-title" style="color:${meta.color}">Подразделы не созданы</div><div class="dsm-empty-sub">Создай первый подраздел</div></div>`:''}
-        <div id="cls-subs-list">
-          ${typeSecs.map((s,i)=>`
-            <div class="dsm-sub-item" id="cls-sub-item-${i}">
-              <div class="dsm-color-stripe" style="background:${s.color||meta.color}"></div>
-              <div class="dsm-sub-inner">
-                <div class="dsm-sub-info">
-                  <div class="dsm-sub-name" id="cls-sub-name-${i}">${esc(s.name)}</div>
-                  <div class="dsm-sub-meta">
-                    <div class="dsm-sub-dot" style="background:${s.color||meta.color}" onclick="toggleClsSubCP(${i})" title="Цвет"></div>
-                    <span class="dsm-sub-cnt">${bySec[s.name]||0}</span>
-                    <span style="color:var(--text-faint)">${(bySec[s.name]||0)===1?'запись':'записей'}</span>
-                  </div>
-                </div>
-                <div class="dsm-sub-actions">
-                  <button class="dsm-btn" onclick="moveClsSec('${typeKey}',${i},-1)">↑</button>
-                  <button class="dsm-btn" onclick="moveClsSec('${typeKey}',${i},1)">↓</button>
-                  <button class="dsm-btn" onclick="startEditClsSec('${typeKey}',${i})">✎</button>
-                  <button class="dsm-btn del" onclick="deleteClsSec('${typeKey}',${i})">✕</button>
-                </div>
-              </div>
-            </div>
-            <div class="dsm-cp-row" id="cls-cp-${i}">
-              <div class="dsm-cp-label">Цвет</div>
-              <div class="dsm-cp-swatches">${COLORS.map(c=>`<div class="dsm-swatch${(s.color||meta.color)===c?' on':''}" style="background:${c}" onclick="setClsSecColor('${typeKey}',${i},'${c}')"></div>`).join('')}</div>
-            </div>`).join('')}
-        </div>
-        <div class="dsm-add-section">
-          <div class="dsm-add-label">＋ Новый подраздел</div>
-          <div class="dsm-add-row">
-            <div style="width:5px;min-height:36px;background:${meta.color};flex-shrink:0;cursor:pointer" id="cls-sec-new-stripe" onclick="toggleClsNewCP()" title="Цвет"></div>
-            <input class="dsm-add-inp" id="cls-sec-new-inp" placeholder="Название подраздела" onkeydown="if(event.key==='Enter')addClsSec('${typeKey}')">
-            <button class="dsm-add-btn" onclick="addClsSec('${typeKey}')">Добавить</button>
+      <div class="sm-body">
+        ${typeSecs.length>0?`
+        <div class="sm-list-head">
+          <span class="sm-list-lbl">Подразделы раздела «${meta.label}»</span>
+          <span class="sm-list-cnt">${typeSecs.length} ${typeSecs.length===1?'подраздел':typeSecs.length<5?'подраздела':'подразделов'}</span>
+        </div>`:''}
+        ${emptyHtml}
+        ${listHtml}
+        <div class="sm-new-block">
+          <div class="sm-new-hdr">
+            <span class="sm-new-hdr-lbl">＋ Новый подраздел</span>
+            <span class="sm-new-hdr-for">для раздела: ${meta.label}</span>
           </div>
-          <div id="cls-sec-new-cp" style="display:none;margin-top:8px">
-            <div class="color-palette">
-              <span style="font-size:7px;color:var(--text-faint);letter-spacing:1px;margin-right:4px">Цвет:</span>
-              ${COLORS.map(c=>`<div class="cp-swatch" style="background:${c}" onclick="setClsNewSecColor('${typeKey}','${c}')"></div>`).join('')}
+          <div class="sm-new-bdy">
+            <div class="sm-new-row2">
+              <div class="sm-new-colbtn" id="cls-sec-new-colbtn" style="background:${nc}" onclick="document.getElementById('cls-sec-new-cprow').classList.toggle('open')" title="Выбрать цвет"></div>
+              <input class="sm-new-inp2" id="cls-sec-new-inp" placeholder="Название подраздела..." onkeydown="if(event.key==='Enter')addClsSec('${typeKey}')">
+              <button class="sm-new-addbtn" onclick="addClsSec('${typeKey}')">Создать</button>
             </div>
+          </div>
+          <div class="sm-new-cprow" id="cls-sec-new-cprow">
+            <span class="sm-new-cp-lbl">Цвет</span>${newSwatches}
           </div>
         </div>
       </div>
     </div>`;
-  document.getElementById('dp-body').style.padding='0';
-  setTimeout(()=>{if(typeSecs.length===0)document.getElementById('cls-sec-new-inp').focus();},50);
+
+  if(typeSecs.length===0)setTimeout(()=>{const el=document.getElementById('cls-sec-new-inp');if(el)el.focus();},50);
 }
+
+window.clsSmToggle=function(i){
+  const el=document.getElementById('cls-sm-item-'+i);
+  if(el)el.classList.toggle('sm-expanded');
+};
+window.clsSmToggleColor=function(i){
+  document.querySelectorAll('[id^="cls-sm-cp-"]').forEach(el=>el.parentElement.classList.remove('sm-color-open'));
+  const item=document.getElementById('cls-sm-item-'+i);
+  if(item)item.classList.toggle('sm-color-open');
+};
+window.setClsNewSecColor=function(tk,color){
+  window._clsSecNewColor=color;
+  const btn=document.getElementById('cls-sec-new-colbtn');if(btn)btn.style.background=color;
+  document.querySelectorAll('#cls-sec-new-cprow .sm-swatch2').forEach(s=>s.classList.toggle('on',s.style.background===color));
+  document.getElementById('cls-sec-new-cprow').classList.remove('open');
+};
+
 
 window.toggleClsSubCP=function(i){const e=document.getElementById('cls-cp-'+i);document.querySelectorAll('.dsm-cp-row').forEach(x=>x.style.display='none');if(e)e.style.display=e.style.display==='none'||e.style.display===''?'block':'none';};
 window.toggleClsNewCP=function(){const e=document.getElementById('cls-sec-new-cp');if(e)e.style.display=e.style.display==='none'?'flex':'none';};
