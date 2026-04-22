@@ -507,6 +507,66 @@ details.dp-block[open] > summary span:last-child{transform:rotate(90deg);display
 details.dp-block > .dp-block-body{animation:fadeIn 0.15s ease}
 @keyframes fadeIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
 
+
+/* ── ФОТОАРХИВ + ДОКУМЕНТЫ ── */
+.tn-mod.act-photo{color:var(--purple);border-bottom-color:var(--purple)}
+.tn-mod.tn-photo{color:var(--purple-dim)}
+.tn-mod.tn-photo:hover{color:var(--purple)}
+.sb-mod-title.cph{color:var(--purple)}
+.sb-mod-title.cbl{color:var(--blue)}
+.dc-chip{display:inline-flex;font-family:'Share Tech Mono',monospace;font-size:7px;letter-spacing:1px;padding:2px 6px;border:1px solid;text-transform:uppercase;flex-shrink:0}
+.dc-rep{color:var(--green);border-color:var(--green-dark)}
+.dc-svd{color:var(--blue);border-color:var(--blue-dim)}
+.dc-map{color:var(--amber);border-color:var(--amber-dim)}
+.dc-ref{color:var(--purple);border-color:var(--purple-dim)}
+.doc-card{border:1px solid var(--border);background:var(--paper);cursor:pointer;transition:border-color 0.2s;margin-bottom:2px}
+.doc-card:hover{border-color:var(--blue-dim)}
+.doc-card-head{padding:7px 12px;border-bottom:1px solid var(--border2);display:flex;align-items:center;gap:8px}
+.doc-card-title{font-family:'Oswald',sans-serif;font-size:12px;color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.doc-card-sub{font-size:7px;letter-spacing:1px;padding:1px 5px;border:1px solid var(--border);color:var(--text-dim);font-family:'Share Tech Mono',monospace;white-space:nowrap;flex-shrink:0}
+.doc-card-meta{padding:4px 12px;border-bottom:1px solid var(--border2);display:flex;gap:10px;background:var(--paper2)}
+.doc-meta-item{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--text-dim)}
+.doc-meta-item span{color:var(--text)}
+.doc-card-body{padding:6px 12px;font-size:11px;color:var(--text-dim);line-height:1.5}
+.sb-sub-item{display:flex;align-items:center;gap:5px;padding:4px 12px 4px 24px;font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--text-faint);cursor:pointer;border-left:2px solid transparent;transition:all 0.12s;background:none;border-top:none;border-right:none;border-bottom:none;width:100%;text-align:left}
+.sb-sub-item:hover{color:var(--text-dim);background:rgba(255,255,255,0.015)}
+.sb-sub-item.act-sub{color:var(--blue);border-left-color:var(--blue);background:rgba(58,143,212,0.05)}
+.sb-sub-dot{width:4px;height:4px;border-radius:50%;flex-shrink:0}
+.sb-sub-cnt{margin-left:auto;font-size:7px;color:var(--text-faint)}
+.sb-type-gear{background:none;border:none;color:var(--text-faint);font-size:9px;cursor:pointer;padding:0 2px;transition:color 0.15s;font-family:monospace;flex-shrink:0}
+.sb-type-gear:hover{color:var(--blue)}
+.photo-archive-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:4px}
+.pa-card{border:1px solid var(--border);background:var(--paper);cursor:pointer;overflow:hidden;transition:border-color 0.2s}
+.pa-card:hover{border-color:var(--purple-dim)}
+.pa-thumb{height:100px;background:var(--paper3);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.pa-thumb img{width:100%;height:100%;object-fit:cover}
+.pa-thumb-empty{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--text-faint);letter-spacing:1px;text-transform:uppercase}
+.pa-type-badge{position:absolute;top:5px;left:5px;font-family:'Share Tech Mono',monospace;font-size:6px;letter-spacing:1px;padding:1px 5px;border:1px solid;text-transform:uppercase}
+.pa-badge-photo{color:var(--blue);border-color:var(--blue-dim);background:rgba(0,0,0,0.7)}
+.pa-badge-video{color:var(--amber);border-color:var(--amber-dim);background:rgba(0,0,0,0.7)}
+.pa-badge-trap{color:var(--green);border-color:var(--green-dark);background:rgba(0,0,0,0.7)}
+.pa-info{padding:5px 8px;border-top:1px solid var(--border2)}
+.pa-title{font-size:9px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:'Share Tech Mono',monospace}
+.pa-meta{font-size:7px;color:var(--text-faint);margin-top:1px;font-family:'Share Tech Mono',monospace}
+.sub-mgr-item{display:flex;align-items:center;gap:7px;padding:8px 12px;border:1px solid var(--border);background:var(--paper);margin-bottom:3px}
+.sub-mgr-drag{cursor:grab;color:var(--text-faint);font-size:12px;flex-shrink:0}
+.sub-mgr-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;cursor:pointer;border:1px solid rgba(255,255,255,0.1);transition:transform 0.1s}
+.sub-mgr-dot:hover{transform:scale(1.15)}
+.sub-mgr-name{flex:1;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text)}
+.sub-mgr-cnt{font-size:8px;color:var(--text-faint);font-family:'Share Tech Mono',monospace;flex-shrink:0}
+.sub-mgr-btn{padding:3px 7px;background:none;border:1px solid var(--border);color:var(--text-dim);font-family:'Share Tech Mono',monospace;font-size:8px;cursor:pointer;transition:all 0.15s;flex-shrink:0}
+.sub-mgr-btn:hover{border-color:var(--blue-dim);color:var(--blue)}
+.sub-mgr-btn.del:hover{border-color:var(--red-dim);color:var(--red)}
+.color-palette{display:flex;gap:5px;align-items:center;padding:7px 12px;border:1px solid var(--border);background:var(--paper3);margin-bottom:6px;flex-wrap:wrap}
+.cp-swatch{width:14px;height:14px;border-radius:50%;cursor:pointer;transition:transform 0.1s;border:2px solid transparent;flex-shrink:0}
+.cp-swatch:hover{transform:scale(1.2)}
+.cp-swatch.selected{border-color:rgba(255,255,255,0.8)}
+.sub-new-row{display:flex;align-items:center;gap:6px;padding:8px 12px;border:1px dashed var(--border);background:var(--paper3);margin-top:6px}
+.sub-new-row input{flex:1;background:none;border:none;border-bottom:1px solid var(--border);color:var(--text);font-family:'Share Tech Mono',monospace;font-size:10px;outline:none;padding:1px 0}
+.sub-new-row input::placeholder{color:var(--text-faint)}
+.sub-add-btn{padding:4px 10px;background:none;border:1px solid var(--blue-dim);color:var(--blue);font-family:'Share Tech Mono',monospace;font-size:8px;cursor:pointer;transition:all 0.15s}
+.sub-add-btn:hover{border-color:var(--blue);background:rgba(58,143,212,0.06)}
+
 @media(max-width:700px){
   .sidebar{display:none}
   .dp-2col{grid-template-columns:1fr}
@@ -567,6 +627,7 @@ details.dp-block > .dp-block-body{animation:fadeIn 0.15s ease}
       <button class="tn-mod" id="tn-arc" onclick="setModule('arc')">⊙ Архив образцов</button>
       <button class="tn-mod" id="tn-stk" onclick="setModule('stk')">◉ Сталкеры</button>
       <button class="tn-mod" id="tn-doc" onclick="setModule('doc')">▤ Документы</button>
+      <button class="tn-mod tn-photo" id="tn-photo" onclick="setModule('photo')">⊞ Фотоархив</button>
       <button class="tn-mod" id="tn-all" onclick="setModule('all')">◈ Все записи</button>
       <button class="tn-mod tn-cls" id="tn-cls" onclick="handleClsClick()">⊘ Закрытые материалы</button>
     </div>
@@ -848,6 +909,201 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden)setUserOffl
 window.addEventListener('beforeunload',()=>{setUserOffline();});
 
 // DATA LISTENERS
+
+// ══ DOC SECTIONS ══
+function getDocSections(){
+  try{const s=localStorage.getItem('doc_sections');return s?JSON.parse(s):{};}
+  catch(e){return {};}
+}
+function saveDocSections(obj){localStorage.setItem('doc_sections',JSON.stringify(obj));}
+
+const DOC_TYPES_META={
+  'отчёт':{label:'Отчёты',color:'var(--green)'},
+  'сводка':{label:'Сводки',color:'var(--blue)'},
+  'карта':{label:'Карты',color:'var(--amber)'},
+  'справка':{label:'Справка',color:'var(--purple)'},
+};
+
+window.updateDocSubOptions=function(type){
+  const sel=document.getElementById('ef-docsubsection');
+  if(!sel)return;
+  const secs=getDocSections()[type.toLowerCase()]||[];
+  sel.innerHTML='<option value="">— без подраздела —</option>'+secs.map(s=>`<option value="${esc(s.name)}">${esc(s.name)}</option>`).join('');
+};
+
+window.openDocSubManager=function(typeKey,typeLabel){
+  document.getElementById('detail-panel').classList.add('open');
+  document.getElementById('dp-title').textContent=`Подразделы — ${typeLabel}`;
+  document.getElementById('dp-title').style.color='var(--blue)';
+  document.getElementById('dp-actions').innerHTML=`<button class="act-btn btn-cancel" onclick="closeDetail()">✕ Закрыть</button>`;
+  renderDocSubManager(typeKey);
+};
+
+function renderDocSubManager(typeKey){
+  const meta=DOC_TYPES_META[typeKey]||{label:typeKey,color:'var(--blue)'};
+  const secs=getDocSections();
+  const typeSecs=secs[typeKey]||[];
+  const bySub={};documents.forEach(d=>{if(d.docSubsection)bySub[d.docSubsection]=(bySub[d.docSubsection]||0)+1;});
+  const COLORS=['var(--green)','var(--amber)','var(--blue)','var(--red)','var(--purple)','var(--text-dim)','#c4c09e'];
+  document.getElementById('dp-body').innerHTML=`
+    <div class="sec-manage-wrap">
+      <div class="sec-manage-title" style="color:var(--blue)">Подразделы: ${meta.label}</div>
+      <div id="doc-subs-list">
+        ${typeSecs.map((s,i)=>`
+          <div class="sub-mgr-item" id="dsub-item-${i}">
+            <div class="sub-mgr-drag">⠿</div>
+            <div class="sub-mgr-dot" style="background:${s.color||meta.color}" onclick="toggleDocSubCP(${i},'${typeKey}')" title="Цвет"></div>
+            <span class="sub-mgr-name" id="dsub-name-${i}">${esc(s.name)}</span>
+            <span class="sub-mgr-cnt">${bySub[s.name]||0} зап.</span>
+            <button class="sub-mgr-btn" onclick="moveDocSub('${typeKey}',${i},-1)">↑</button>
+            <button class="sub-mgr-btn" onclick="moveDocSub('${typeKey}',${i},1)">↓</button>
+            <button class="sub-mgr-btn" onclick="startEditDocSub('${typeKey}',${i})">✎</button>
+            <button class="sub-mgr-btn del" onclick="deleteDocSub('${typeKey}',${i})">✕</button>
+          </div>
+          <div id="dsub-cp-${i}" style="display:none">
+            <div class="color-palette">
+              <span style="font-size:7px;color:var(--text-faint);letter-spacing:1px;margin-right:4px">Цвет:</span>
+              ${COLORS.map(c=>`<div class="cp-swatch${(s.color||meta.color)===c?' selected':''}" style="background:${c}" onclick="setDocSubColor('${typeKey}',${i},'${c}')"></div>`).join('')}
+            </div>
+          </div>`).join('')}
+      </div>
+      <div class="sub-new-row">
+        <div class="sub-mgr-dot" style="background:${meta.color};border:1px dashed var(--border)"></div>
+        <input id="new-doc-sub-inp" placeholder="Название подраздела" onkeydown="if(event.key==='Enter')addDocSub('${typeKey}')">
+        <button class="sub-add-btn" onclick="addDocSub('${typeKey}')">✓ Добавить</button>
+      </div>
+      <button onclick="showNewDocSubForm('${typeKey}')" style="width:100%;margin-top:8px;padding:7px;background:none;border:1px dashed var(--border);color:var(--text-faint);font-family:monospace;font-size:8px;text-transform:uppercase;letter-spacing:1px;cursor:pointer;transition:all 0.15s" onmouseover="this.style.borderColor='var(--blue-dim)';this.style.color='var(--blue)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-faint)'">＋ Добавить подраздел</button>
+    </div>`;
+}
+window.showNewDocSubForm=function(tk){document.getElementById('new-doc-sub-inp').focus();};
+window.toggleDocSubCP=function(i,tk){const e=document.getElementById('dsub-cp-'+i);if(e)e.style.display=e.style.display==='none'?'':'none';};
+window.setDocSubColor=function(tk,i,color){const s=getDocSections();if(!s[tk])return;s[tk][i].color=color;saveDocSections(s);renderDocSubManager(tk);renderSidebar();};
+window.moveDocSub=function(tk,i,dir){const s=getDocSections();const a=s[tk]||[];const ni=i+dir;if(ni<0||ni>=a.length)return;[a[i],a[ni]]=[a[ni],a[i]];s[tk]=a;saveDocSections(s);renderDocSubManager(tk);renderSidebar();};
+window.addDocSub=function(tk){
+  const name=document.getElementById('new-doc-sub-inp').value.trim();if(!name)return;
+  const s=getDocSections();if(!s[tk])s[tk]=[];
+  const meta=DOC_TYPES_META[tk]||{color:'var(--blue)'};
+  s[tk].push({name,color:meta.color});saveDocSections(s);
+  renderDocSubManager(tk);renderSidebar();showToast('✓ Подраздел добавлен');
+};
+window.deleteDocSub=function(tk,i){
+  const s=getDocSections();const name=s[tk][i].name;
+  const cnt=documents.filter(d=>d.docSubsection===name).length;
+  showConfirm(cnt?`Удалить «${name}»? ${cnt} записей перейдут в общий раздел.`:`Удалить «${name}»?`,async()=>{
+    await Promise.all(documents.filter(d=>d.docSubsection===name).map(d=>setDoc(doc(db,'documents',d.id),{...d,docSubsection:''})));
+    s[tk].splice(i,1);saveDocSections(s);renderDocSubManager(tk);renderSidebar();renderContent();showToast('Подраздел удалён');
+  });
+};
+window.startEditDocSub=function(tk,i){
+  const s=getDocSections();const el=document.getElementById('dsub-name-'+i);if(!el)return;
+  const orig=s[tk][i].name;
+  el.innerHTML=`<input value="${esc(orig)}" style="background:none;border:none;border-bottom:1px solid var(--blue-dim);outline:none;font-family:monospace;font-size:10px;color:var(--text);width:100%" id="dsub-ei-${i}">`;
+  const inp=document.getElementById('dsub-ei-'+i);inp.focus();inp.select();
+  const save=()=>saveEditDocSub(tk,i,orig,inp.value.trim());
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter')save();if(e.key==='Escape')renderDocSubManager(tk);});
+  inp.addEventListener('blur',()=>setTimeout(save,150));
+};
+async function saveEditDocSub(tk,i,orig,nn){
+  if(!nn||nn===orig){renderDocSubManager(tk);return;}
+  const s=getDocSections();s[tk][i].name=nn;saveDocSections(s);
+  await Promise.all(documents.filter(d=>d.docSubsection===orig).map(d=>setDoc(doc(db,'documents',d.id),{...d,docSubsection:nn})));
+  renderDocSubManager(tk);renderSidebar();showToast('✓ Переименовано');
+}
+
+// ══ PHOTO MODULE ══
+let photos=[];
+let unsubPhotos=null;
+
+function sbItemPhoto(group,val,label,cnt,dotColor='var(--purple)'){
+  const isAll=val==='all-photo';
+  const isActive=isAll?(!currentSub):!!(currentSub&&currentSub.group===group&&currentSub.val===val);
+  return `<button class="sb-item${isActive?' act-p':''}" onclick="setSub('${group||''}','${val}')" style="width:100%">
+    <div class="sb-dot" style="background:${dotColor}"></div>
+    <span style="flex:1;text-align:left">${label}</span>
+    <span class="sb-cnt">${cnt||0}</span>
+  </button>`;
+}
+
+function startPhotosListener(){
+  if(unsubPhotos)return;
+  unsubPhotos=onSnapshot(collection(db,'photos'),snap=>{
+    photos=snap.docs.map(d=>({id:d.id,...d.data()}));
+    if(currentModule==='photo'){renderSidebar();renderContent();}
+  });
+}
+
+function renderPhotoDetail(p){
+  document.getElementById('dp-title').style.color='var(--purple)';
+  const tl=(p.photoType||'').toLowerCase();
+  const bc=tl==='видео'?'pa-badge-video':tl==='фотоловушка'?'pa-badge-trap':'pa-badge-photo';
+  const phs=(p.photos||[]).map(ph=>`<div class="photo-item"><img src="${ph.data}" alt="" onclick="openLightbox('${ph.data}')"></div>`).join('');
+  document.getElementById('dp-body').innerHTML=`
+    <div class="dp-2col">
+      <div>
+        ${phs?`<div class="dp-block"><div class="dp-block-label">Файл / изображение</div><div class="dp-block-body"><div class="photo-grid">${phs}</div></div></div>`:''}
+        ${p.note?`<div class="dp-block"><div class="dp-block-label">Заметка</div><div class="dp-block-body"><div class="fv-val">${esc(p.note)}</div></div></div>`:''}
+      </div>
+      <div>
+        <div class="dp-block"><div class="dp-block-label">Параметры</div><div class="dp-block-body">
+          <div class="fv"><div class="fv-label">Тип</div><span class="dc-chip ${bc}" style="border:1px solid">${esc(p.photoType||'—')}</span></div>
+          <div class="fv"><div class="fv-label">Дата</div><div class="fv-val mono">${fmtDate(p.date)}</div></div>
+          <div class="fv"><div class="fv-label">Автор / источник</div><div class="fv-val${!p.photoAuthor?' empty':''}">${p.photoAuthor?esc(p.photoAuthor):'—'}</div></div>
+          <div class="fv"><div class="fv-label">Связано с</div><div class="fv-val${!p.related?' empty':''}">${p.related?esc(p.related):'—'}</div></div>
+        </div></div>
+      </div>
+    </div>`;
+}
+
+function renderPhotoForm(id,isNew){
+  const p=id?photos.find(x=>x.id===id):{};
+  const newId=uid();
+  if(isNew){editingId=newId;window._newId=newId;}
+  window._editMod='photo';
+  window._editRecord=isNew?{id:editingId,photos:[]}:JSON.parse(JSON.stringify(p));
+  setEditPanel(isNew?'Новый материал':`Редактировать: ${p.title||''}`, 'photo');
+  const ph=(window._editRecord.photos||[]).map(f=>`<div class="photo-item"><img src="${f.data}" alt="" onclick="openLightbox('${f.data}')"><button class="photo-del" onclick="deletePhoto('${f.id}')">✕</button></div>`).join('');
+  document.getElementById('dp-body').innerHTML=`
+    <div class="dp-2col">
+      <div>
+        <div class="dp-block"><div class="dp-block-label">Основные поля</div><div class="dp-block-body">
+          <div class="form-field" style="margin-bottom:10px">
+            <label class="form-label">Название *</label>
+            <input type="text" id="ef-photo-title" value="${esc(p.title||'')}" placeholder="Название материала" style="font-size:14px">
+          </div>
+          <div class="form-grid">
+            <div class="form-field"><label class="form-label">Тип материала</label>
+              <select id="ef-photo-type">
+                <option value="">— выбери —</option>
+                <option value="фото"${(p.photoType||'')==='фото'?' selected':''}>Фото</option>
+                <option value="видео"${(p.photoType||'')==='видео'?' selected':''}>Видео</option>
+                <option value="фотоловушка"${(p.photoType||'')==='фотоловушка'?' selected':''}>Фотоловушка</option>
+              </select></div>
+            <div class="form-field"><label class="form-label">Дата</label>
+              <input type="date" id="ef-photo-date" value="${p.date||today()}"></div>
+            <div class="form-field"><label class="form-label">Автор / источник</label>
+              <input type="text" id="ef-photo-author" value="${esc(p.photoAuthor||'')}" placeholder="Позывной, источник..."></div>
+            <div class="form-field"><label class="form-label">Связано с</label>
+              <input type="text" id="ef-photo-related" value="${esc(p.related||'')}" placeholder="Образец, операция..."></div>
+          </div>
+          <div class="form-field" style="margin-top:9px"><label class="form-label">Заметка</label>
+            <textarea id="ef-photo-note" rows="3">${esc(p.note||'')}</textarea></div>
+        </div></div>
+        <div class="dp-block"><div class="dp-block-label">Файл / изображение</div><div class="dp-block-body">
+          <div class="photo-grid" id="dp-photo-grid">${ph}
+            <label class="photo-add-btn"><span class="pic">＋</span><span>Загрузить</span>
+              <input type="file" accept="image/*,video/*" multiple style="display:none" onchange="handlePhotoUpload(event)">
+            </label>
+          </div>
+        </div></div>
+      </div>
+      <div><div class="dp-block"><div class="dp-block-label">Инфо</div>
+        <div class="dp-block-body" style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--text-dim);line-height:2">
+          <div style="font-size:8px;color:var(--text-faint)">* — обязательное поле</div>
+        </div>
+      </div></div>
+    </div>`;
+}
+
 function startListeners(){
   onSnapshot(collection(db,'records'),snap=>{
     records=snap.docs.map(d=>({id:d.id,...d.data()}));
@@ -861,6 +1117,8 @@ function startListeners(){
     documents=snap.docs.map(d=>({id:d.id,...d.data()}));
     renderSidebar();renderContent();
   });
+  // Фотоархив — запустить сразу
+  startPhotosListener();
 }
 
 // MODULE SWITCHING
@@ -869,9 +1127,9 @@ window.setModule=function(mod){
   document.getElementById('detail-panel').classList.remove('open');
   editingId=null;window._editRecord=null;
   // update top nav
-  ['arc','stk','doc','all'].forEach(m=>{
+  ['arc','stk','doc','all','photo'].forEach(m=>{
     const el=document.getElementById('tn-'+m);
-    if(el) el.className='tn-mod'+(m===mod?' act-'+m:'');
+    if(el) el.className='tn-mod'+(m==='photo'?' tn-photo':'')+(m===mod?' act-'+m:'');
   });
   // cls button keeps its own state — managed by activateClsModule
   const clsEl=document.getElementById('tn-cls');
@@ -884,7 +1142,7 @@ window.setModule=function(mod){
   else if(mod==='cls'){addBtn.className='add-btn';addBtn.style.borderColor='var(--red-dim)';addBtn.style.color='var(--red)';addBtn.textContent='＋ Запись';}
   else{addBtn.className='add-btn g';addBtn.textContent='＋ Добавить';}
   // detail title color
-  document.getElementById('dp-title').className='dp-title '+(mod==='arc'?'cg':mod==='stk'?'ca':mod==='doc'?'cp':'cg');
+  document.getElementById('dp-title').className='dp-title '+(mod==='arc'?'cg':mod==='stk'?'ca':mod==='doc'||mod==='photo'?'cp':'cg');
   renderToolbarFilters();
   renderSidebar();
   renderContent();
@@ -949,23 +1207,59 @@ function renderSidebar(){
     startPresenceInSidebar();
   }
   else if(mod==='doc'){
-    titleEl.className='sb-mod-title cp';titleEl.textContent='Документы';
-    subEl.textContent='Архив · Отчёты · Заметки';
-    const byType={'отчёт':0,'заметка':0,'аналитика':0,'срочно':0,'архивная запись':0,'служебная заметка':0};
-    documents.forEach(d=>{const t=(d.docType||'').toLowerCase();if(byType[t]!==undefined)byType[t]++;});
-    const urgent=byType['срочно'];
+    titleEl.className='sb-mod-title cbl';titleEl.textContent='Документы';
+    subEl.textContent='Текстовый и картографический архив';
+    const DOC_TYPES_LIST=[
+      {key:'отчёт',label:'Отчёты',color:'var(--green)'},
+      {key:'сводка',label:'Сводки',color:'var(--blue)'},
+      {key:'карта',label:'Карты',color:'var(--amber)'},
+      {key:'справка',label:'Справка',color:'var(--purple)'},
+    ];
+    const byDocType={};DOC_TYPES_LIST.forEach(t=>{byDocType[t.key]=0;});
+    documents.forEach(d=>{const t=(d.docType||'').toLowerCase();if(byDocType[t]!==undefined)byDocType[t]++;});
+    const docSecs=getDocSections();
+    const bySub={};
+    documents.forEach(d=>{if(d.docSubsection)bySub[d.docSubsection]=(bySub[d.docSubsection]||0)+1;});
+    const typeRows=DOC_TYPES_LIST.map(t=>{
+      const subs=docSecs[t.key]||[];
+      const isTypeAct=currentSub&&currentSub.group==='doc-type'&&currentSub.val===t.key;
+      const subRows=subs.map(s=>{
+        const isSubAct=currentSub&&currentSub.group==='doc-sub'&&currentSub.val===s.name;
+        return `<button class="sb-sub-item${isSubAct?' act-sub':''}" onclick="setSub('doc-sub','${esc(s.name)}')">
+          <div class="sb-sub-dot" style="background:${s.color||t.color}"></div>
+          <span style="flex:1">${esc(s.name)}</span>
+          <span class="sb-sub-cnt">${bySub[s.name]||0}</span>
+        </button>`;
+      }).join('');
+      return `<button class="sb-item${isTypeAct?' act-p':''}" onclick="setSub('doc-type','${t.key}')" style="width:100%;display:flex;align-items:center;gap:6px;padding:6px 12px;background:${isTypeAct?'rgba(154,106,184,0.06)':'none'};border:none;border-left:2px solid ${isTypeAct?'var(--purple)':'transparent'};font-family:monospace;font-size:9px;cursor:pointer;color:${isTypeAct?'var(--purple)':'var(--text-dim)'}">
+        <div class="sb-dot" style="background:${t.color}"></div>
+        <span style="flex:1;text-align:left">${t.label}</span>
+        <span class="sb-cnt">${byDocType[t.key]||0}</span>
+        <button class="sb-type-gear" onclick="event.stopPropagation();openDocSubManager('${t.key}','${t.label}')">⚙</button>
+      </button>${subRows}`;
+    }).join('');
     navEl.innerHTML=`
-      <div class="sb-sec"><span>Тип документа</span></div>
+      <div class="sb-sec" style="padding-top:10px"><span>Тип</span></div>
       ${sbItem(null,'all-doc','Все документы',documents.length,'p')}
-      ${sbItem('doc-type','отчёт','Отчёты',byType['отчёт'],'p',true,'var(--green)')}
-      ${sbItem('doc-type','заметка','Заметки',byType['заметка'],'p',true,'var(--amber)')}
-      ${sbItem('doc-type','аналитика','Аналитика',byType['аналитика'],'p',true,'var(--blue)')}
-      ${sbItem('doc-type','срочно','Срочно',byType['срочно'],'p',true,'var(--red)')}
-      ${sbItem('doc-type','архивная запись','Архивные',byType['архивная запись'],'p',true,'var(--text-dim)')}
-      ${sbItem('doc-type','служебная заметка','Служебные',byType['служебная заметка'],'p',true,'var(--text-dim)')}`;
+      ${typeRows}`;
     statsEl.innerHTML=`
-      <div class="st-box"><div class="st-n" style="color:var(--purple)">${documents.length}</div><div class="st-l">Всего</div></div>
-      <div class="st-box"><div class="st-n" style="color:${urgent?'var(--red)':'var(--text-faint)'}">${urgent}</div><div class="st-l" style="color:${urgent?'var(--red)':''}">Срочных</div></div>`;
+      <div class="st-box"><div class="st-n" style="color:var(--blue)">${documents.length}</div><div class="st-l">Всего</div></div>
+      <div class="st-box"><div class="st-n" style="color:var(--amber)">${byDocType['карта']||0}</div><div class="st-l">Карт</div></div>`;
+  }
+  else if(mod==='photo'){
+    titleEl.className='sb-mod-title cph';titleEl.textContent='Фотоархив';
+    subEl.textContent='Визуальные материалы';
+    const byPhType={'фото':0,'видео':0,'фотоловушка':0};
+    photos.forEach(p=>{const t=(p.photoType||'').toLowerCase();if(byPhType[t]!==undefined)byPhType[t]++;});
+    navEl.innerHTML=`
+      <div class="sb-sec" style="padding-top:10px"><span>Тип</span></div>
+      ${sbItemPhoto(null,'all-photo','Все материалы',photos.length)}
+      ${sbItemPhoto('photo-type','фото','Фото',byPhType['фото'],'var(--blue)')}
+      ${sbItemPhoto('photo-type','видео','Видео',byPhType['видео'],'var(--amber)')}
+      ${sbItemPhoto('photo-type','фотоловушка','Фотоловушки',byPhType['фотоловушка'],'var(--green)')}`;
+    statsEl.innerHTML=`
+      <div class="st-box"><div class="st-n" style="color:var(--purple)">${photos.length}</div><div class="st-l">Всего</div></div>
+      <div class="st-box"><div class="st-n" style="color:var(--blue)">${byPhType['фото']}</div><div class="st-l">Фото</div></div>`;
   }
   else if(mod==='cls'){
     titleEl.className='sb-mod-title cr';titleEl.textContent='Закрытые материалы';
@@ -1125,13 +1419,30 @@ function renderToolbarFilters(){
   }else if(mod==='stk'){
     el.innerHTML='';
   }else if(mod==='doc'){
-    el.innerHTML=`<select class="tb-select" id="f-author" onchange="renderContent()">
-      <option value="">Все авторы</option>
-    </select>`;
-    // populate authors
     const authors=[...new Set(documents.map(d=>d.author).filter(Boolean))];
-    const sel=document.getElementById('f-author');
-    if(sel)authors.forEach(a=>{const o=document.createElement('option');o.value=a;o.textContent=a;sel.appendChild(o);});
+    const authOpts=authors.map(a=>`<option value="${esc(a)}">${esc(a)}</option>`).join('');
+    el.innerHTML=`
+      <select class="tb-select" id="f-doctype" onchange="renderContent()">
+        <option value="">Все типы</option>
+        <option value="отчёт">Отчёты</option>
+        <option value="сводка">Сводки</option>
+        <option value="карта">Карты</option>
+        <option value="справка">Справка</option>
+      </select>
+      <select class="tb-select" id="f-author" onchange="renderContent()">
+        <option value="">Все авторы</option>${authOpts}
+      </select>`;
+  }else if(mod==='photo'){
+    const phAuthors=[...new Set(photos.map(p=>p.photoAuthor).filter(Boolean))];
+    const phOpts=phAuthors.map(a=>`<option value="${esc(a)}">${esc(a)}</option>`).join('');
+    el.innerHTML=`
+      <select class="tb-select" id="f-phototype" onchange="renderContent()">
+        <option value="">Все типы</option>
+        <option value="фото">Фото</option>
+        <option value="видео">Видео</option>
+        <option value="фотоловушка">Фотоловушки</option>
+      </select>
+      ${phAuthors.length?`<select class="tb-select" id="f-photoauthor" onchange="renderContent()"><option value="">Все авторы</option>${phOpts}</select>`:''}`;
   }else{
     el.innerHTML='';
   }
@@ -1169,11 +1480,25 @@ function getFiltered(){
     });
   }
   if(mod==='doc'){
+    const fDocType=getVal('f-doctype');
     const fAuthor=getVal('f-author');
     return documents.filter(d=>{
       if(sub&&sub.group==='doc-type'&&(d.docType||'').toLowerCase()!==sub.val)return false;
+      if(sub&&sub.group==='doc-sub'&&(d.docSubsection||'')!==sub.val)return false;
+      if(fDocType&&(d.docType||'').toLowerCase()!==fDocType)return false;
       if(fAuthor&&d.author!==fAuthor)return false;
-      if(q&&!(d.title||'').toLowerCase().includes(q))return false;
+      if(q&&!(d.title||'').toLowerCase().includes(q)&&!(d.text||'').toLowerCase().includes(q))return false;
+      return true;
+    }).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+  }
+  if(mod==='photo'){
+    const fPhType=getVal('f-phototype');
+    const fPhAuth=getVal('f-photoauthor');
+    return photos.filter(p=>{
+      if(sub&&sub.group==='photo-type'&&(p.photoType||'').toLowerCase()!==sub.val)return false;
+      if(fPhType&&(p.photoType||'').toLowerCase()!==fPhType)return false;
+      if(fPhAuth&&p.photoAuthor!==fPhAuth)return false;
+      if(q&&!(p.title||'').toLowerCase().includes(q))return false;
       return true;
     }).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
   }
@@ -1302,15 +1627,56 @@ function renderList(){
     return;
   }
   if(mod==='doc'){
-    ca.innerHTML=rows.map(d=>`<div class="doc-card" onclick="openDetail('${d.id}','doc')">
-      <div class="doc-card-head">${docTypeChip(d.docType)}<span class="doc-card-title">${esc(d.title||'Без названия')}</span></div>
-      <div class="doc-card-meta">
-        <div class="doc-meta-item">Дата: <span>${fmtDate(d.date)}</span></div>
-        <div class="doc-meta-item">Автор: <span>${esc(d.author||'—')}</span></div>
-        ${d.related?`<div class="doc-meta-item">Связано: <span>${esc(d.related)}</span></div>`:''}
-      </div>
-      <div class="doc-card-body">${esc((d.summary||d.text||'').slice(0,120))}${(d.summary||d.text||'').length>120?'…':''}</div>
-    </div>`).join('');
+    ca.innerHTML=`<div class="content-header"><span class="content-count">Найдено: <strong>${rows.length}</strong></span></div>`
+    +rows.map(d=>{
+      const tl=(d.docType||'').toLowerCase();
+      let chipCls='dc-rep';
+      if(tl==='сводка')chipCls='dc-svd';
+      else if(tl==='карта')chipCls='dc-map';
+      else if(tl==='справка')chipCls='dc-ref';
+      const subL=d.docSubsection?`<span class="doc-card-sub">${esc(d.docSubsection)}</span>`:'';
+      return`<div class="doc-card" onclick="openDetail('${d.id}','doc')">
+        <div class="doc-card-head"><span class="dc-chip ${chipCls}">${esc(d.docType||'—')}</span><span class="doc-card-title">${esc(d.title||'Без названия')}</span>${subL}</div>
+        <div class="doc-card-meta">
+          <div class="doc-meta-item">Дата: <span>${fmtDate(d.date)}</span></div>
+          <div class="doc-meta-item">Автор: <span>${esc(d.author||'—')}</span></div>
+          ${d.related?`<div class="doc-meta-item">Связано: <span>${esc(d.related)}</span></div>`:''}
+        </div>
+        <div class="doc-card-body">${esc((d.summary||d.text||'').slice(0,110))}${(d.summary||d.text||'').length>110?'…':''}</div>
+      </div>`;
+    }).join('');
+    return;
+  }
+  if(mod==='photo'){
+    if(currentView==='list'){
+      ca.innerHTML=`<div class="content-header"><span class="content-count">Найдено: <strong>${rows.length}</strong></span></div>
+        <table class="list-table"><thead><tr>
+          <th>Тип</th><th>Название</th><th>Автор</th><th>Дата</th>
+        </tr></thead><tbody>${rows.map(p=>{
+          const tl=(p.photoType||'').toLowerCase();
+          const bc=tl==='видео'?'pa-badge-video':tl==='фотоловушка'?'pa-badge-trap':'pa-badge-photo';
+          return`<tr class="dr" onclick="openDetail('${p.id}','photo')">
+            <td><span class="dc-chip ${bc}" style="border:1px solid">${esc(p.photoType||'фото')}</span></td>
+            <td><strong>${esc(p.title||'Без названия')}</strong></td>
+            <td class="td-dim">${esc(p.photoAuthor||'—')}</td>
+            <td class="td-dim">${fmtDate(p.date)}</td>
+          </tr>`;
+        }).join('')}</tbody></table>`;
+    }else{
+      ca.innerHTML=`<div class="content-header"><span class="content-count">Найдено: <strong>${rows.length}</strong></span></div>
+        <div class="photo-archive-grid">${rows.map(p=>{
+          const tl=(p.photoType||'').toLowerCase();
+          const bc=tl==='видео'?'pa-badge-video':tl==='фотоловушка'?'pa-badge-trap':'pa-badge-photo';
+          const thumb=(p.photos&&p.photos.length)?`<img src="${p.photos[0].data}" alt="">`:`<div class="pa-thumb-empty">${esc(p.photoType||'фото')}</div>`;
+          return`<div class="pa-card" onclick="openDetail('${p.id}','photo')">
+            <div class="pa-thumb">${thumb}<span class="pa-type-badge ${bc}">${esc(p.photoType||'фото')}</span></div>
+            <div class="pa-info">
+              <div class="pa-title">${esc(p.title||'Без названия')}</div>
+              <div class="pa-meta">${esc(p.photoAuthor||'—')} · ${fmtDate(p.date)}</div>
+            </div>
+          </div>`;
+        }).join('')}</div>`;
+    }
     return;
   }
   if(mod==='cls'){
@@ -1426,6 +1792,11 @@ window.openDetail=function(id,mod){
     document.getElementById('dp-title').textContent=d.title||'Документ';
     document.getElementById('dp-actions').innerHTML=`<button class="act-btn btn-edit" onclick="openEdit('${id}','doc')">✎ Редактировать</button><button class="act-btn btn-del" onclick="confirmDel('${id}','doc')">✕ Удалить</button>`;
     renderDocDetail(d);
+  }else if(mod==='photo'){
+    const p=photos.find(x=>x.id===id);if(!p)return;
+    document.getElementById('dp-title').textContent=p.title||'Материал';
+    document.getElementById('dp-actions').innerHTML=`<button class="act-btn btn-edit" onclick="openEdit('${id}','photo')">✎ Редактировать</button><button class="act-btn btn-del" onclick="confirmDel('${id}','photo')">✕ Удалить</button>`;
+    renderPhotoDetail(p);
   }
 }
 
@@ -1526,7 +1897,7 @@ window.closeDetail=function(){
 }
 
 // ADD / EDIT
-window.openAdd=function(){openEdit(null,currentModule==='all'?'arc':currentModule==='cls'?'cls':currentModule);}
+window.openAdd=function(){const m=currentModule==='all'?'arc':currentModule==='cls'?'cls':currentModule;openEdit(null,m);}
 window.openAddWithType=function(type){
   openEdit(null,'arc');
   // Установить тип после рендера формы
@@ -1541,6 +1912,7 @@ window.openEdit=function(id,mod){
   else if(mod==='stk')renderStkForm(id,!id);
   else if(mod==='doc')renderDocForm(id,!id);
   else if(mod==='cls')renderClsForm(id,!id);
+  else if(mod==='photo')renderPhotoForm(id,!id);
 }
 
 function setEditPanel(title,mod){
@@ -1813,131 +2185,57 @@ function renderDocForm(id,isNew){
   window._editRecord=isNew?{id:editingId,photos:[]}:JSON.parse(JSON.stringify(d));
   setEditPanel(isNew?'Новый документ':`Редактировать: ${d.title||''}`, 'doc');
   const ph=(window._editRecord.photos||[]).map(p=>`<div class="photo-item"><img src="${p.data}" alt="" onclick="openLightbox('${p.data}')"><button class="photo-del" onclick="deletePhoto('${p.id}')">✕</button></div>`).join('');
+  const docSecs=getDocSections();
+  const curType=(d.docType||'').toLowerCase();
+  const secOpts=(docSecs[curType]||[]).map(s=>`<option value="${esc(s.name)}"${d.docSubsection===s.name?' selected':''}>${esc(s.name)}</option>`).join('');
   document.getElementById('dp-body').innerHTML=`
     <div class="dp-2col">
       <div>
         <div class="dp-block"><div class="dp-block-label">Основные поля</div><div class="dp-block-body">
-          <div class="form-field"><label class="form-label">Название *</label><input type="text" id="ef-title" value="${esc(d.title||'')}" placeholder="Название документа"></div>
-          <div class="form-grid" style="margin-top:9px">
-            <div class="form-field"><label class="form-label">Тип документа</label><select id="ef-doctype"><option value="">—</option><option value="отчёт"${(d.docType||'')==='отчёт'?' selected':''}>Отчёт</option><option value="заметка"${(d.docType||'')==='заметка'?' selected':''}>Заметка</option><option value="аналитика"${(d.docType||'')==='аналитика'?' selected':''}>Аналитика</option><option value="срочно"${(d.docType||'')==='срочно'?' selected':''}>Срочно</option><option value="архивная запись"${(d.docType||'')==='архивная запись'?' selected':''}>Архивная запись</option><option value="служебная заметка"${(d.docType||'')==='служебная заметка'?' selected':''}>Служебная заметка</option></select></div>
-            <div class="form-field"><label class="form-label">Дата</label><input type="date" id="ef-date" value="${d.date||today()}"></div>
-            <div class="form-field"><label class="form-label">Автор</label><input type="text" id="ef-author" value="${esc(d.author||'')}" placeholder="Позывной автора"></div>
-            <div class="form-field"><label class="form-label">Связано с</label><input type="text" id="ef-related" value="${esc(d.related||'')}" placeholder="Образец, сталкер..."></div>
+          <div class="form-field" style="margin-bottom:10px">
+            <label class="form-label">Название *</label>
+            <input type="text" id="ef-title" value="${esc(d.title||'')}" placeholder="Название документа" style="font-size:14px">
           </div>
-          <div class="form-field" style="margin-top:9px"><label class="form-label">Краткое описание</label><textarea id="ef-summary" rows="2">${esc(d.summary||'')}</textarea></div>
-          <div class="form-field" style="margin-top:9px"><label class="form-label">Полный текст</label><textarea id="ef-text" rows="7">${esc(d.text||'')}</textarea></div>
+          <div class="form-grid">
+            <div class="form-field"><label class="form-label">Тип</label>
+              <select id="ef-doctype" onchange="updateDocSubOptions(this.value)">
+                <option value="">— выбери —</option>
+                <option value="отчёт"${(d.docType||'')==='отчёт'?' selected':''}>Отчёт</option>
+                <option value="сводка"${(d.docType||'')==='сводка'?' selected':''}>Сводка</option>
+                <option value="карта"${(d.docType||'')==='карта'?' selected':''}>Карта</option>
+                <option value="справка"${(d.docType||'')==='справка'?' selected':''}>Справка</option>
+              </select></div>
+            <div class="form-field"><label class="form-label">Подраздел</label>
+              <select id="ef-docsubsection">
+                <option value="">— без подраздела —</option>
+                ${secOpts}
+              </select></div>
+            <div class="form-field"><label class="form-label">Дата</label>
+              <input type="date" id="ef-date" value="${d.date||today()}"></div>
+            <div class="form-field"><label class="form-label">Автор</label>
+              <input type="text" id="ef-author" value="${esc(d.author||'')}" placeholder="Позывной автора"></div>
+            <div class="form-field" style="grid-column:span 2"><label class="form-label">Связано с</label>
+              <input type="text" id="ef-related" value="${esc(d.related||'')}" placeholder="Образец, сталкер..."></div>
+          </div>
+          <div class="form-field" style="margin-top:9px"><label class="form-label">Краткое описание</label>
+            <textarea id="ef-summary" rows="2">${esc(d.summary||'')}</textarea></div>
+          <div class="form-field" style="margin-top:9px"><label class="form-label">Полный текст</label>
+            <textarea id="ef-text" rows="7">${esc(d.text||'')}</textarea></div>
         </div></div>
-        <div class="dp-block"><div class="dp-block-label">Вложения</div><div class="dp-block-body"><div class="photo-grid" id="dp-photo-grid">${ph}<label class="photo-add-btn"><span class="pic">＋</span><span>Файл</span><input type="file" accept="image/*" multiple style="display:none" onchange="handlePhotoUpload(event)"></label></div></div></div>
+        <div class="dp-block"><div class="dp-block-label">Вложения</div><div class="dp-block-body">
+          <div class="photo-grid" id="dp-photo-grid">${ph}
+            <label class="photo-add-btn"><span class="pic">＋</span><span>Файл</span>
+              <input type="file" accept="image/*" multiple style="display:none" onchange="handlePhotoUpload(event)">
+            </label>
+          </div>
+        </div></div>
       </div>
-      <div><div class="dp-block"><div class="dp-block-label">Инфо</div><div class="dp-block-body" style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--text-dim);line-height:2">
-        <div style="color:var(--text-faint);font-size:8px">* — обязательное поле</div>
-      </div></div></div>
+      <div><div class="dp-block"><div class="dp-block-label">Инфо</div>
+        <div class="dp-block-body" style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--text-dim);line-height:2">
+          <div style="font-size:8px;color:var(--text-faint)">* — обязательное поле</div>
+        </div>
+      </div></div>
     </div>`;
-}
-
-// SAVE
-window.doSave=async function(){
-  const mod=window._editMod;
-  try{
-    if(mod==='arc'){
-      const name=document.getElementById('ef-name').value.trim();
-      if(!name){showToast('⚠ Введите название');return;}
-      const ex=records.find(x=>x.id===editingId);
-      const rec={
-        id:editingId,num:ex?ex.num:window._editRecord.num,name,
-        objectType:document.getElementById('ef-type').value,
-        status:document.getElementById('ef-status').value,
-        danger:document.getElementById('ef-danger').value,
-        date:document.getElementById('ef-date').value,
-        location:document.getElementById('ef-location').value.trim(),
-        storage:document.getElementById('ef-storage').value.trim(),
-        shortDesc:document.getElementById('ef-short').value.trim(),
-        fullDesc:document.getElementById('ef-full').value.trim(),
-        photos:window._editRecord?window._editRecord.photos:[],
-        customFields:collectCF(),
-        createdAt:ex?ex.createdAt:Date.now(),updatedAt:Date.now()
-      };
-      await setDoc(doc(db,'records',rec.id),rec);
-      closeDetail();showToast(!ex?'✓ Образец добавлен':'✓ Сохранено');
-    }else if(mod==='stk'){
-      const call=document.getElementById('ef-callsign').value.trim();
-      if(!call){showToast('⚠ Введите позывной');return;}
-      const ex=stalkers.find(x=>x.id===editingId);
-      const s={
-        id:editingId,callsign:call,
-        fio:document.getElementById('ef-fio').value.trim(),
-        age:document.getElementById('ef-age').value.trim(),
-        gender:document.getElementById('ef-gender').value,
-        status:document.getElementById('ef-status').value,
-        lastActive:document.getElementById('ef-last-active').value,
-        build:document.getElementById('ef-build').value.trim(),
-        height:document.getElementById('ef-height').value.trim(),
-        appearance:document.getElementById('ef-appearance').value.trim(),
-        dossier:document.getElementById('ef-dossier').value.trim(),
-        note:document.getElementById('ef-note').value.trim(),
-        relatedDocs:document.getElementById('ef-reldocs').value.trim(),
-        relatedRecords:document.getElementById('ef-relrec').value.trim(),
-        photos:window._editRecord?window._editRecord.photos:[],
-        customFields:collectCF(),
-        createdDate:ex?ex.createdDate:today(),
-        createdAt:ex?ex.createdAt:Date.now(),updatedAt:Date.now()
-      };
-      await setDoc(doc(db,'stalkers',s.id),s);
-      closeDetail();showToast(!ex?'✓ Досье добавлено':'✓ Сохранено');
-    }else if(mod==='doc'){
-      const title=document.getElementById('ef-title').value.trim();
-      if(!title){showToast('⚠ Введите название');return;}
-      const ex=documents.find(x=>x.id===editingId);
-      const d={
-        id:editingId,title,
-        docType:document.getElementById('ef-doctype').value,
-        date:document.getElementById('ef-date').value,
-        author:document.getElementById('ef-author').value.trim(),
-        related:document.getElementById('ef-related').value.trim(),
-        summary:document.getElementById('ef-summary').value.trim(),
-        text:document.getElementById('ef-text').value.trim(),
-        photos:window._editRecord?window._editRecord.photos:[],
-        createdAt:ex?ex.createdAt:Date.now(),updatedAt:Date.now()
-      };
-      await setDoc(doc(db,'documents',d.id),d);
-      closeDetail();showToast(!ex?'✓ Документ добавлен':'✓ Сохранено');
-    }
-    else if(mod==='cls'){
-      const title=document.getElementById('ef-cls-title').value.trim();
-      if(!title){showToast('⚠ Введите название');return;}
-      const ex=closedRecords.find(x=>x.id===editingId);
-      const clsNum=ex?ex.clId:('ЗМ-'+String(closedRecords.length+1).padStart(3,'0'));
-      // Тип — с поддержкой своего
-      const typeEl=document.getElementById('ef-cls-type');
-      let clsType=typeEl?typeEl.value:'';
-      if(clsType==='__custom__'){
-        const customInp=document.getElementById('ef-cls-type-custom');
-        clsType=customInp?customInp.value.trim():'';
-      }
-      // Собрать persons из DOM
-      const personInputs=document.querySelectorAll('.person-row-edit input');
-      const persons=[...personInputs].map(i=>i.value.trim()).filter(Boolean);
-      // Теги из _editRecord
-      const tags=window._editRecord?(window._editRecord.tags||[]):[];
-      // Доп блоки из _editRecord
-      const blocks=window._editRecord?(window._editRecord.blocks||[]):[];
-      const r={
-        id:editingId,title,clId:clsNum,
-        clType:clsType,
-        section:document.getElementById('ef-cls-section')?document.getElementById('ef-cls-section').value:'',
-        status:document.getElementById('ef-cls-status').value,
-        date:document.getElementById('ef-cls-date').value,
-        summary:document.getElementById('ef-cls-summary').value.trim(),
-        content:document.getElementById('ef-cls-content').value.trim(),
-        note:document.getElementById('ef-cls-note').value.trim(),
-        persons,tags,blocks,
-        photos:window._editRecord?window._editRecord.photos:[],
-        createdAt:ex?ex.createdAt:Date.now(),updatedAt:Date.now()
-      };
-      await setDoc(doc(db,'closed',r.id),r);
-      closeDetail();showToast(!ex?'✓ Запись добавлена':'✓ Сохранено');
-    }
-  }catch(e){showToast('⚠ Ошибка: '+e.message);}
 }
 
 window.cancelEdit=function(id,isNew,mod){
@@ -1951,9 +2249,10 @@ window.confirmDel=function(id,mod){
   const name=mod==='arc'?(records.find(x=>x.id===id)||{}).name:
              mod==='stk'?(stalkers.find(x=>x.id===id)||{}).callsign:
              mod==='cls'?(closedRecords.find(x=>x.id===id)||{}).title:
+             mod==='photo'?(photos.find(x=>x.id===id)||{}).title:
              (documents.find(x=>x.id===id)||{}).title;
   showConfirm(`Удалить «${name||'запись'}»?`,async()=>{
-    const col=mod==='stk'?'stalkers':mod==='doc'?'documents':mod==='cls'?'closed':'records';
+    const col=mod==='stk'?'stalkers':mod==='doc'?'documents':mod==='cls'?'closed':mod==='photo'?'photos':'records';
     await deleteDoc(doc(db,col,id));
     closeDetail();showToast('Удалено');
   });
@@ -2148,9 +2447,9 @@ function activateClsModule() {
   editingId = null; window._editRecord = null;
 
   // Topnav
-  ['arc','stk','doc','all'].forEach(m => {
+  ['arc','stk','doc','all','photo'].forEach(m => {
     const el = document.getElementById('tn-' + m);
-    if (el) el.className = 'tn-mod';
+    if (el) el.className = 'tn-mod'+(m==='photo'?' tn-photo':'');
   });
   // Placeholder поиска под модуль
   const searchInput=document.getElementById('search-input');
