@@ -3065,6 +3065,10 @@ function activateClsModule(){
   ab.className='add-btn';ab.removeAttribute('style');
   ab.style.cssText='border-color:var(--red-dim);color:var(--red);background:rgba(184,64,64,0.08);font-family:monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all 0.2s;white-space:nowrap;margin-left:auto;height:30px;padding:0 14px;border:1px solid var(--red-dim)';
   ab.textContent='＋ Запись';ab.onclick=()=>openAdd();
+  currentView='list';
+  document.querySelectorAll('.view-btn').forEach(b=>b.classList.remove('active'));
+  const lbtn=document.getElementById('vbtn-list');
+  if(lbtn)lbtn.classList.add('active');
   renderToolbarFilters();renderSidebar();renderContent();
 }
 
@@ -3337,6 +3341,8 @@ function renderClsList(ca){
 // ── ОТКРЫТЬ ДЕТАЛЬ ──
 window.openClsDetail=function(id){
   const r=closedRecords.find(x=>x.id===id);if(!r)return;
+  // Сбросить режим редактирования
+  editingId=null;window._editRecord=null;window._editMod=null;window._pendingClsType=null;
   const panel=document.getElementById('detail-panel');
   panel.classList.add('open');
   const tLabel=clsTypeLabel(r.clType);
@@ -3423,6 +3429,7 @@ function renderClsDetailView(r){
     </div></div>`;
   }
 
+  document.getElementById('dp-body').style.padding='';
   document.getElementById('dp-body').innerHTML=`
     <div class="prot-bar" style="margin:-18px -18px 14px"><div class="prot-dot"></div><span class="prot-text">Защищённый раздел · ${tLabel}</span></div>
     <div class="dp-2col">
