@@ -533,8 +533,9 @@ details.dp-block > .dp-block-body{animation:fadeIn 0.15s ease}
 .sb-sub-item.act-sub{color:var(--blue);border-left-color:var(--blue);background:rgba(58,143,212,0.05)}
 .sb-sub-dot{width:4px;height:4px;border-radius:50%;flex-shrink:0}
 .sb-sub-cnt{margin-left:auto;font-size:7px;color:var(--text-faint)}
-.sb-type-gear{background:none;border:none;color:var(--text-faint);font-size:9px;cursor:pointer;padding:0 2px;transition:color 0.15s;font-family:monospace;flex-shrink:0}
-.sb-type-gear:hover{color:var(--blue)}
+.sb-type-gear{background:none;border:none;color:var(--text-faint);font-size:9px;cursor:pointer;padding:0 2px;transition:all 0.15s;font-family:monospace;flex-shrink:0;opacity:0}
+.sb-item:hover .sb-type-gear{opacity:1}
+.sb-type-gear:hover{color:var(--blue);opacity:1}
 .photo-archive-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:4px}
 .pa-card{border:1px solid var(--border);background:var(--paper);cursor:pointer;overflow:hidden;transition:border-color 0.2s}
 .pa-card:hover{border-color:var(--purple-dim)}
@@ -1104,7 +1105,7 @@ function renderDocSubManager(typeKey){
           <span>Подразделы</span>
         </div>
         <div class="dsm-title" style="color:${meta.color}">${meta.label}</div>
-        <div class="dsm-hint">1. Создай подраздел&nbsp;&nbsp;·&nbsp;&nbsp;2. Привяжи документ к подразделу при создании&nbsp;&nbsp;·&nbsp;&nbsp;3. Фильтруй в сайдбаре</div>
+
       </div>
       <div class="dsm-body">
         ${emptyHtml}
@@ -1403,7 +1404,7 @@ function renderSidebar(){
         <div class="sb-dot" style="background:${t.color}"></div>
         <span style="flex:1;text-align:left">${t.label}</span>
         <span class="sb-cnt">${byDocType[t.key]||0}</span>
-        <button class="sb-type-gear" onclick="event.stopPropagation();openDocSubManager('${t.key}','${t.label}')" title="Управление подразделами" style="font-size:10px;padding:0 3px">⚙</button>
+        <button class="sb-type-gear" onclick="event.stopPropagation();openDocSubManager('${t.key}','${t.label}')" title="Подразделы">⚙</button>
       </button>${subRows}`;
     }).join('');
     navEl.innerHTML=`
