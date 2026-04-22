@@ -1631,6 +1631,138 @@ function getFiltered(){
   }).join('')}</tbody></table>`;
 }
 
+function renderContent(){
+  if(currentView==='list') renderList(); else renderCards();
+}
+
+function renderList(){
+  const rows=getFiltered();
+  const ca=document.getElementById('content-area');
+  if(!rows.length&&currentModule!=='cls'){ca.innerHTML=emptyState('',currentModule);return;}
+
+  if(currentModule==='cls'){
+    renderClsList(ca);
+    return;
+  }
+
+  if(currentModule==='photo'){
+    if(currentView==='list'){
+      ca.innerHTML=`<div class="content-header"><span class="content-count">Найдено: <strong>${rows.length}</strong></span></div>
+        <table class="list-table"><thead><tr>
+          <th>Тип</th><th>Название</th><th>Автор</th><th>Дата</th>
+        </tr></thead><tbody>${rows.map(p=>{
+          const tl=(p.photoType||'').toLowerCase();
+          const bc=tl==='видео'?'pa-badge-video':tl==='фотоловушка'?'pa-badge-trap':'pa-badge-photo';
+          return`<tr class="dr" onclick="openDetail('${p.id}','photo')">
+            <td><span class="dc-chip ${bc}" style="border:1px solid">${esc(p.photoType||'фото')}</span></td>
+            <td><strong>${esc(p.title||'Без названия')}</strong></td>
+            <td class="td-dim">${esc(p.photoAuthor||'—')}</td>
+            <td class="td-dim">${fmtDate(p.date)}</td>
+          </tr>`;
+        }).join('')}</tbody></table>`;
+    }else{
+      ca.innerHTML=`<div class="content-header"><span class="content-count">Найдено: <strong>${rows.length}</strong></span></div>
+        <div class="photo-archive-grid">${rows.map(p=>{
+          const tl=(p.photoType||'').toLowerCase();
+          const bc=tl==='видео'?'pa-badge-video':tl==='фотоловушка'?'pa-badge-trap':'pa-badge-photo';
+          const thumb=(p.photos&&p.photos.length)?`<img src="${p.photos[0].data}" alt="">`:`<div class="pa-thumb-empty">${esc(p.photoType||'фото')}</div>`;
+          return`<div class="pa-card" onclick="openDetail('${p.id}','photo')">
+            <div class="pa-thumb">${thumb}<span class="pa-type-badge ${bc}">${esc(p.photoType||'фото')}</span></div>
+            <div class="pa-info">
+              <div class="pa-title">${esc(p.title||'Без названия')}</div>
+              <div class="pa-meta">${esc(p.photoAuthor||'—')} · ${fmtDate(p.date)}</div>
+            </div>
+          </div>`;
+        }).join('')}</div>`;
+    }
+    return;
+  }
+
+  // all — STRICTLY no closed records
+  if(currentModule==='all'){
+    ca.innerHTML=`<div class="content-header"><span class="content-count">Найдено: <strong>${rows.length}</strong></span></div>
+      <table class="list-table"><thead><tr>
+        <th>Тип</th><th>Название / Позывной</th><th>Статус</th><th>Дата</th><th>Автор</th>
+      </tr></thead><tbody>${rows.map(r=>{
+        const mod=r._mod;
+        const modLabel=mod==='arc'?`<span class="td-mono">Образец</span>`:mod==='stk'?`<span style="font-family:monospace;font-size:9px;color:var(--amber)">Сталкер</span>`:`<span style="font-family:monospace;font-size:9px;color:var(--purple)">Документ</span>`;
+        const st=mod==='arc'?statusChipArc(r.status):mod==='stk'?statusChipStk(r.status):docTypeChip(r.docType);
+        const name=mod==='arc'?r.name:mod==='stk'?r.callsign:r.title;
+        const dateVal=mod==='arc'?r.date:mod==='stk'?r.lastActive:r.date;
+        return`<tr class="dr" onclick="openDetail('${r.id}','${mod}')">
+          <td>${modLabel}</td>
+          <td><strong>${esc(name||'—')}</strong></td>
+          <td>${st}</td>
+          <td class="td-dim">${fmtDate(dateVal)}</td>
+          <td class="td-dim">${esc(r.author||'—')}</td>
+        </tr>`;
+      }).join('')}</tbody></table>`;
+    return;
+  }
+
+  if(currentModule==='doc'){
+    ca.innerHTML=`<div class="content-header"><span class="content-count">Найдено: <strong>${rows.length}</strong></span></div>`
+    +rows.map(d=>{
+      const tl=(d.docType||'').toLowerCase();
+      let chipCls='dc-rep';
+      if(tl==='сводка')chipCls='dc-svd';
+      else if(tl==='карта')chipCls='dc-map';
+      else if(tl==='справка')chipCls='dc-ref';
+      const subL=d.docSubsection?`<span class="doc-card-sub">${esc(d.docSubsection)}</span>`:'';
+      return`<div class="doc-card" onclick="openDetail('${d.id}','doc')">
+        <div class="doc-card-head"><span class="dc-chip ${chipCls}">${esc(d.docType||'—')}</span><span class="doc-card-title">${esc(d.title||'Без названия')}</span>${subL}</div>
+        <div class="doc-card-meta">
+          <div class="doc-meta-item">Дата: <span>${fmtDate(d.date)}</span></div>
+          <div class="doc-meta-item">Автор: <span>${esc(d.author||'—')}</span></div>
+          ${d.related?`<div class="doc-meta-item">Связано: <span>${esc(d.related)}</span></div>`:''}
+        </div>
+        <div class="doc-card-body">${esc((d.summary||d.text||'').slice(0,110))}${(d.summary||d.text||'').length>110?'…':''}</div>
+      </div>`;
+    }).join('');
+    return;
+  }
+
+  if(currentModule==='stk'){
+    ca.innerHTML=`<div class="content-header"><span class="content-count">Найдено: <strong>${rows.length}</strong></span></div>
+      <table class="list-table"><thead><tr>
+        <th onclick="doSort('callsign')">Позывной</th>
+        <th>Статус</th>
+        <th onclick="doSort('lastActive')">Активность</th>
+        <th>Автор</th>
+      </tr></thead><tbody>${rows.map(s=>`
+        <tr class="dr" onclick="openDetail('${s.id}','stk')">
+          <td><strong>${esc(s.callsign||'—')}</strong>${s.fio?`<div style="font-size:9px;color:var(--text-dim)">${esc(s.fio)}</div>`:''}</td>
+          <td>${statusChipStk(s.status)}</td>
+          <td class="td-dim">${fmtDate(s.lastActive)}</td>
+          <td class="td-dim">${esc(s.author||'—')}</td>
+        </tr>`).join('')}</tbody></table>`;
+    return;
+  }
+
+  if(currentModule==='arc'){
+    ca.innerHTML=`<div class="content-header"><span class="content-count">Найдено: <strong>${rows.length}</strong></span></div>
+      <table class="list-table"><thead><tr>
+        <th onclick="doSort('num')">#</th>
+        <th onclick="doSort('name')">Название</th>
+        <th onclick="doSort('objectType')">Тип</th>
+        <th>Опасность</th>
+        <th onclick="doSort('status')">Статус</th>
+        <th onclick="doSort('date')">Дата</th>
+        <th>Автор</th>
+      </tr></thead><tbody>${rows.map(r=>`
+        <tr class="dr" onclick="openDetail('${r.id}','arc')">
+          <td class="td-mono">${padNum(r.num)}</td>
+          <td><strong>${esc(r.name||'—')}</strong>${r.shortDesc?`<div style="font-size:9px;color:var(--text-dim)">${esc(r.shortDesc)}</div>`:''}</td>
+          <td>${typeLabel(r.objectType)}</td>
+          <td>${dangerChip(r.danger)}</td>
+          <td>${statusChipArc(r.status)}</td>
+          <td class="td-dim">${fmtDate(r.date)}</td>
+          <td class="td-dim">${esc(r.author||'—')}</td>
+        </tr>`).join('')}</tbody></table>`;
+    return;
+  }
+}
+
 function renderCards(){
   const rows=getFiltered();
   const ca=document.getElementById('content-area');
