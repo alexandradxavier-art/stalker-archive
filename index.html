@@ -1593,6 +1593,13 @@ function renderToolbarFilters(){
         <option value="фотоловушка">Фотоловушки</option>
       </select>
       ${phAuthors.length?`<select class="tb-select" id="f-photoauthor" onchange="renderContent()"><option value="">Все авторы</option>${phOpts}</select>`:''}`;
+    // По умолчанию photo в карточках
+    if(currentView==='list'){
+      currentView='cards';
+      document.querySelectorAll('.view-btn').forEach(b=>b.classList.remove('active'));
+      const cb=document.getElementById('vbtn-cards');
+      if(cb)cb.classList.add('active');
+    }
   }else{
     el.innerHTML='';
   }
@@ -1653,66 +1660,7 @@ function getFiltered(){
     }).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
   }
   if(mod==='cls'){return getFilteredCls();}
-  if(mod==='photo'){
-    if(currentView==='list'){
-      ca.innerHTML=`<div class="content-header"><span class="content-count">Найдено: <strong>${rows.length}</strong></span></div>
-        <table class="list-table"><thead><tr>
-          <th>Тип</th><th>Название</th><th>Автор</th><th>Дата</th>
-        </tr></thead><tbody>${rows.map(p=>{
-          const tl=(p.photoType||'').toLowerCase();
-          const bc=tl==='видео'?'pa-badge-video':tl==='фотоловушка'?'pa-badge-trap':'pa-badge-photo';
-          return`<tr class="dr" onclick="openDetail('${p.id}','photo')">
-            <td><span class="dc-chip ${bc}" style="border:1px solid">${esc(p.photoType||'фото')}</span></td>
-            <td><strong>${esc(p.title||'Без названия')}</strong></td>
-            <td class="td-dim">${esc(p.photoAuthor||'—')}</td>
-            <td class="td-dim">${fmtDate(p.date)}</td>
-          </tr>`;
-        }).join('')}</tbody></table>`;
-    }else{
-      ca.innerHTML=`<div class="content-header"><span class="content-count">Найдено: <strong>${rows.length}</strong></span></div>
-        <div class="photo-archive-grid">${rows.map(p=>{
-          const tl=(p.photoType||'').toLowerCase();
-          const bc=tl==='видео'?'pa-badge-video':tl==='фотоловушка'?'pa-badge-trap':'pa-badge-photo';
-          let thumb;
-          if(tl==='видео'){
-            const ytM=p.videoUrl&&p.videoUrl.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
-            const ytThumb=ytM?`<img src="https://img.youtube.com/vi/${ytM[1]}/mqdefault.jpg" alt="" style="width:100%;height:100%;object-fit:cover">`:'';
-            const prvw=p.photos&&p.photos.length?`<img src="${p.photos[0].data}" alt="" style="width:100%;height:100%;object-fit:cover">`:ytThumb;
-            thumb=`<div class="pa-video-thumb">${prvw}<div class="pa-play-ico">▶</div>${p.videoUrl?`<div class="pa-video-src">${esc(p.videoUrl.replace(/^https?:\/\/(www\.)?/,''))}</div>`:''}</div>`;
-          }else{
-            thumb=(p.photos&&p.photos.length)?`<img src="${p.photos[0].data}" alt="">`:`<div class="pa-thumb-empty">${esc(p.photoType||'фото')}</div>`;
-          }
-          return`<div class="pa-card" onclick="openDetail('${p.id}','photo')">
-            <div class="pa-thumb">${thumb}<span class="pa-type-badge ${bc}">${esc(p.photoType||'фото')}</span></div>
-            <div class="pa-info">
-              <div class="pa-title">${esc(p.title||'Без названия')}</div>
-              <div class="pa-meta">${esc(p.photoAuthor||'—')} · ${fmtDate(p.date)}</div>
-            </div>
-          </div>`;
-        }).join('')}</div>`;
-    }
-    return;
-  }
-  if(mod==='cls'){
-    renderClsList(ca);
-    return;
-  }
-  // all
-  ca.innerHTML=`<table class="list-table"><thead><tr>
-    <th>#</th><th>Название</th><th>Раздел</th><th>Статус/Тип</th><th>Дата</th>
-  </tr></thead><tbody>${rows.map((r,i)=>{
-    const mod=r._mod;
-    const name=r._name||'—';
-    const modLabel=mod==='arc'?`<span class="td-mono">Образец</span>`:mod==='stk'?`<span style="font-family:monospace;font-size:9px;color:var(--amber)">Сталкер</span>`:`<span style="font-family:monospace;font-size:9px;color:var(--purple)">Документ</span>`;
-    const st=mod==='arc'?statusChipArc(r.status):mod==='stk'?statusChipStk(r.status):docTypeChip(r.docType);
-    return`<tr class="dr" onclick="openDetail('${r.id}','${mod}')">
-      <td class="td-mono">${padNum(i+1)}</td>
-      <td><strong>${esc(name)}</strong></td>
-      <td>${modLabel}</td>
-      <td>${st}</td>
-      <td class="td-dim">${fmtDate(r.date||r.createdDate||'')}</td>
-    </tr>`;
-  }).join('')}</tbody></table>`;
+  return [];
 }
 
 function renderContent(){
@@ -1858,8 +1806,33 @@ function renderList(){
 function renderCards(){
   const rows=getFiltered();
   const ca=document.getElementById('content-area');
-  if(!rows.length){ca.innerHTML=emptyState('',mod);return;}
   const mod=currentModule;
+  if(!rows.length){ca.innerHTML=emptyState('',mod);return;}
+
+  if(mod==='photo'){
+    ca.innerHTML=`<div class="content-header"><span class="content-count">Найдено: <strong>${rows.length}</strong></span></div>
+      <div class="photo-archive-grid">${rows.map(p=>{
+        const tl=(p.photoType||'').toLowerCase();
+        const bc=tl==='видео'?'pa-badge-video':tl==='фотоловушка'?'pa-badge-trap':'pa-badge-photo';
+        let thumb;
+        if(tl==='видео'){
+          const ytM=p.videoUrl&&p.videoUrl.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+          const ytThumb=ytM?`<img src="https://img.youtube.com/vi/${ytM[1]}/mqdefault.jpg" alt="" style="width:100%;height:100%;object-fit:cover">`:'' ;
+          const prvw=p.photos&&p.photos.length?`<img src="${p.photos[0].data}" alt="" style="width:100%;height:100%;object-fit:cover">`:ytThumb;
+          thumb=`<div class="pa-video-thumb">${prvw}<div class="pa-play-ico">▶</div></div>`;
+        }else{
+          thumb=(p.photos&&p.photos.length)?`<img src="${p.photos[0].data}" alt="">`:`<div class="pa-thumb-empty">${esc(p.photoType||'фото')}</div>`;
+        }
+        return`<div class="pa-card" onclick="openDetail('${p.id}','photo')">
+          <div class="pa-thumb">${thumb}<span class="pa-type-badge ${bc}">${esc(p.photoType||'фото')}</span></div>
+          <div class="pa-info">
+            <div class="pa-title">${esc(p.title||'Без названия')}</div>
+            <div class="pa-meta">${esc(p.photoAuthor||'—')} · ${fmtDate(p.date)}</div>
+          </div>
+        </div>`;
+      }).join('')}</div>`;
+    return;
+  }
 
   if(mod==='stk'){
     ca.innerHTML=`<div class="sc-grid">${rows.map(s=>{
