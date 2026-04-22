@@ -2553,7 +2553,6 @@ window.doSave=async function(){
         note:photoNoteEl?photoNoteEl.value.trim():(ex?ex.note:''),
         videoUrl:photoVideoEl?photoVideoEl.value.trim():(ex?ex.videoUrl:''),
         attachUrl:getAttachUrl('photo-attach')||getAttachUrl('photo-video-attach')||(ex?ex.attachUrl:''),
-        attachUrl:getAttachUrl('photo-attach')||getAttachUrl('photo-video-attach'),
         photos:window._editRecord?window._editRecord.photos:[],
         createdAt:ex?ex.createdAt:Date.now(),updatedAt:Date.now()
       };
