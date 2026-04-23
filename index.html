@@ -1186,7 +1186,7 @@ async function setUserOffline(){
   if(!currentUser)return;
   try{await setDoc(doc(db,'presence',currentUser.uid),{callsign:currentUser.displayName||'—',uid:currentUser.uid,online:false,lastSeen:Date.now()});}catch(e){}
 }
-function startHeartbeat(){clearInterval(heartbeatInterval);setUserOnline();heartbeatInterval=setInterval(setUserOnline,30000);}
+function startHeartbeat(){clearInterval(heartbeatInterval);setUserOnline();heartbeatInterval=setInterval(setUserOnline,30000);startPresenceListener();}
 function stopHeartbeat(){clearInterval(heartbeatInterval);}
 document.addEventListener('visibilitychange',()=>{if(document.hidden)setUserOffline();else if(currentUser)setUserOnline();});
 window.addEventListener('beforeunload',()=>{setUserOffline();});
@@ -1942,26 +1942,39 @@ function sbItem(group,val,label,cnt,cls,dot=false,dotColor='var(--green)'){
   </button>`;
 }
 
+// Глобальный кэш пользователей онлайн — обновляется всегда, независимо от раздела
 let presenceUnsub=null;
-function startPresenceInSidebar(){
-  if(presenceUnsub)presenceUnsub();
+let presenceUsers=[];
+
+function startPresenceListener(){
+  if(presenceUnsub)return; // уже запущен
   presenceUnsub=onSnapshot(collection(db,'presence'),snap=>{
     const now=Date.now();
-    const users=snap.docs.map(d=>d.data()).filter(u=>u.callsign)
+    presenceUsers=snap.docs.map(d=>d.data()).filter(u=>u.callsign)
       .map(u=>({...u,isOnline:u.online&&(now-u.lastSeen)<90000}))
       .sort((a,b)=>b.isOnline-a.isOnline);
-    const el=document.getElementById('sb-online-list');
-    if(!el)return;
-    el.innerHTML=users.map(u=>{
-      const isMe=currentUser&&u.uid===currentUser.uid;
-      const cls=u.isOnline?'on':'off';
-      return `<div class="sb-item">
-        <div class="sb-dot" style="background:${u.isOnline?'var(--green)':'var(--text-faint)'};${u.isOnline?'box-shadow:0 0 4px var(--green)':''}"></div>
-        <span style="flex:1;${isMe?'color:var(--green)':''}">${esc(u.callsign)}${isMe?' (я)':''}</span>
-        <span style="font-size:8px;color:${u.isOnline?'var(--green)':'var(--text-faint)'}">${u.isOnline?'в сети':'—'}</span>
-      </div>`;
-    }).join('');
+    // Если сейчас открыт сайдбар сталкеров — обновить его
+    renderPresenceInSidebar();
   });
+}
+
+function renderPresenceInSidebar(){
+  const el=document.getElementById('sb-online-list');
+  if(!el)return;
+  el.innerHTML=presenceUsers.map(u=>{
+    const isMe=currentUser&&u.uid===currentUser.uid;
+    return '<div class="sb-item">'
+      +'<div class="sb-dot" style="background:'+(u.isOnline?'var(--green)':'var(--text-faint)')+(u.isOnline?';box-shadow:0 0 4px var(--green)':'')+'">'
+      +'</div>'
+      +'<span style="flex:1;'+(isMe?'color:var(--green)':'')+'">'+esc(u.callsign)+(isMe?' (я)':'')+'</span>'
+      +'<span style="font-size:8px;color:'+(u.isOnline?'var(--green)':'var(--text-faint)')+';">'+(u.isOnline?'в сети':'—')+'</span>'
+      +'</div>';
+  }).join('');
+}
+
+// Оставляем для совместимости — теперь просто рендерит из кэша
+function startPresenceInSidebar(){
+  renderPresenceInSidebar();
 }
 
 window.setSub=function(group,val){
